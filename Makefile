@@ -66,7 +66,7 @@ pypi-publish: build
 update:
 	pipenv update
 
-githook: checks style requirements.txt
+githook: clean checks style requirements.txt
 	
 push:
 	git status

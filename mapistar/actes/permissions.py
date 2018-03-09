@@ -14,7 +14,7 @@ class ActesWritePermission():
 
         obj = get_or_404(self.actesviews.model, obj_id)
 
-        if obj.created.date() != timezone.localdate():
+        if obj.created.date() != timezone.now().date():
             raise BadRequest("Observation can't be edited another day")
 
         if auth.user != obj.owner:
