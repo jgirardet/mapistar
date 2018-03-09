@@ -27,6 +27,7 @@ class AuthUser(Auth):
 
 
 class MapistarJWTAuthentication():
+
     def authenticate(self, authorization: http.Header, settings: Settings, db: Db):
         # Firs we check token validity
         jwt = get_jwt(authorization, settings)

@@ -7,7 +7,6 @@ from apistar import typesystem
 # yapf: disable
 
 
-
 """
 Base class for various schemas type
 
