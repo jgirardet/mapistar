@@ -1,0 +1,40 @@
+# Config file for automatic testing at travis-ci.org
+# This file will be regenerated if you run travis_pypi_setup.py
+
+language: python
+
+python:
+  - 3.6
+
+env:
+  - DB_ENGINE=django.db.backends.postgresql DB=PORT= DB_NAME=test DB_HOST=localhost DB_USER=postgres DB_PASSWORD=
+
+before_script:
+  - psql -c 'create database test;' -U postgres
+
+install:
+  - pip install -U pip pipenv==10.0.1
+  - pip install python-coveralls
+  - make dev
+
+script:
+  - make check
+  - make dist
+  - make doc
+  - make test-unit
+  - make test-coverage
+
+after_success:
+  coveralls
+
+# After you create the Github repo and add it to Travis, run the
+# travis_pypi_setup.py script to finish PyPI deployment setup
+deploy:
+  provider: pypi
+  user: jgirardet
+  distributions: sdist bdist_wheel
+  password:
+    secure: PLEASE_REPLACE_ME
+  on:
+    tags: true
+    repo: jgirardet/mapistar
