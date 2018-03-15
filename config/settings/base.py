@@ -1,15 +1,26 @@
 # Third Party Libraries
-from apistar.permissions import IsAuthenticated
+# from apistar.permissions import IsAuthenticated
 from config.get_env import env
-from users.authentication import MapistarJWTAuthentication
+# from users.authentication import MapistarJWTAuthentication
 
-AUTHENTICATION = [
-    MapistarJWTAuthentication(),
-]
-PERMISSIONS = [
-    IsAuthenticated(),
-]
+# AUTHENTICATION = [
+#     MapistarJWTAuthentication(),
+# ]
+# PERMISSIONS = [
+#     IsAuthenticated(),
+# ]
 JWT = {'SECRET': env['JWT_SECRET'], 'PAYLOAD_DURATION': {'seconds': 300}}
+
+DATABASE = {
+    'provider': env['DB_ENGINE'],
+    'port': env['DB_PORT'],
+    'database': env['DB_NAME'],
+    'host': env['DB_HOST'],
+    'user': env['DB_USER'],
+    'password': env['DB_PASSWORD'],
+}
+
+PONY = {'PROJECT_NAME': "mapistar", 'INSTALLED_APPS': ["patients"]}
 
 ACTES_URL = '/actes'
 

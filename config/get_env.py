@@ -28,11 +28,6 @@ class Env(environment.Environment):
 
 env = Env()
 
-# add app folder to sys.path
-PROJECT_ROOT = pathlib.Path(__file__).absolute()
-PROJECT_ROOT = PROJECT_ROOT.parents[1] / "mapistar"
-sys.path.insert(0, str(PROJECT_ROOT))
-
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.django.settings')
 # if not apps.ready:
 #     print("aaaaaaaaaaaaa", settings.configured)

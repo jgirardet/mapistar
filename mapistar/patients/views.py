@@ -9,6 +9,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 from .schemas import PatientCreateSchema, PatientSchema, PatientUpdateSchema
+from pony.orm import Database
 
 
 def patients_detail(session: Session, patient_id: int) -> PatientSchema:
@@ -22,12 +23,32 @@ def patients_detail(session: Session, patient_id: int) -> PatientSchema:
     return PatientSchema(pat)
 
 
-def patients_create(session: Session, patient: PatientCreateSchema) -> Response:
+# class Patient(db.Entity):
+#     nom = Required(str)
+#     prenom = Required(str)
+#     # ddn = Required(date)
+
+
+# @db_session
+def patients_create(aa: Database, patient: PatientSchema) -> Response:
     """
     create patients
     """
-    new_patient = session.Patient.objects.create(**patient)
-    return Response(PatientSchema(new_patient), status=201)
+    # print(aa.entities)
+    a = aa.Patient(
+        nom=patient['nom'], prenom=patient['prenom'], ddn=patient['ddn'])
+    print(a.id)
+    # ddn=patient['birthdate'])
+    # new_patient = session.Patient.objects.create(**patient)
+    return Response(PatientSchema(a.to_dict()), status=201)
+
+
+# def patients_create(session: Session, patient: PatientCreateSchema) -> Response:
+#     """
+#     create patients
+#     """
+#     new_patient = session.Patient.objects.create(**patient)
+#     return Response(PatientSchema(new_patient), status=201)
 
 
 def patients_update(session: Session, patient_id: int,

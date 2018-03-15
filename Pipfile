@@ -39,3 +39,4 @@ apistar = {git = "https://github.com/audiolion/apistar.git", editable=true}
 django = "*"
 "psycopg2-binary" = "*"
 apistar-jwt = "*"
+pony = "*"

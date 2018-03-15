@@ -1,6 +1,6 @@
 # Third Party Libraries
 from apistar import typesystem
-from utils.schemas import email_schema, formatted_date, regular_text
+from mapistar.utils.schemas import email_schema, formatted_date, regular_text
 
 
 class PatientSchema(typesystem.Object):
@@ -10,9 +10,9 @@ class PatientSchema(typesystem.Object):
     """
     properties = {
         'id': typesystem.integer(description="Patient id"),
-        'name': typesystem.string(description="Nom"),
-        'firstname': typesystem.string(description="Prénom"),
-        'birthdate': typesystem.string(description="Date de naissance"),
+        'nom': typesystem.string(description="Nom"),
+        'prenom': typesystem.string(description="Prénom"),
+        'ddn': typesystem.string(description="Date de naissance"),
         'sexe': typesystem.boolean(description="sexe"),
         'street': typesystem.string(description="rue"),
         'postalcode': typesystem.string(description="Code Postal"),
@@ -21,7 +21,11 @@ class PatientSchema(typesystem.Object):
         'email': typesystem.string(description="email"),
         'alive': typesystem.boolean(description="vivant ?"),
     }
-    required = []
+    required = [
+        'nom',
+        'prenom',
+        'ddn',
+    ]
 
 
 class PatientWriteSchema(PatientSchema):
@@ -30,7 +34,7 @@ class PatientWriteSchema(PatientSchema):
     enforce validated date at write time
     """
     updated_properties = {
-        'name': regular_text(description="Nom"),
+        'nom': regular_text(description="Nom"),
         'firstname': regular_text(description="Prénom"),
         'birthdate': formatted_date(description="Date de naissance"),
         'email': email_schema(description="email"),
@@ -46,13 +50,14 @@ class PatientCreateSchema(PatientWriteSchema):
 
     properties = {
         k: v
-        for k, v in PatientWriteSchema.properties.items() if k not in ['id', 'alive']
+        for k, v in PatientWriteSchema.properties.items()
+        if k not in ['id', 'alive']
     }
 
     required = [
-        'name',
-        'firstname',
-        'birthdate',
+        'nom',
+        'prenom',
+        'ddn',
     ]
 
 
@@ -60,6 +65,9 @@ class PatientUpdateSchema(PatientWriteSchema):
     """
     schema to update patients
     """
-    properties = {k: v for k, v in PatientSchema.properties.items() if k != 'id'}
+    properties = {
+        k: v
+        for k, v in PatientSchema.properties.items() if k != 'id'
+    }
 
     required = []
