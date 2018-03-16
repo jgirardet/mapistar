@@ -9,7 +9,7 @@ class Patient(db.Entity):
     nom = Required(str)
     prenom = Required(str)
     ddn = Required(date)
-    street = Required(str)
+    street = Optional(str)
 
 
 class Bla(db.Entity):

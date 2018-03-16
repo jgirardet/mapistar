@@ -35,7 +35,10 @@ def patients_create(aa: Database, patient: PatientSchema) -> Response:
     """
     # print(aa.entities)
     a = aa.Patient(
-        nom=patient['nom'], prenom=patient['prenom'], ddn=patient['ddn'], street=patient['street'])
+        nom=patient['nom'],
+        prenom=patient['prenom'],
+        ddn=patient['ddn'],
+        street=patient['street'])
     # ddn=patient['birthdate'])
     # new_patient = session.Patient.objects.create(**patient)
 
@@ -68,4 +71,4 @@ def patients_list(aa: Database) -> List[PatientSchema]:
     """
     # p = session.Patient.objects.all()
 
-    return select(x for x in aa.Patient)[:]
+    return [x.to_dict() for x in aa.Patient.select()]
