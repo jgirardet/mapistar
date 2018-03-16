@@ -19,6 +19,11 @@ print(db_params)
 
 
 command = sys.argv[1]
+try:
+    command = command + ' ' + sys.argv[2]
+except IndexError:
+    pass
+print(command)
 if command == 'make':
     print("helle")
     for app in pony_config['INSTALLED_APPS']:

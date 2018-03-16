@@ -68,4 +68,4 @@ def patients_list(aa: Database) -> List[PatientSchema]:
     """
     # p = session.Patient.objects.all()
 
-    return select(PatientSchema(x.to_dict()) for x in aa.Patient)[:]
+    return select(x for x in aa.Patient)[:]
