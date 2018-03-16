@@ -11,16 +11,18 @@ from config.get_env import env
 # ]
 JWT = {'SECRET': env['JWT_SECRET'], 'PAYLOAD_DURATION': {'seconds': 300}}
 
-DATABASE = {
-    'provider': env['DB_ENGINE'],
-    'port': env['DB_PORT'],
-    'database': env['DB_NAME'],
-    'host': env['DB_HOST'],
-    'user': env['DB_USER'],
-    'password': env['DB_PASSWORD'],
+PONY = {
+    'DATABASE': {
+        'provider': env['DB_ENGINE'],
+        'port': env['DB_PORT'],
+        'database': env['DB_NAME'],
+        'host': env['DB_HOST'],
+        'user': env['DB_USER'],
+        'password': env['DB_PASSWORD'],
+    },
+    'PROJECT_NAME': "mapistar",
+    'INSTALLED_APPS': ["patients"]
 }
-
-PONY = {'PROJECT_NAME': "mapistar", 'INSTALLED_APPS': ["patients"]}
 
 ACTES_URL = '/actes'
 

@@ -4,6 +4,11 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 
+[requires]
+
+python_version = "3.6"
+
+
 [dev-packages]
 
 "flake8" = "*"
@@ -22,21 +27,17 @@ pipenv-to-requirements = "*"
 sphinx = "*"
 sphinx-autobuild = "*"
 pytest-pythonpath = "*"
-pytest-django = "*"
-django-reset-migrations = "*"
-django-extensions = "*"
 factory-boy = "*"
 pytest-timeit = "*"
 pytest-env = "*"
 apistar-shell = "*"
-mypy = "*"
 
 
 [packages]
 
 pbr = ">=3.0"
-apistar = {git = "https://github.com/audiolion/apistar.git", editable=true}
-django = "*"
+apistar = "*"
 "psycopg2-binary" = "*"
 apistar-jwt = "*"
-pony = "*"
+pony = {git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations", editable = true}
+django = "*"

@@ -33,14 +33,7 @@ class PonyBackend(object):
         for app in pony_config['INSTALLED_APPS']:
             import_module('.'.join((pony_config['PROJECT_NAME'], app,
                                     entities_filename)))
-        print("avant")
-        self.db.bind(**settings['DATABASE'])
-        if sys.argv[-1] == "create_tables":
-            print('creating tables ....')
-        else:
-            #     print("pendant")
-            # self.db.generate_mapping()
-            self.db.generate_mapping(create_tables=True)
+        self.db.connect(**settings['DATABASE'], allow_auto_upgrade=True)
 
 
 @contextlib.contextmanager
