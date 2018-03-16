@@ -25,7 +25,6 @@ class PonyBackend(object):
         Get the settings.PONY dict
         do imports in INSTALLED_APPS with PROJECT_NAME
         """
-
         self.db = db
         pony_config = settings['PONY']
         entities_filename = pony_config.get('entities_filename', "models")
@@ -33,7 +32,9 @@ class PonyBackend(object):
         for app in pony_config['INSTALLED_APPS']:
             import_module('.'.join((pony_config['PROJECT_NAME'], app,
                                     entities_filename)))
-        self.db.connect(**settings['DATABASE'], allow_auto_upgrade=True)
+
+        self.db.connect(**pony_config['DATABASE'], )
+        # self.db.connect(provider='sqlite', filename="../db.local", create_tables=True)
 
 
 @contextlib.contextmanager

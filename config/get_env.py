@@ -13,9 +13,9 @@ from apistar import environment, typesystem
 
 class Env(environment.Environment):
     properties = {
-        'DB_ENGINE': typesystem.string(default='django.db.backends.sqlite3'),
-        'DB_PORT': typesystem.string(default=''),
-        'DB_NAME': typesystem.string(default='db.local'),
+        'DB_ENGINE': typesystem.string(default=''),
+        'DB_PORT': typesystem.string(default=None),
+        'DB_NAME': typesystem.string(default=''),
         'DB_HOST': typesystem.string(default=''),
         'DB_USER': typesystem.string(default=''),
         'DB_PASSWORD': typesystem.string(default=''),

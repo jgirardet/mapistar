@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from config import settings
 from importlib import import_module
-# from mapistar.pony_backend import db
-
+from mapistar.pony_backend import db
+from pony.orm import Database
 import sys
 from pathlib import Path
 
@@ -10,18 +10,19 @@ pony_config = settings.PONY
 entities_filename = pony_config.get('entities_filename', "models")
 db_params = pony_config['DATABASE']
 project = pony_config['PROJECT_NAME']
+project_path = Path(__file__)
+db_path = project_path.absolute().parent / 'db.local'
+print(db_params)
 
-print(sys.argv)
 # models = []
-if sys.argv[1] == 'make':
-    app = sys.argv[2]
-    entity = sys.argv[3]
-    model = import_module('.'.join((project, app, entities_filename)))
-    migration_dir = Path(project) / app / model.__file__ / "migrations"
-    migration_dir.
-    entity = getattr(model, sys.argv[3])
-    model.db.migrate(
-        command='make', migration_dir=str(migration_dir), **db_params)
 
-# for app in pony_config['INSTALLED_APPS']:
-#     model = import_module('.'.join((project, app, entities_filename)))
+
+
+command = sys.argv[1]
+if command == 'make':
+    print("helle")
+    for app in pony_config['INSTALLED_APPS']:
+            model_path='.'.join((project, app, entities_filename))
+            import_module(model_path)
+db.migrate(command=command, migration_dir="mapistar/migrations", **db_params)
+        
