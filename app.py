@@ -18,7 +18,7 @@ components = [
     *pony_components,
 ]
 
-commands = [*apistar_shell_commands.common_commands, *pony_commands]
+commands = [*apistar_shell_commands.pony_commands, *pony_commands]
 
 app = App(
     routes=routes,
