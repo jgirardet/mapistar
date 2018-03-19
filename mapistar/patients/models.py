@@ -18,6 +18,10 @@ class Bla(db.Entity):
     # ddn = Required(date)
 
 
+from config.settings import PONY
+db.bind(**PONY['DATABASE'])
+db.generate_mapping(create_tables=True)
+
 # # Standard Libraries
 # from string import capwords
 

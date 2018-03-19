@@ -29,6 +29,7 @@ sphinx-autobuild = "*"
 pytest-pythonpath = "*"
 pytest-timeit = "*"
 pytest-env = "*"
+pytest-ponyorm = "*"
 
 
 [packages]
