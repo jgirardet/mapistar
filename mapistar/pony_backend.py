@@ -3,9 +3,9 @@ import typing
 
 from pony.orm import db_session, Database, TableIsNotEmpty
 from pony.orm.dbapiprovider import ProgrammingError
-from apistar import Command, Component
-from config import settings
-from apistar import Settings
+from apistar import Component
+# from config import settings
+# from apistar import Settings
 from apistar.types import KeywordArgs
 from apistar.interfaces import CommandLineClient
 # db = Database()
@@ -15,7 +15,6 @@ from apistar.interfaces import CommandLineClient
 from importlib import import_module
 
 db = Database()
-
 import sys
 
 
@@ -87,7 +86,7 @@ components = [
     Component(Database, init=get_session, preload=False)
 ]
 
-commands = [
-    Command('create_tables', create_tables),
-    Command('drop_all_tables', drop_all_tables)
-]
+# commands = [
+#     Command('create_tables', create_tables),
+#     Command('drop_all_tables', drop_all_tables)
+# ]

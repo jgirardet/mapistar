@@ -1,17 +1,16 @@
 import pytest
 
-from mapistar.patients.models import Patient
-
 pytestmark = pytest.mark.pony
+
 import datetime
 
 
-def test_essai():
-    Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
-    Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
-    Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
-    Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
-    a = Patient.select()
+def test_essai(ponydb):
+    ponydb.Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
+    ponydb.Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
+    ponydb.Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
+    ponydb.Patient(nom="omkmo", prenom="omkmok", ddn="1234-12-12")
+    a = ponydb.Patient.select()
     print(list(a))
     assert len(a) == 4
 

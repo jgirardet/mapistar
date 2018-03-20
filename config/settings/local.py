@@ -1,5 +1,5 @@
 # Third Party Libraries
-from apistar.interfaces import Auth
+# from apistar.interfaces import Auth
 
 # mapistar
 # from mapistar.users.authentication import AuthUser
@@ -9,7 +9,7 @@ from .base import *
 # PERMISSIONS.clear()
 # AUTHENTICATION.clear()
 
-JWT['PAYLOAD_DURATION'] = {'seconds': 9000}
+# JWT['PAYLOAD_DURATION'] = {'seconds': 9000}
 
 # change authentication for local use
 # class LocalAuthentification():

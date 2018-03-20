@@ -2,7 +2,7 @@ from pony.orm import Required, Optional
 
 from datetime import date
 
-from mapistar.pony_backend import db
+from mapistar.base_db import db
 
 
 class Patient(db.Entity):
@@ -17,10 +17,6 @@ class Bla(db.Entity):
     prenom = Required(str)
     # ddn = Required(date)
 
-
-from config.settings import PONY
-db.bind(**PONY['DATABASE'])
-db.generate_mapping(create_tables=True)
 
 # # Standard Libraries
 # from string import capwords

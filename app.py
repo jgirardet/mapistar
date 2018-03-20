@@ -6,22 +6,23 @@
 from apistar.frameworks.wsgi import WSGIApp as App
 from apistar_shell import commands as apistar_shell_commands
 from apistar_shell import components as apistar_shell_components
-from pony import orm
 from config import settings
-from config.urls import routes
-from mapistar.pony_backend import components as pony_components
-from mapistar.pony_backend import commands as pony_commands
-
+# from config.urls import routes
+# from mapistar.pony_backend import components as pony_components
+# from mapistar.pony_backend import commands as pony_commands
+from mapistar.models import db
 # collect All components
 components = [
     *apistar_shell_components.components,
-    *pony_components,
+    # *pony_components,
 ]
 
-commands = [*apistar_shell_commands.pony_commands, *pony_commands]
+commands = [
+    *apistar_shell_commands.pony_commands,
+]  # *pony_commands]
 
 app = App(
-    routes=routes,
+    # routes=routes,
     components=components,
     commands=commands,
     settings=settings.__dict__)
