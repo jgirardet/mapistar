@@ -5,7 +5,7 @@ from config import settings
 
 from apistar import App, Document, Field, Link
 from apistar.server.handlers import serve_schema
-from mapistar.patients.views import patients_create, aaa
+from mapistar.patients.views import patients_create, aaa, patients_list
 
 document = Document(
     title='API Star',
@@ -13,13 +13,13 @@ document = Document(
         Link(
             url='/create/',
             method='POST',
-            name='patient_create',
+            name='add patient',
             fields=[Field(name='patient', location='body')],
             handler=patients_create,
             encoding='application/json'),
         Link(url='/create2/{aaa}/', method='POST', handler=patients_create),
         Link(url='/schema/', method='GET', handler=serve_schema),
-        Link(url='/', method='GET', handler=aaa),
+        Link(url='/', method='GET', handler=patients_list),
     ])
 
 app = App(document)
@@ -29,7 +29,7 @@ app = App(document)
 
 import werkzeug
 """
-curl -H "Content-Type: appliation/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create2/12/
+curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """
 
 

@@ -13,6 +13,18 @@
 
 import os
 
+# PONY = {
+#     'DATABASE': {
+#         'provider': os.environ['DB_ENGINE'],
+#         'port': os.environ['DB_PORT'],
+#         'database': os.environ['DB_NAME'],
+#         'host': os.environ['DB_HOST'],
+#         'user': os.environ['DB_USER'],
+#         'password': os.environ['DB_PASSWORD'],
+#     },
+#     'PROJECT_NAME': "mapistar",
+#     'INSTALLED_APPS': ["patients"]
+# }
 PONY = {
     'DATABASE': {
         'provider': os.environ['DB_ENGINE'],
@@ -25,18 +37,6 @@ PONY = {
     'PROJECT_NAME': "mapistar",
     'INSTALLED_APPS': ["patients"]
 }
-# PONY = {
-#     'DATABASE': {
-#         'provider': env['DB_ENGINE'],
-#         'port': env['DB_PORT'],
-#         'database': env['DB_NAME'],
-#         'host': env['DB_HOST'],
-#         'user': env['DB_USER'],
-#         'password': env['DB_PASSWORD'],
-#     },
-#     'PROJECT_NAME': "mapistar",
-#     'INSTALLED_APPS': ["patients"]
-# }
 
 ACTES_URL = '/actes'
 

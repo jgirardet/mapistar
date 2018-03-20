@@ -5,35 +5,14 @@ class PatientSchema(types.Type):
     nom = validators.String(max_length=100)
     prenom = validators.String(max_length=100)
     ddn = validators.Date()
+    sexe: validators.Boolean(description="sexe")
+    street: validators.String(description="rue")
+    postalcode: validators.Integer(description="Code Postal")
+    city: validators.String(description="Ville")
+    phonenumber: validators.String(description="Numéro de Téléphone")
+    email: validators.String(description="email")
+    alive: validators.Boolean(description="vivant ?")
 
-
-# # Third Party Libraries
-# from apistar import typesystem
-# from mapistar.utils.schemas import email_schema, formatted_date, regular_text
-
-# class PatientSchema(typesystem.Object):
-#     """
-#     read only schema, for db call purpose
-#     won't fail if pattern or anything else wrong
-#     """
-#     properties = {
-#         'id': typesystem.integer(description="Patient id"),
-#         'nom': typesystem.string(description="Nom"),
-#         'prenom': typesystem.string(description="Prénom"),
-#         'ddn': typesystem.string(description="Date de naissance"),
-#         'sexe': typesystem.boolean(description="sexe"),
-#         'street': typesystem.string(description="rue"),
-#         'postalcode': typesystem.string(description="Code Postal"),
-#         'city': typesystem.string(description="Ville"),
-#         'phonenumber': typesystem.string(description="Numéro de Téléphone"),
-#         'email': typesystem.string(description="email"),
-#         'alive': typesystem.boolean(description="vivant ?"),
-#     }
-#     required = [
-#         'nom',
-#         'prenom',
-#         'ddn',
-#     ]
 
 # class PatientWriteSchema(PatientSchema):
 #     """"
