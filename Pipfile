@@ -36,8 +36,7 @@ pytest-ponyorm = "*"
 
 pbr = ">=3.0"
 "psycopg2-binary" = "*"
-apistar-jwt = "*"
 pony = {git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations", editable = true}
 apistar = {git = "https://github.com/encode/apistar.git", ref = "level-up", editable = true}
 "6533db5" = {path = "../apistar_shell", editable = true}
-"be97a19" = {path = "../factory_boy/", editable = true}
+uwsgi = "*"

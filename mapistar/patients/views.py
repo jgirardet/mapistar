@@ -12,17 +12,27 @@ from apistar import http
 
 
 @db_session
-def patients_create(patient: PatientSchema) -> http.Response:
+def patients_create(patient: PatientSchema, aaa: int = 0) -> http.Response:
     """
     create patients
     """
     # print(aa.entities)
     a = db.Patient(**patient)
-
+    print('mkoooooooooo: ', aaa)
     # ddn=patient['birthdate'])
     # new_patient = session.Patient.objects.create(**patient)
 
     return http.Response(PatientSchema(a.to_dict()), status_code=201)
+
+
+def aaa() -> http.Response:
+    """
+    create patients
+    """
+    # print(aa.entities)
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+
+    return http.Response({"hello": "HELLO"}, status_code=201)
 
 
 # def patients_detail(session: Session, patient_id: int) -> PatientSchema:
