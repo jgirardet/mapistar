@@ -2,6 +2,7 @@ from apistar import types, validators
 
 
 class PatientSchema(types.Type):
+    pk = validators.Integer(default=None)
     nom = validators.String(max_length=100)
     prenom = validators.String(max_length=100)
     ddn = validators.Date()

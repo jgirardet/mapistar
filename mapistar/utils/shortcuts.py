@@ -1,13 +1,11 @@
 # Third Party Libraries
 from apistar.exceptions import NotFound
-from django.db import models
-from django.http import Http404
-from django.shortcuts import get_object_or_404
+from pony import orm
 
 
-def get_or_404(model: models, id: [str, int]):
+def get_or_404(model, id: [str, int]):
     try:
-        item = get_object_or_404(model, id=id)
-    except Http404 as e:
-        raise NotFound(str(e))
+        item = model[id]
+    except orm.ObjectNotFound as e:
+        raise NotFound
     return item

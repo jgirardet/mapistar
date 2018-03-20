@@ -2,87 +2,53 @@
 from typing import List
 
 # Third Party Libraries
-from apistar.exceptions import NotFound
+from apistar.exceptions import NotFound, BadRequest
 
 from .schemas import PatientSchema
 from pony.orm import Database, select, desc, db_session
 
 from mapistar.models import db
 from apistar import http
+from mapistar.utils.shortcuts import get_or_404
 
 
 @db_session
-def patients_create(patient: PatientSchema) -> http.Response:
+def add(patient: PatientSchema) -> http.Response:
     """
     create patients
     """
+    if 'pk' is not None in patient:
+        raise BadRequest("pk ne peut être spédicifée pour un ajout")
+
     a = db.Patient(**patient)
     return http.Response(PatientSchema(a.to_dict()), status_code=201)
 
 
 @db_session
-def patients_list() -> List[PatientSchema]:
-    #     """
-    #     List patients
-    #     """
-
+def liste() -> List[PatientSchema]:
+    """ List patients """
     return [PatientSchema(x.to_dict()) for x in db.Patient.select()]
 
 
-def aaa() -> http.Response:
-    """
-    create patients
-    """
-    return http.Response({"hello": "HELLO"}, status_code=201)
+@db_session
+def get(patient_pk: int) -> PatientSchema:
+    """ Get patient details """
+    pat = get_or_404(db.Patient, patient_pk)
+    return PatientSchema(pat)
 
 
-# def patients_detail(session: Session, patient_id: int) -> PatientSchema:
-#     """
-#     Get patient details
-#     """
-#     try:
-#         pat = get_object_or_404(session.Patient, id=patient_id)
-#     except Http404 as e:
-#         raise NotFound(str(e))
-#     return PatientSchema(pat)
+@db_session
+def delete(patient_pk: int) -> dict:
+    """delete un patient"""
+    pat = get_or_404(db.Patient, patient_pk)
+    pat.delete()
+    return {"msg": "delete success"}
 
-# def patients_create(aa: Database, patient: PatientSchema) -> Response:
-#     """
-#     create patients
-#     """
-#     # print(aa.entities)
-#     a = aa.Patient(
-#         nom=patient['nom'],
-#         prenom=patient['prenom'],
-#         ddn=patient['ddn'],
-#         street=patient['street'])
 
-#     # ddn=patient['birthdate'])
-#     # new_patient = session.Patient.objects.create(**patient)
-
-#     return Response(PatientSchema(a.to_dict()), status=201)
-
-# # def patients_create(session: Session, patient: PatientCreateSchema) -> Response:
-# #     """
-# #     create patients
-# #     """
-# #     new_patient = session.Patient.objects.create(**patient)
-# #     return Response(PatientSchema(new_patient), status=201)
-
-# def patients_update(session: Session, patient_id: int,
-#                     patient: PatientUpdateSchema) -> PatientSchema:
-#     """
-#     modify patients
-#     """
-#     a = session.Patient.objects.filter(id=patient_id).update(**patient)
-#     if not a:
-#         raise NotFound('Patient id not found')
-#     updated_patient = session.Patient.objects.get(id=patient_id)
-#     return PatientSchema(updated_patient)
-
-# def patients_list(aa: Database) -> List[PatientSchema]:
-#     """
-#     List patients
-#     """
-
-#     return [PatientSchema(x.to_dict()) for x in aa.Patient.select()]
+def update(new_data: PatientSchema) -> PatientSchema:
+    """ modify patients """
+    if 'pk' is None:
+        raise BadRequest('la pk doit être spédicifée')
+    to_update = get_or_404(new_data['pk'])
+    to_update.set(**new_data)
+    return PatientSchema(to_update.to_dict())

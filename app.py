@@ -3,23 +3,15 @@
 """
 from config import settings
 
-from apistar import App, Document, Field, Link
+from apistar import App, Document, Field, Link, Section
 from apistar.server.handlers import serve_schema
-from mapistar.patients.views import patients_create, aaa, patients_list
+from mapistar.patients.urls import section_patients
 
 document = Document(
     title='API Star',
     content=[
-        Link(
-            url='/create/',
-            method='POST',
-            name='add patient',
-            fields=[Field(name='patient', location='body')],
-            handler=patients_create,
-            encoding='application/json'),
-        Link(url='/create2/{aaa}/', method='POST', handler=patients_create),
+        section_patients,
         Link(url='/schema/', method='GET', handler=serve_schema),
-        Link(url='/', method='GET', handler=patients_list),
     ])
 
 app = App(document)

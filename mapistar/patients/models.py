@@ -1,4 +1,4 @@
-from pony.orm import Required, Optional
+from pony.orm import Required, Optional, PrimaryKey
 
 from datetime import date
 
@@ -7,6 +7,7 @@ from string import capwords
 
 
 class Patient(db.Entity):
+    pk = PrimaryKey(int, auto=True)
     nom = Required(str)
     prenom = Required(str)
     ddn = Required(date)

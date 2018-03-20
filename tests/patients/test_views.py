@@ -4,34 +4,42 @@ import json
 # Third Party Libraries
 import pytest
 from apistar.exceptions import NotFound
-from mapistar.patients.views import patients_create
 from mapistar.patients.schemas import PatientSchema
 
-from apistar import http, test
 from apistar.document import Document, Link
-from apistar.server.app import App
-from app import app
+from pony import orm
+
+from tests.factory import patient
+
+pytestmark = pytest.mark.pony
 
 
-def test_patient_create():
+def test_cli_patient_create(cli, app):
     a = {'nom': "Mokmomokok", 'prenom': "Ljlijjlj", 'ddn': "1234-12-12"}
 
-    resp = patients_create(PatientSchema(**a))
-    assert resp.content == a
-
-
-client = test.TestClient(app)
-
-
-def test_cli_patient_create():
-    a = {'nom': "Mokmomokok", 'prenom': "Ljlijjlj", 'ddn': "1234-12-12"}
-
-    resp = client.post(app.reverse_url('add patient'), data=json.dumps(a))
+    resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
+    a['pk'] = 1
     assert resp.json() == a
-    # resp = json.loads(response.content.decode())
 
-    # assert response.status_code == 201
-    # assert Patient.objects.get(id=resp['id']).name.lower() == a['name'].lower()
+
+def test_cli_get_patient(patient, cli, app):
+    resp = cli.get(app.reverse_url('patients:get', patient_pk=patient.pk))
+    assert resp.json() == PatientSchema(patient.to_dict())
+
+
+def test_cli_del_patient(patient, cli, app):
+    resp = cli.delete(
+        app.reverse_url('patients:delete', patient_pk=patient.pk))
+    assert resp.json() == {"msg": "delete success"}
+
+
+def test_cli_list_patient(ponydb, cli, app):
+    e = []
+    for i in range(5):
+        e.append(patient(ponydb))
+    orm.commit()
+    resp = cli.get(app.reverse_url('patients:liste'))
+    assert set(i['nom'] for i in resp.json()) == set(i.nom for i in e)
 
 
 # # test read write
@@ -42,36 +50,9 @@ def test_cli_patient_create():
 #     patients_detail(ss, a.id)
 #     patients_list(ss)
 
-# # patients_detail
-# def test_patient_detail(client, patient):
-#     """
-#     Testing a view, using the test client with
-#     """
-#     response = client.get(
-#         reverse_url('patients_detail', patient_id=patient.id))
-#     resp = json.loads(response.content.decode())
-#     assert resp == PatientSchema(patient)
 
-# def test_detail_not_found(ss, patient):
-#     deleted = patient.id
-#     patient.delete()
-#     with pytest.raises(NotFound):
-#         patients_detail(ss, deleted)
+def test_patient_update(patient, cli, app):
 
-# def test_patient_list(client, patient10):
-#     response = client.get(reverse_url('patients_list'))
-#     resp = json.loads(response.content.decode())
-#     assert resp == [PatientSchema(p) for p in Patient.objects.all()]
-
-# def test_patient_update(patient, client):
-#     response = client.put(
-#         reverse_url('patients_update', patient_id=patient.id),
-#         {"city": "Nevers"})
-#     a = Patient.objects.get(id=patient.id)
-#     assert a.city == "Nevers"
-
-# def test_patient_update_raises_not_found(patient, ss):
-#     a = patient.id
-#     patient.delete()
-#     with pytest.raises(NotFound):
-#         patients_update(ss, a, PatientSchema())
+    update = {"pk": patient.pk, "rue": "mokmokmok", "nom": "lùplùplù ùpl ù "}
+    response = cli.put(app.reverse_url('patients:update', new_data=update))
+    assert response.json() == PatientSchema(patient.to_dict())
