@@ -14,22 +14,21 @@ from tests.factory import patient
 pytestmark = pytest.mark.pony
 
 
-def test_cli_patient_create(cli, app):
+def test_cli_patient_create(cli, app, ponydb):
     a = {'nom': "Mokmomokok", 'prenom': "Ljlijjlj", 'ddn': "1234-12-12"}
 
     resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
-    a['pk'] = 1
-    assert resp.json() == a
+    assert resp.json() == PatientSchema(ponydb.Patient[1].to_dict())
 
 
 def test_cli_get_patient(patient, cli, app):
-    resp = cli.get(app.reverse_url('patients:get', patient_pk=patient.pk))
+    resp = cli.get(app.reverse_url('patients:get', pk=patient.pk))
     assert resp.json() == PatientSchema(patient.to_dict())
 
 
 def test_cli_del_patient(patient, cli, app):
-    resp = cli.delete(
-        app.reverse_url('patients:delete', patient_pk=patient.pk))
+    resp = cli.delete('/patients/1/')
+    # app.reverse_url('patients:delete', pk=patient.pk))
     assert resp.json() == {"msg": "delete success"}
 
 
@@ -53,6 +52,14 @@ def test_cli_list_patient(ponydb, cli, app):
 
 def test_patient_update(patient, cli, app):
 
-    update = {"pk": patient.pk, "rue": "mokmokmok", "nom": "lùplùplù ùpl ù "}
-    response = cli.put(app.reverse_url('patients:update', new_data=update))
+    update = {
+        "prenom": "omkmok",
+        "ddn": "1237-03-03",
+        "rue": "mokmokmok",
+    }
+    response = cli.put(
+        app.reverse_url('patients:update', pk=patient.pk),
+        data=json.dumps(update))
+    # assert False
     assert response.json() == PatientSchema(patient.to_dict())
+    assert response.status_code == 201

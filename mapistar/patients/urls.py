@@ -7,10 +7,10 @@ section_patients = Section(
     content=[
         Link(url="/patients/", method="POST", handler=add),
         Link(url="/patients/", method="GET", handler=liste),
-        Link(url="/patients/", method="PUT", handler=update),
+        Link(url="/patients/{pk}/", method="PUT", handler=update),
         # Link(url="/patients/", method="DELETE", handler=delete),
-        Link(url="/patients/{patient_pk}/", method="DELETE", handler=delete),
-        Link(url="/patients/{patient_pk}/", method="GET", handler=get),
+        Link(url="/patients/{pk}/", method="DELETE", handler=delete),
+        Link(url="/patients/{pk}/", method="GET", handler=get),
     ],
     title="titre de section patieny",
     description="descriptoin Api des patients")

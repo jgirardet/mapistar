@@ -6,13 +6,22 @@ class PatientSchema(types.Type):
     nom = validators.String(max_length=100)
     prenom = validators.String(max_length=100)
     ddn = validators.Date()
-    sexe: validators.Boolean(description="sexe")
-    street: validators.String(description="rue")
-    postalcode: validators.Integer(description="Code Postal")
-    city: validators.String(description="Ville")
-    phonenumber: validators.String(description="Numéro de Téléphone")
-    email: validators.String(description="email")
-    alive: validators.Boolean(description="vivant ?")
+    # sexe = validators.Boolean(description="sexe", default=False)
+    rue = validators.String(description="rue", default="")
+    # postalcode: validators.Integer(description="Code Postal")
+    # city: validators.String(description="Ville")
+    # phonenumber: validators.String(description="Numéro de Téléphone")
+    # email: validators.String(description="email")
+    # alive: validators.Boolean(description="vivant ?")
+
+
+class PatientUpdateSchema(PatientSchema):
+    pk = validators.Integer(default=None)
+    nom = validators.String(max_length=100, default='')
+    prenom = validators.String(max_length=100, default=None)
+    ddn = validators.Date(default='')
+    # sexe = validators.Boolean(description="sexe", default=False)
+    rue = validators.String(description="rue", default=None)
 
 
 # class PatientWriteSchema(PatientSchema):
@@ -55,4 +64,4 @@ class PatientSchema(types.Type):
 #         for k, v in PatientSchema.properties.items() if k != 'id'
 #     }
 
-#     required = []
+# required = []

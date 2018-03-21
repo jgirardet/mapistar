@@ -43,10 +43,7 @@ def test_fields_with_capwords_at_create(ponydb):
 def test_fileds_with_capwords_at_update(patient, ponydb):
     patient.nom = "FZEFZEFZEFEZF"
     patient.prenom = "sdfsdfdfsdfsdf sdfsdfsdf"
-    print(patient.nom, patient.id)
     orm.commit()
-    print(patient.nom)
-    print(ponydb.Patient.select()[:])
     assert patient.nom == "Fzefzefzefezf"
     assert patient.prenom == "Sdfsdfdfsdfsdf Sdfsdfsdf"
 

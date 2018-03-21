@@ -11,16 +11,18 @@ class Patient(db.Entity):
     nom = Required(str)
     prenom = Required(str)
     ddn = Required(date)
+    # sexe = Optional(bool)
     rue = Optional(str, 200)
-    postalcode = Optional(int)
-    city = Optional(
-        str,
-        200,
-    )
-    phonenumber = Optional(int)
-    email = Optional(str, 100)
 
-    # alive = Optional(bool, default=True)
+    # postalcode = Optional(int)
+    # city = Optional(
+    #     str,
+    #     200,
+    # )
+    # phonenumber = Optional(int)
+    # email = Optional(str, 100)
+
+    # # alive = Optional(bool, default=True)
 
     def __repr__(self):
         """

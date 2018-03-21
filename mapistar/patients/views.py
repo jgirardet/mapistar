@@ -2,10 +2,10 @@
 from typing import List
 
 # Third Party Libraries
-from apistar.exceptions import NotFound, BadRequest
+from apistar.exceptions import BadRequest
 
-from .schemas import PatientSchema
-from pony.orm import Database, select, desc, db_session
+from .schemas import PatientSchema, PatientUpdateSchema
+from pony.orm import db_session
 
 from mapistar.models import db
 from apistar import http
@@ -20,6 +20,7 @@ def add(patient: PatientSchema) -> http.Response:
     if 'pk' is not None in patient:
         raise BadRequest("pk ne peut être spédicifée pour un ajout")
 
+    print(patient)
     a = db.Patient(**patient)
     return http.Response(PatientSchema(a.to_dict()), status_code=201)
 
@@ -31,24 +32,24 @@ def liste() -> List[PatientSchema]:
 
 
 @db_session
-def get(patient_pk: int) -> PatientSchema:
+def get(pk: int) -> PatientSchema:
     """ Get patient details """
-    pat = get_or_404(db.Patient, patient_pk)
+    print("helloooooooooooooooooo")
+
+    pat = get_or_404(db.Patient, pk)
     return PatientSchema(pat)
 
 
 @db_session
-def delete(patient_pk: int) -> dict:
+def delete(pk: int) -> dict:
     """delete un patient"""
-    pat = get_or_404(db.Patient, patient_pk)
+    pat = get_or_404(db.Patient, pk)
     pat.delete()
     return {"msg": "delete success"}
 
 
-def update(new_data: PatientSchema) -> PatientSchema:
+def update(new_data: PatientUpdateSchema, pk: int) -> PatientSchema:
     """ modify patients """
-    if 'pk' is None:
-        raise BadRequest('la pk doit être spédicifée')
-    to_update = get_or_404(new_data['pk'])
-    to_update.set(**new_data)
-    return PatientSchema(to_update.to_dict())
+    to_update = get_or_404(db.Patient, pk)
+    to_update.set(**{k: v for k, v in new_data.items() if v})
+    return http.Response(PatientSchema(to_update.to_dict()), status_code=201)
