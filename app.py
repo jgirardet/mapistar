@@ -1,7 +1,6 @@
 """ 
     Apistar Main App
 """
-from config import settings
 
 from apistar import App, Document, Field, Link, Section
 from apistar.server.handlers import serve_schema
