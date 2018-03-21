@@ -1,21 +1,24 @@
+# Standard Libraries
 import contextlib
+import sys
 import typing
+from importlib import import_module
 
-from pony.orm import db_session, Database, TableIsNotEmpty
-from pony.orm.dbapiprovider import ProgrammingError
+# Third Party Libraries
 from apistar import Component
+from apistar.interfaces import CommandLineClient
 # from config import settings
 # from apistar import Settings
 from apistar.types import KeywordArgs
-from apistar.interfaces import CommandLineClient
+from pony.orm import Database, TableIsNotEmpty, db_session
+from pony.orm.dbapiprovider import ProgrammingError
+
 # db = Database()
 # db.bind(**database_config)
 # db.generate_mapping(create_tables=True)
 
-from importlib import import_module
 
 db = Database()
-import sys
 
 
 class PonyBackend(object):

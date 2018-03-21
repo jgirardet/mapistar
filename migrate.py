@@ -1,10 +1,15 @@
 #!/usr/bin/env python
-from config import settings
-from importlib import import_module
-from mapistar.pony_backend import db
-from pony.orm import Database
+# Standard Libraries
 import sys
+from importlib import import_module
 from pathlib import Path
+
+# Third Party Libraries
+from config import settings
+from pony.orm import Database
+
+# mapistar
+from mapistar.pony_backend import db
 
 pony_config = settings.PONY
 entities_filename = pony_config.get('entities_filename', "models")
@@ -30,4 +35,3 @@ if command == 'make':
             model_path='.'.join((project, app, entities_filename))
             import_module(model_path)
 db.migrate(command=command, migration_dir="mapistar/migrations", **db_params)
-        

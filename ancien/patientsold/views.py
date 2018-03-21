@@ -2,14 +2,15 @@
 from typing import List
 
 # Third Party Libraries
+from apistar import http
 from apistar.exceptions import BadRequest
-
-from .schemas import PatientSchema, PatientUpdateSchema
 from pony.orm import db_session
 
+# mapistar
 from mapistar.models import db
-from apistar import http
 from mapistar.utils.shortcuts import get_or_404
+
+from .schemas import PatientSchema, PatientUpdateSchema
 
 
 @db_session

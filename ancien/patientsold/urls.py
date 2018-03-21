@@ -1,7 +1,8 @@
 # Third Party Libraries
 from apistar import Link, Section
 
-from .views import add, delete, liste, get, update
+from .views import add, delete, get, liste, update
+
 section_patients = Section(
     name="patients",
     content=[

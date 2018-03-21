@@ -2,8 +2,12 @@
     Apistar Main App
 """
 
+# Third Party Libraries
+import werkzeug
 from apistar import App, Document, Field, Link, Section
 from apistar.server.handlers import serve_schema
+
+# mapistar
 from mapistar.patients import section_patients
 
 document = Document(
@@ -18,7 +22,6 @@ app = App(document)
 # app = App(
 #     routes=routes, settings=settings, commands=commands, components=components)
 
-import werkzeug
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """

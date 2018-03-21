@@ -1,10 +1,10 @@
 # Third Party Libraries
 # from apistar.interfaces import Auth
 
-# mapistar
+from .base import *
+
 # from mapistar.users.authentication import AuthUser
 
-from .base import *
 
 # PERMISSIONS.clear()
 # AUTHENTICATION.clear()

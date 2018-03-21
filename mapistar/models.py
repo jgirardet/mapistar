@@ -1,9 +1,12 @@
+# Third Party Libraries
 from pony import orm
 
+# mapistar
 from mapistar.base_db import db
-from .patients import Patient
 
+from .patients import Patient
 from .users import User
+
 # from config.settings import PONY
 # db.bind(**PONY['DATABASE'])
 db.connect(

@@ -1,7 +1,9 @@
+# Third Party Libraries
 import pytest
-from .factory import *
-from app import app as main_app
 from apistar import test
+from app import app as main_app
+
+from .factory import *
 
 
 @pytest.fixture(scope='session')

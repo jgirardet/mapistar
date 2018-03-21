@@ -1,9 +1,12 @@
-from pony.orm import Required, Optional, PrimaryKey
-
+# Standard Libraries
 from datetime import date
-
-from mapistar.base_db import db
 from string import capwords
+
+# Third Party Libraries
+from pony.orm import Optional, PrimaryKey, Required
+
+# mapistar
+from mapistar.base_db import db
 
 
 class Patient(db.Entity):

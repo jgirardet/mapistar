@@ -11,8 +11,6 @@ from mapistar.models import db
 STATUT = ['docteur', 'secrétaire', 'interne', 'remplaçant']
 
 
-
-
 class User(db.Entity):
     """
     Base User class for unolog
@@ -59,6 +57,4 @@ class User(db.Entity):
 RPPS
 ADELI
 
-
-https://github.com/codingforentrepreneurs/srvup-rest-framework/blob/master/src/accounts/models.py
 """

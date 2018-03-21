@@ -1,6 +1,9 @@
-from mapistar.utils.shortcuts import get_or_404
+# Third Party Libraries
 import pytest
 from apistar.exceptions import NotFound
+
+# mapistar
+from mapistar.shortcuts import get_or_404
 
 # Test get_or_404
 

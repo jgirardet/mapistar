@@ -11,7 +11,7 @@ from pony.orm import Optional, PrimaryKey, Required, db_session
 # mapistar
 from mapistar.base_db import db
 # from mapistar.models import db
-from mapistar.utils.shortcuts import get_or_404
+from .shortcuts import get_or_404
 
 
 class Patient(db.Entity):
