@@ -75,9 +75,9 @@ class PatientSchema(types.Type):
 
 class PatientUpdateSchema(PatientSchema):
     pk = validators.Integer(default=None)
-    nom = validators.String(max_length=100, default='')
+    nom = validators.String(max_length=100, default=None)
     prenom = validators.String(max_length=100, default=None)
-    ddn = validators.Date(default='')
+    ddn = validators.Date(default=None)
     # sexe = validators.Boolean(description="sexe", default=False)
     rue = validators.String(description="rue", default=None)
 

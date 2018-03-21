@@ -21,7 +21,6 @@ app = App(document)
 
 # app = App(
 #     routes=routes, settings=settings, commands=commands, components=components)
-
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """

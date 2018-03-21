@@ -74,7 +74,7 @@ class TestPatientViews:
         assert set(i['nom'] for i in resp.json()) == set(i.nom for i in e)
 
     def test_patient_update(self, patient, cli, app):
-
+        print(patient.to_dict())
         update = {
             "prenom": "omkmok",
             "ddn": "1237-03-03",
