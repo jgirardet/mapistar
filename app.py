@@ -4,7 +4,7 @@
 
 from apistar import App, Document, Field, Link, Section
 from apistar.server.handlers import serve_schema
-from mapistar.patients.urls import section_patients
+from mapistar.patients import section_patients
 
 document = Document(
     title='API Star',

@@ -1,7 +1,7 @@
 from pony import orm
 
 from mapistar.base_db import db
-from mapistar.patients.models import *
+from patients import Patient
 
 # from config.settings import PONY
 # db.bind(**PONY['DATABASE'])

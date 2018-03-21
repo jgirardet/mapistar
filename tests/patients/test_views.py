@@ -4,7 +4,7 @@ import json
 # Third Party Libraries
 import pytest
 from apistar.exceptions import NotFound
-from mapistar.patients.schemas import PatientSchema
+from mapistar.patients import PatientSchema
 
 from apistar.document import Document, Link
 from pony import orm
