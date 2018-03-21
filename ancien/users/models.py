@@ -1,32 +1,54 @@
 # Standard Libraries
 import typing
 
-# Third Party Libraries
-from apistar.backends.django_orm import Session
-from apistar.interfaces import Auth
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
 STATUT = ['docteur', 'secrétaire', 'interne', 'remplaçant']
 
+from mapistar.models import db
+from pony import orm
 
-class User(AbstractUser):
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
+class User(db.Entity):
     """
     Base User class for unolog
     define statu
     """
-    MEDECIN = "medecin"
-    SECRETAIRE = "secretaire"
-    INTERNE = "interne"
-    REMPLACANT = "remplacant"
-    STATUT = (
-        (MEDECIN, 'Médecin'),
-        (SECRETAIRE, 'Secrétaire'),
-        (INTERNE, "Interne"),
-        (REMPLACANT, "Remplaçant"),
-    )
+    pk = orm.PrimaryKey(int, auto=True)
+    username = orm.Required(str)
+    password = orm.Required(str)
 
-    statut = models.CharField(max_length=20, choices=STATUT)
+    def __repr__(self):
+        """
+        nice printing Firstname Name
+        """
+        return f"[User: {self.username}]"
+
+    @staticmethod
+    def _set_password(password):
+        return generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    @classmethod
+    @orm.db_session
+    def create_user(cls, username, password):
+        pwd = cls._set_password(password)
+        user = db.User(username=username, password=pwd)
+        user.flush()
+        return user
+
+    # MEDECIN = "medecin"
+    # SECRETAIRE = "secretaire"
+    # INTERNE = "interne"
+    # REMPLACANT = "remplacant"
+    # STATUT = (
+    #     (MEDECIN, 'Médecin'),
+    #     (SECRETAIRE, 'Secrétaire'),
+    #     (INTERNE, "Interne"),
+    #     (REMPLACANT, "Remplaçant"),
+    # )
 
 
 """
