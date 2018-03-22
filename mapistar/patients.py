@@ -24,6 +24,8 @@ MAX_LENGTH = {
     "email": 100,
 }
 
+SEXE = ['m', 'f']
+
 
 class Patient(db.Entity):
 
@@ -32,7 +34,7 @@ class Patient(db.Entity):
     prenom = Required(str, MAX_LENGTH['prenom'])
     ddn = Required(date)
     sexe = Required(
-        str, MAX_LENGTH['sexe'], py_check=lambda x: x in [None, 'm', 'f'])
+        str, MAX_LENGTH['sexe'], py_check=lambda x: x in ['m', 'f'])
     rue = Optional(str, MAX_LENGTH['rue'])
     cp = Optional(int, max=MAX_LENGTH['cp'])
     ville = Optional(str, MAX_LENGTH['ville'])
@@ -78,8 +80,10 @@ class PatientSchema(types.Type):
     cp: validators.Integer(description="Code Postal")
     ville: validators.String(
         description="Ville", max_length=MAX_LENGTH['ville'])
-    # tel: validators.String(description="Numéro de Téléphone", max_length=MAX_LENGTH['tel'])
-    # email: validators.String(description="email", max_length=MAX_LENGTH['email'])
+    tel: validators.String(
+        description="Numéro de Téléphone", max_length=MAX_LENGTH['tel'])
+    email: validators.String(
+        description="email", max_length=MAX_LENGTH['email'])
     # alive: validators.Boolean(description="vivant ?")
 
 
