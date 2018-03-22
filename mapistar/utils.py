@@ -1,7 +1,5 @@
 from apistar import validators
 
-description = "Email"
-
 # class Email(String):
 #     def __init__(self, **kwargs):
 #         super().__init__(pattern=)
@@ -15,8 +13,8 @@ email_re = re.compile(
     r')@(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?$',
     re.IGNORECASE)  # domain
 
-a = re.search(email_re, "zef@fzef.gftr")
-print(a)
+# a = re.search(email_re, "zef@fzef.gftr")
+# print(a)
 
 
 class Email(validators.String):
@@ -24,8 +22,15 @@ class Email(validators.String):
         super().__init__(pattern=email_re, **kwargs)
 
 
+assert pattern is None or isinstance(pattern, str) or isinstance(
+    pattern, re._pattern_type)  #type(re.compile('')))
 # or isinstance(
 #            pattern, re._pattern_type
 
-email = Email()
-email.validate("mokm")
+# email = Email()
+# email.validate("mokm")
+
+# a = validators.String(pattern=email_re)
+
+a = Email()
+print(a.validate("dazfze@ze.gt"))
