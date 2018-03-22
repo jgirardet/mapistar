@@ -19,13 +19,12 @@ attrs = ('name', 'firstname')
 
 
 class TestPatientModel:
-    def test_repr(self, ponydb):
+    def test_repr(self, ponydb, patient):
         """
         test autoput of str
         """
-        a = ponydb.Patient(nom="mok", prenom="omk", ddn="1234-12-12")
 
-        assert a.__repr__() == "[Patient: omk mok]"
+        assert repr(patient) == f"[Patient: {patient.prenom} {patient.nom}]"
 
     def test_fields_with_capwords_at_create(self, ponydb):
         """
@@ -33,7 +32,12 @@ class TestPatientModel:
             name
             firstname
         """
-        d = {'nom': "ZEFZEF", 'prenom': "SDFSDF", 'ddn': "1234-12-12"}
+        d = {
+            'nom': "ZEFZEF",
+            'prenom': "SDFSDF",
+            'ddn': "1234-12-12",
+            'sexe': 'm'
+        }
         a = ponydb.Patient(**d)
         a.flush()
         for i in ['nom', 'prenom']:
@@ -51,7 +55,12 @@ class TestPatientModel:
 
 class TestPatientViews:
     def test_cli_patient_create(self, cli, app, ponydb):
-        a = {'nom': "Mokmomokok", 'prenom': "Ljlijjlj", 'ddn': "1234-12-12"}
+        a = {
+            'nom': "Mokmomokok",
+            'prenom': "Ljlijjlj",
+            'ddn': "1234-12-12",
+            "sexe": "m"
+        }
 
         resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
         assert resp.json() == PatientSchema(ponydb.Patient[1].to_dict())

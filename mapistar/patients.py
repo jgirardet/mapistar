@@ -13,24 +13,32 @@ from mapistar.base_db import db
 # from mapistar.models import db
 from .shortcuts import get_or_404
 
+MAX_LENGTH = {
+    "nom": 100,
+    "prenom": 100,
+    "sexe": 1,
+    "rue": 200,
+    "cp": 10000000,
+    "ville": 100,
+    "tel": 20,
+    "email": 100,
+}
+
 
 class Patient(db.Entity):
+
     pk = PrimaryKey(int, auto=True)
-    nom = Required(str)
-    prenom = Required(str)
+    nom = Required(str, MAX_LENGTH['nom'])
+    prenom = Required(str, MAX_LENGTH['prenom'])
     ddn = Required(date)
-    # sexe = Optional(bool)
-    rue = Optional(str, 200)
-
-    # postalcode = Optional(int)
-    # city = Optional(
-    #     str,
-    #     200,
-    # )
-    # phonenumber = Optional(int)
-    # email = Optional(str, 100)
-
-    # # alive = Optional(bool, default=True)
+    sexe = Required(
+        str, MAX_LENGTH['sexe'], py_check=lambda x: x in [None, 'm', 'f'])
+    rue = Optional(str, MAX_LENGTH['rue'])
+    cp = Optional(int, max=MAX_LENGTH['cp'])
+    ville = Optional(str, MAX_LENGTH['ville'])
+    tel = Optional(str, MAX_LENGTH['tel'])
+    email = Optional(str, MAX_LENGTH['email'])
+    alive = Optional(bool, default=True)
 
     def __repr__(self):
         """
@@ -61,15 +69,17 @@ notes divers
 
 class PatientSchema(types.Type):
     pk = validators.Integer(default=None)
-    nom = validators.String(max_length=100)
-    prenom = validators.String(max_length=100)
+    nom = validators.String(max_length=MAX_LENGTH['nom'])
+    prenom = validators.String(max_length=MAX_LENGTH['prenom'])
     ddn = validators.Date()
-    # sexe = validators.Boolean(description="sexe", default=False)
-    rue = validators.String(description="rue", default="")
-    # postalcode: validators.Integer(description="Code Postal")
-    # city: validators.String(description="Ville")
-    # phonenumber: validators.String(description="Numéro de Téléphone")
-    # email: validators.String(description="email")
+    sexe = validators.String(description="sexe", max_length=MAX_LENGTH['sexe'])
+    rue = validators.String(
+        description="rue", max_length=MAX_LENGTH['rue'], default="")
+    cp: validators.Integer(description="Code Postal")
+    ville: validators.String(
+        description="Ville", max_length=MAX_LENGTH['ville'])
+    # tel: validators.String(description="Numéro de Téléphone", max_length=MAX_LENGTH['tel'])
+    # email: validators.String(description="email", max_length=MAX_LENGTH['email'])
     # alive: validators.Boolean(description="vivant ?")
 
 
@@ -89,8 +99,7 @@ def add(patient: PatientSchema) -> http.Response:
     """
     if 'pk' is not None in patient:
         raise BadRequest("pk ne peut être spédicifée pour un ajout")
-
-    print(patient)
+    # print(patient)
     a = db.Patient(**patient)
     return http.Response(PatientSchema(a.to_dict()), status_code=201)
 

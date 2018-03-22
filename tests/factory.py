@@ -2,20 +2,30 @@
 import faker
 import pytest
 
-f = faker.Faker()
+import random
+
+f = faker.Faker('fr_FR')
+
+patient_dict = {
+    "nom": f.name(),
+    "prenom": f.first_name(),
+    "ddn": f.date(),
+    "sexe": random.choice(('f', 'm')),
+}
 
 
 @pytest.fixture(scope='function')
-def patientd(ponydb):
+def patientd(patient):
     """ patient dict sans id """
-    return (ponydb.Patient(nom=f.name(), prenom=f.first_name(), ddn=f.date())
-            .to_dict(exclude='pk'))
+    dico = patient.to_dict(exclude='pk')
+    patient.delete()
+    return dico
 
 
 @pytest.fixture(scope='function')
 def patient(ponydb):
     """ patient dict sans id """
-    a = ponydb.Patient(nom=f.name(), prenom=f.first_name(), ddn=f.date())
+    a = ponydb.Patient(**patient_dict)
     a.flush()
     print(a)
     return a
