@@ -119,13 +119,13 @@ def add(patient: PatientCreateSchema) -> http.Response:
     create patients
     """
     a = db.Patient(**patient)
-    return http.Response(PatientSchema(a.to_dict()), status_code=201)
+    return http.Response(a.to_dict(), status_code=201)
 
 
 @db_session
 def liste() -> List[PatientSchema]:
     """ List patients """
-    return [PatientSchema(x.to_dict()) for x in db.Patient.select()]
+    return [x.to_dict() for x in db.Patient.select()]
 
 
 @db_session
@@ -133,8 +133,7 @@ def get(pk: int) -> PatientSchema:
     """ Get patient details """
     print("helloooooooooooooooooo")
 
-    pat = get_or_404(db.Patient, pk)
-    return PatientSchema(pat)
+    return get_or_404(db.Patient, pk).to_dict()
 
 
 @db_session
@@ -149,7 +148,7 @@ def update(new_data: PatientUpdateSchema, pk: int) -> PatientSchema:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
     to_update.set(**{k: v for k, v in new_data.items() if v})
-    return http.Response(PatientSchema(to_update.to_dict()), status_code=201)
+    return http.Response(to_update.to_dict(), status_code=201)
 
 
 section_patients = Section(

@@ -87,7 +87,7 @@ class TestPatientViews:
         }
 
         resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
-        assert resp.json() == PatientSchema(ponydb.Patient[1].to_dict())
+        assert resp.json() == ponydb.Patient[1].to_dict()
         #
 
     def test_cli_get_patient(self, patient, cli, app):
