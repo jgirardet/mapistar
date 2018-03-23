@@ -48,6 +48,13 @@ class Patient(db.Entity):
         """
         return f"[Patient: {self.prenom} {self.nom}]"
 
+    @property
+    def dico(self):
+        " return to_dict but serializable"
+        _dico = self.to_dict()
+        _dico['ddn'] = _dico['ddn'].isoformat()
+        return _dico
+
     def _capwords(self):
 
         self.nom = capwords(self.nom)
@@ -68,21 +75,6 @@ décédé
 médecin traitant déclaré
 notes divers
 """
-
-
-class PatientSchema(types.Type):
-    pk = validators.Integer(default=None, allow_null=True)
-    nom = validators.String(default='')
-    prenom = validators.String(default='')
-    ddn = validators.Date(default='')
-    sexe = validators.String(default='')
-    rue = validators.String(description="rue", default='')
-    cp = validators.Integer(
-        description="Code Postal", default=None, allow_null=True)
-    ville = validators.String(description="Ville", default='')
-    tel = validators.String(description="Numéro de Téléphone", default='')
-    email = validators.String(description="email", default="")
-    alive = validators.Boolean(description="vivant ?", default=True)
 
 
 class PatientCreateSchema(types.Type):
@@ -119,21 +111,19 @@ def add(patient: PatientCreateSchema) -> http.Response:
     create patients
     """
     a = db.Patient(**patient)
-    return http.Response(a.to_dict(), status_code=201)
+    return http.Response(a.dico, status_code=201)
 
 
 @db_session
-def liste() -> List[PatientSchema]:
+def liste() -> List[dict]:
     """ List patients """
-    return [x.to_dict() for x in db.Patient.select()]
+    return [x.dico for x in db.Patient.select()]
 
 
 @db_session
-def get(pk: int) -> PatientSchema:
+def get(pk: int) -> dict:
     """ Get patient details """
-    print("helloooooooooooooooooo")
-
-    return get_or_404(db.Patient, pk).to_dict()
+    return get_or_404(db.Patient, pk).dico
 
 
 @db_session
@@ -144,11 +134,11 @@ def delete(pk: int) -> dict:
     return {"msg": "delete success"}
 
 
-def update(new_data: PatientUpdateSchema, pk: int) -> PatientSchema:
+def update(new_data: PatientUpdateSchema, pk: int) -> dict:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
     to_update.set(**{k: v for k, v in new_data.items() if v})
-    return http.Response(to_update.to_dict(), status_code=201)
+    return http.Response(to_update.dico, status_code=201)
 
 
 section_patients = Section(
