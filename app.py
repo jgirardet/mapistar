@@ -6,21 +6,25 @@
 import werkzeug
 from apistar import App, Document, Field, Link, Section
 from apistar.server.handlers import serve_schema
+from apistar.server.core import bind
 
 # mapistar
-from mapistar.patients import section_patients
+from mapistar.patients import routes_patients
 
-document = Document(
-    title='API Star',
-    content=[
-        section_patients,
-        Link(url='/schema/', method='GET', handler=serve_schema),
-    ])
+# document = Document(
+#     title='API Star',
+#     content=[
+#         section_patients,
+#         # Link(name="schema", url='/schema/', method='GET', handler=serve_schema),
+#     ])
 
-app = App(document)
+app = App(routes = [routes_patients])
 
-# app = App(
-#     routes=routes, settings=settings, commands=commands, components=components)
+
+
+
+
+
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """
@@ -40,7 +44,6 @@ def run_wsgi(app: App,
       debug: Turn the debugger [on|off].
       reloader: Turn the reloader [on|off].
     """
-    import werkzeug
 
     options = {
         'use_debugger': debug,

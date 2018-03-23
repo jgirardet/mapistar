@@ -79,7 +79,8 @@ class TestPatientViews:
             "sexe": "m"
         }
 
-        resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
+        # resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
+        resp = cli.post("/patients/", data=json.dumps(a))
         assert resp.json() == ponydb.Patient[1].dico
         #
 
@@ -100,6 +101,8 @@ class TestPatientViews:
         assert {i['nom'] for i in resp.json()} == {i.nom for i in e}
 
     def test_patient_update(self, patient, cli, app):
+        patient.sexe = "m"
+        patient.flush()
         update = {
             "prenom": "omkmok",
             "ddn": "1237-03-03",

@@ -4,7 +4,7 @@ from string import capwords
 from typing import List
 
 # Third Party Libraries
-from apistar import Link, Section, http, types, validators
+from apistar import Link, Section, http, types, validators, Route, Include
 from apistar.exceptions import BadRequest
 from pony.orm import Optional, PrimaryKey, Required, db_session
 
@@ -81,15 +81,14 @@ class PatientCreateSchema(types.Type):
     nom = validators.String(max_length=MAX_LENGTH['nom'])
     prenom = validators.String(max_length=MAX_LENGTH['prenom'])
     ddn = validators.Date()
-    sexe = validators.String(description="sexe", max_length=MAX_LENGTH['sexe'])
+    sexe = validators.String(description="sexe", max_length=MAX_LENGTH['sexe'], enum=SEXE)
 
 
 class PatientUpdateSchema(types.Type):
     nom = validators.String(max_length=MAX_LENGTH['nom'], default='')
     prenom = validators.String(max_length=MAX_LENGTH['prenom'], default='')
     ddn = validators.Date(default='')
-    sexe = validators.String(
-        description="sexe", max_length=MAX_LENGTH['sexe'], default='')
+    sexe = validators.String(enum=SEXE, default=None, allow_null=True   )
     rue = validators.String(
         description="rue", max_length=MAX_LENGTH['rue'], default='')
     cp = validators.Integer(
@@ -133,7 +132,7 @@ def delete(pk: int) -> dict:
     pat.delete()
     return {"msg": "delete success"}
 
-
+@db_session
 def update(new_data: PatientUpdateSchema, pk: int) -> dict:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
@@ -141,15 +140,26 @@ def update(new_data: PatientUpdateSchema, pk: int) -> dict:
     return http.Response(to_update.dico, status_code=201)
 
 
-section_patients = Section(
-    name="patients",
-    content=[
-        Link(url="/patients/", method="POST", handler=add),
-        Link(url="/patients/", method="GET", handler=liste),
-        Link(url="/patients/{pk}/", method="PUT", handler=update),
-        # Link(url="/patients/", method="DELETE", handler=delete),
-        Link(url="/patients/{pk}/", method="DELETE", handler=delete),
-        Link(url="/patients/{pk}/", method="GET", handler=get),
-    ],
-    title="titre de section patieny",
-    description="descriptoin Api des patients")
+# section_patients = Section(
+#     name='patients',
+#     title="titre de section patieny",
+#     description="descriptoin Api des patients",
+#     content = [
+#     Link(url="/patients/", method="POST", handler=add),
+#     Link(url="/patients/", method="GET", handler=liste),
+#     Link(url="/patients/{pk}/", method="PUT", handler=update),
+#     # Link(url="/patients/", method="DELETE", handler=delete),
+#     Link(url="/patients/{pk}/", method="DELETE", handler=delete),
+#     Link(url="/patients/{pk}/", method="GET", handler=get),
+#     ]
+#     )
+
+routes_patients = Include(url='/patients', name='patients', routes=[
+    Route(url="/", method="POST", handler=add),
+    Route(url="/", method="GET", handler=liste),
+    Route(url="/{pk}/", method="PUT", handler=update),
+    # Route(url="/patients/", method="DELETE", handler=delete),
+    Route(url="/{pk}/", method="DELETE", handler=delete),
+    Route(url="/{pk}/", method="GET", handler=get),
+    ])
+# 
