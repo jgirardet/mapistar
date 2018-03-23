@@ -54,6 +54,7 @@ class Patient(db.Entity):
         self.prenom = capwords(self.prenom)
 
     def before_insert(self):
+        self.alive = True
         self._capwords()
 
     def before_update(self):
@@ -70,40 +71,53 @@ notes divers
 
 
 class PatientSchema(types.Type):
-    pk = validators.Integer(default=None)
+    pk = validators.Integer(default=None, allow_null=True)
+    nom = validators.String(default='')
+    prenom = validators.String(default='')
+    ddn = validators.Date(default='')
+    sexe = validators.String(default='')
+    rue = validators.String(description="rue", default='')
+    cp = validators.Integer(
+        description="Code Postal", default=None, allow_null=True)
+    ville = validators.String(description="Ville", default='')
+    tel = validators.String(description="Numéro de Téléphone", default='')
+    email = validators.String(description="email", default="")
+    alive = validators.Boolean(description="vivant ?", default=True)
+
+
+class PatientCreateSchema(types.Type):
     nom = validators.String(max_length=MAX_LENGTH['nom'])
     prenom = validators.String(max_length=MAX_LENGTH['prenom'])
     ddn = validators.Date()
     sexe = validators.String(description="sexe", max_length=MAX_LENGTH['sexe'])
+
+
+class PatientUpdateSchema(types.Type):
+    nom = validators.String(max_length=MAX_LENGTH['nom'], default='')
+    prenom = validators.String(max_length=MAX_LENGTH['prenom'], default='')
+    ddn = validators.Date(default='')
+    sexe = validators.String(
+        description="sexe", max_length=MAX_LENGTH['sexe'], default='')
     rue = validators.String(
-        description="rue", max_length=MAX_LENGTH['rue'], default="")
-    cp: validators.Integer(description="Code Postal")
-    ville: validators.String(
-        description="Ville", max_length=MAX_LENGTH['ville'])
-    tel: validators.String(
-        description="Numéro de Téléphone", max_length=MAX_LENGTH['tel'])
-    email: validators.String(
-        description="email", max_length=MAX_LENGTH['email'])
-    # alive: validators.Boolean(description="vivant ?")
-
-
-class PatientUpdateSchema(PatientSchema):
-    pk = validators.Integer(default=None)
-    nom = validators.String(max_length=100, default=None)
-    prenom = validators.String(max_length=100, default=None)
-    ddn = validators.Date(default=None)
-    # sexe = validators.Boolean(description="sexe", default=False)
-    rue = validators.String(description="rue", default=None)
+        description="rue", max_length=MAX_LENGTH['rue'], default='')
+    cp = validators.Integer(
+        description="Code Postal", default=None, allow_null=True)
+    ville = validators.String(
+        description="Ville", max_length=MAX_LENGTH['ville'], default='')
+    tel = validators.String(
+        description="Numéro de Téléphone",
+        max_length=MAX_LENGTH['tel'],
+        default='')
+    email = validators.String(
+        description="email", max_length=MAX_LENGTH['email'], default="")
+    alive = validators.Boolean(description="vivant ?", default=True)
 
 
 @db_session
-def add(patient: PatientSchema) -> http.Response:
+def add(patient: PatientCreateSchema) -> http.Response:
     """
     create patients
     """
-    if 'pk' is not None in patient:
-        raise BadRequest("pk ne peut être spédicifée pour un ajout")
-    # print(patient)
     a = db.Patient(**patient)
     return http.Response(PatientSchema(a.to_dict()), status_code=201)
 
