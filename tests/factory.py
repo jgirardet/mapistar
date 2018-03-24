@@ -27,5 +27,10 @@ def patient(ponydb):
     """ patient dict sans id """
     a = ponydb.Patient(**patient_dict)
     a.flush()
-    print(a)
     return a
+
+
+@pytest.fixture(scope='function')
+def user(ponydb):
+    """ simple user """
+    return ponydb.User.create_user(username = 'j', password='j', nom="Nom", prenom="Prenom")

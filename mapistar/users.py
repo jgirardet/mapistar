@@ -19,26 +19,24 @@ class User(db.Entity):
     pk = orm.PrimaryKey(int, auto=True)
     username = orm.Required(str)
     password = orm.Required(str)
+    nom = orm.Required(str)
+    prenom = orm.Required(str)
 
     def __repr__(self):
         """
         nice printing Firstname Name
         """
-        return f"[User: {self.username}]"
+        return f"[User: {self.prenom} {self.nom}]"
 
-    @staticmethod
-    def _set_password(password):
-        return generate_password_hash(password)
-
+ 
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
     @classmethod
     @orm.db_session
-    def create_user(cls, username, password):
-        pwd = cls._set_password(password)
-        user = db.User(username=username, password=pwd)
-        user.flush()
+    def create_user(cls, username, password, nom, prenom):
+        pwd = generate_password_hash(password)
+        user = db.User(username=username, password=pwd, nom=nom, prenom=prenom)
         return user
 
     # MEDECIN = "medecin"
