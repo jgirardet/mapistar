@@ -5,8 +5,8 @@
 # Third Party Libraries
 import werkzeug
 from apistar import App, Document, Field, Link, Section
-from apistar.server.handlers import serve_schema
 from apistar.server.core import bind
+from apistar.server.handlers import serve_schema
 
 # mapistar
 from mapistar.patients import routes_patients

@@ -17,11 +17,11 @@ from pony.orm.dbapiprovider import ProgrammingError
 # db.bind(**database_config)
 # db.generate_mapping(create_tables=True)
 
-
 db = Database()
 
 
 class PonyBackend(object):
+
     def __init__(self, settings: Settings, cmd: CommandLineClient):
         """
         Get the settings.PONY dict
@@ -32,16 +32,14 @@ class PonyBackend(object):
         entities_filename = pony_config.get('entities_filename', "models")
 
         for app in pony_config['INSTALLED_APPS']:
-            import_module('.'.join((pony_config['PROJECT_NAME'], app,
-                                    entities_filename)))
+            import_module('.'.join((pony_config['PROJECT_NAME'], app, entities_filename)))
 
         self.db.connect(**pony_config['DATABASE'], )
         # self.db.connect(provider='sqlite', filename="../db.local", create_tables=True)
 
 
 @contextlib.contextmanager
-def get_session(
-        backend: PonyBackend) -> typing.Generator[Database, None, None]:
+def get_session(backend: PonyBackend) -> typing.Generator[Database, None, None]:
     """
     Create a new context-managed database session, which automatically
     handles rollback or commit behavior.
@@ -73,8 +71,7 @@ def drop_all_tables(backend: PonyBackend):
     try:
         backend.db.drop_all_tables()
     except TableIsNotEmpty:
-        response = input(
-            "Are you sure you really want to delete EVERYTHING ? (yes/NO)")
+        response = input("Are you sure you really want to delete EVERYTHING ? (yes/NO)")
         if response == "yes":
             backend.db.drop_all_tables(with_all_data=True)
         else:

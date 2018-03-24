@@ -4,12 +4,13 @@ from string import capwords
 
 # Third Party Libraries
 import pytest
-from apistar.exceptions import NotFound, BadRequest, ValidationError
+from apistar.exceptions import BadRequest, NotFound, ValidationError
 from pony import orm
-from .factory import patient
 
 # mapistar
-from mapistar.patients import PatientCreateSchema, add, PatientUpdateSchema
+from mapistar.patients import PatientCreateSchema, PatientUpdateSchema, add
+
+from .factory import patient
 
 pytestmark = pytest.mark.pony
 

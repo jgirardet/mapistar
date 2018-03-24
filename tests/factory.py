@@ -1,8 +1,9 @@
+# Standard Libraries
+import random
+
 # Third Party Libraries
 import faker
 import pytest
-
-import random
 
 f = faker.Faker('fr_FR')
 

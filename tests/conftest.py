@@ -1,6 +1,6 @@
 # Third Party Libraries
 import pytest
-from apistar import test, Client
+from apistar import Client, test
 from app import app as main_app
 
 from .factory import *

@@ -28,7 +28,6 @@ class User(db.Entity):
         """
         return f"[User: {self.prenom} {self.nom}]"
 
- 
     def check_password(self, password):
         return check_password_hash(self.password, password)
 

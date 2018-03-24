@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Standard Libraries
 import sys
 from importlib import import_module
