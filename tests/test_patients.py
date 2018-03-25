@@ -93,10 +93,10 @@ class TestPatientViews:
         resp = cli.delete(app.reverse_url('patients:delete', pk=patient.pk))
         assert resp.json() == {"msg": "delete success"}
 
-    def test_cli_list_patient(self, ponydb, cli, app):
+    def test_cli_list_patient(self, patient, cli, app):
         e = []
         for i in range(5):
-            e.append(patient(ponydb))
+            e.append(patient)
         orm.commit()
         resp = cli.get(app.reverse_url('patients:liste'))
         assert {i['nom'] for i in resp.json()} == {i.nom for i in e}

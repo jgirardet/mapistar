@@ -10,7 +10,7 @@ from apistar.server.handlers import serve_schema
 
 # mapistar
 from mapistar.patients import routes_patients
-
+from mapistar.actes.urls import routes_actes
 # document = Document(
 #     title='API Star',
 #     content=[
@@ -18,13 +18,7 @@ from mapistar.patients import routes_patients
 #         # Link(name="schema", url='/schema/', method='GET', handler=serve_schema),
 #     ])
 
-app = App(routes = [routes_patients])
-
-
-
-
-
-
+app = App(routes=[routes_patients, routes_actes])
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """

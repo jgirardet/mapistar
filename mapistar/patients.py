@@ -6,7 +6,7 @@ from typing import List
 # Third Party Libraries
 from apistar import Include, Link, Route, Section, http, types, validators
 from apistar.exceptions import BadRequest
-from pony.orm import Optional, PrimaryKey, Required, db_session
+from pony.orm import Optional, PrimaryKey, Required, db_session, Set
 
 # mapistar
 from mapistar.base_db import db
@@ -41,6 +41,7 @@ class Patient(db.Entity):
     tel = Optional(str, MAX_LENGTH['tel'])
     email = Optional(str, MAX_LENGTH['email'])
     alive = Optional(bool, default=True)
+    actes = Set('Acte')
 
     def __repr__(self):
         """

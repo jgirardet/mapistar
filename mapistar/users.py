@@ -17,10 +17,11 @@ class User(db.Entity):
     define statu
     """
     pk = orm.PrimaryKey(int, auto=True)
-    username = orm.Required(str)
+    username = orm.Required(str, unique=True)
     password = orm.Required(str)
     nom = orm.Required(str)
     prenom = orm.Required(str)
+    actes = orm.Set('Acte')
 
     def __repr__(self):
         """

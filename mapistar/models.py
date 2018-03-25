@@ -6,7 +6,7 @@ from mapistar.base_db import db
 
 from .patients import Patient
 from .users import User
-
+from mapistar.actes.models import Acte, Observation
 # from config.settings import PONY
 # db.bind(**PONY['DATABASE'])
 db.connect(
