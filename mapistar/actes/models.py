@@ -15,6 +15,20 @@ class Acte(db.Entity):
     created = orm.Required(datetime, default=datetime.now())
     modified = orm.Optional(datetime)
 
+    # name = "Observation"
+    # url_name = "observations"
+
+    def __new__(cls, *args, **kwargs):
+        print(args, kwargs)
+        cls = super().__new__(cls)
+        cls.name = cls._discriminator_
+        cls.url_name = cls._discriminator_.lower() + 's'
+        return cls
+
+    # @property
+    # def url_name(self):
+    #     return self._discriminator_.lower() + 's'
+
     @property
     def dico(self):
         " return to_dict but serializable"
@@ -38,6 +52,13 @@ class Acte(db.Entity):
                 raise AttributeError(f"{item} n'est pas updatable")
         super().set(**kwargs)
 
+    # def name(self):
+    #     return self._discriminator_
+
+    # @property
+    # def url_name(self):
+    #     return self.name + 's'
+
 
 class Observation(Acte):
     motif = orm.Required(str)
@@ -47,5 +68,3 @@ class Observation(Acte):
 
     def __repr__(self):
         return f"Observation: {self.motif} par {self.owner}"
-
-    url_name = "observations"

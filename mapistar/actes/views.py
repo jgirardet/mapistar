@@ -17,7 +17,6 @@ def add(new_obs: ObservationCreateSchema):
 class ActesViews:
     def __init__(self, model):
         # model needed as key for schemas and parameter  for permissions
-        # url_name : one unique lowercase plural name
         self.model = model
 
     def add(self):
@@ -27,7 +26,8 @@ class ActesViews:
             obs = db.Observation(**a)
             return http.Response(obs.dico, status_code=201)
 
-        # add.__doc__ = f""" Create a new {self.url_name}"""
+        add.__doc__ = f""" Create a new {self.model.name}"""
+        print(add.__doc__)
         return add
 
     def urls(self):
