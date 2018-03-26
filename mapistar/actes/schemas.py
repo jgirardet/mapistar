@@ -10,7 +10,7 @@ class ObservationCreateSchema(types.Type):
 
 
 class ObservationUpdateSchema(types.Type):
-    motif = validators.String()
+    motif = validators.String(default='')
     body = validators.String(default='')
 
 

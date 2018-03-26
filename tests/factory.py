@@ -14,6 +14,11 @@ from mapistar.models import db
 # pytestmark = pytest.mark.pony
 
 
+@pytest.fixture(scope='session')
+def fk(request):
+    return f
+
+
 # @pytest.fixture(scope='function')
 def patientd():
     """ patient dict sans id """
@@ -58,6 +63,15 @@ def acte(patient, user):
     """ simple user """
     with orm.db_session():
         b = db.Acte(patient=patient.pk, owner=user.pk)
+        b.flush()
+    return b
+
+
+@pytest.fixture(scope='function')
+def observation(patient, user, motif=f.sentence()):
+    """ simple user """
+    with orm.db_session():
+        b = db.Observation(patient=patient.pk, owner=user.pk, motif=motif)
         b.flush()
     return b
 

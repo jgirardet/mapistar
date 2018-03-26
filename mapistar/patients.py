@@ -34,7 +34,8 @@ class Patient(db.Entity):
     nom = Required(str, MAX_LENGTH['nom'])
     prenom = Required(str, MAX_LENGTH['prenom'])
     ddn = Required(date)
-    sexe = Required(str, MAX_LENGTH['sexe'], py_check=lambda x: x in ['m', 'f'])
+    sexe = Required(
+        str, MAX_LENGTH['sexe'], py_check=lambda x: x in ['m', 'f'])
     rue = Optional(str, MAX_LENGTH['rue'])
     cp = Optional(int, max=MAX_LENGTH['cp'])
     ville = Optional(str, MAX_LENGTH['ville'])
@@ -82,7 +83,8 @@ class PatientCreateSchema(types.Type):
     nom = validators.String(max_length=MAX_LENGTH['nom'])
     prenom = validators.String(max_length=MAX_LENGTH['prenom'])
     ddn = validators.Date()
-    sexe = validators.String(description="sexe", max_length=MAX_LENGTH['sexe'], enum=SEXE)
+    sexe = validators.String(
+        description="sexe", max_length=MAX_LENGTH['sexe'], enum=SEXE)
 
 
 class PatientUpdateSchema(types.Type):
@@ -90,12 +92,18 @@ class PatientUpdateSchema(types.Type):
     prenom = validators.String(max_length=MAX_LENGTH['prenom'], default='')
     ddn = validators.Date(default='')
     sexe = validators.String(enum=SEXE, default=None, allow_null=True)
-    rue = validators.String(description="rue", max_length=MAX_LENGTH['rue'], default='')
-    cp = validators.Integer(description="Code Postal", default=None, allow_null=True)
-    ville = validators.String(description="Ville", max_length=MAX_LENGTH['ville'], default='')
+    rue = validators.String(
+        description="rue", max_length=MAX_LENGTH['rue'], default='')
+    cp = validators.Integer(
+        description="Code Postal", default=None, allow_null=True)
+    ville = validators.String(
+        description="Ville", max_length=MAX_LENGTH['ville'], default='')
     tel = validators.String(
-        description="Numéro de Téléphone", max_length=MAX_LENGTH['tel'], default='')
-    email = validators.String(description="email", max_length=MAX_LENGTH['email'], default="")
+        description="Numéro de Téléphone",
+        max_length=MAX_LENGTH['tel'],
+        default='')
+    email = validators.String(
+        description="email", max_length=MAX_LENGTH['email'], default="")
     alive = validators.Boolean(description="vivant ?", default=True)
 
 
@@ -105,7 +113,7 @@ def add(patient: PatientCreateSchema) -> http.Response:
     create patients
     """
     a = db.Patient(**patient)
-    return http.Response(a.dico, status_code=201)
+    return http.JSONResponse(a.dico, status_code=201)
 
 
 @db_session
@@ -133,7 +141,7 @@ def update(new_data: PatientUpdateSchema, pk: int) -> dict:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
     to_update.set(**{k: v for k, v in new_data.items() if v})
-    return http.Response(to_update.dico, status_code=201)
+    return http.JSONResponse(to_update.dico, status_code=201)
 
 
 # section_patients = Section(

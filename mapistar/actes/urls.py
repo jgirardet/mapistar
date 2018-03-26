@@ -1,5 +1,5 @@
 from apistar import Route, Include
-from .views import add, ActesViews
+from .views import ActesViews
 from mapistar.models import db
 # routes_actes = Include(
 #     url='/actes',

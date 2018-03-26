@@ -11,12 +11,6 @@ from apistar.server.handlers import serve_schema
 # mapistar
 from mapistar.patients import routes_patients
 from mapistar.actes.urls import routes_actes
-# document = Document(
-#     title='API Star',
-#     content=[
-#         section_patients,
-#         # Link(name="schema", url='/schema/', method='GET', handler=serve_schema),
-#     ])
 
 app = App(routes=[routes_patients, routes_actes])
 """
@@ -49,4 +43,5 @@ def run_wsgi(app: App,
 
 
 if __name__ == '__main__':
+    # app.serve(host='127.0.0.1', port=8080, use_reloader=True)
     run_wsgi(app)

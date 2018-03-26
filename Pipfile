@@ -40,3 +40,4 @@ pony = {git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations", edi
 apistar = {git = "https://github.com/encode/apistar.git", ref = "level-up", editable = true}
 "6533db5" = {path = "../apistar_shell", editable = true}
 uwsgi = "*"
+dickens = "*"

@@ -1,6 +1,7 @@
 from mapistar.models import db
 from pony import orm
 from datetime import datetime
+from descriptors import classproperty
 
 
 class Acte(db.Entity):
@@ -15,19 +16,13 @@ class Acte(db.Entity):
     created = orm.Required(datetime, default=datetime.now())
     modified = orm.Optional(datetime)
 
-    # name = "Observation"
-    # url_name = "observations"
+    @classproperty
+    def url_name(self):
+        return self.__name__.lower() + 's'
 
-    def __new__(cls, *args, **kwargs):
-        print(args, kwargs)
-        cls = super().__new__(cls)
-        cls.name = cls._discriminator_
-        cls.url_name = cls._discriminator_.lower() + 's'
-        return cls
-
-    # @property
-    # def url_name(self):
-    #     return self._discriminator_.lower() + 's'
+    @classproperty
+    def name(self):
+        return self.__name__.lower() + 's'
 
     @property
     def dico(self):
@@ -52,13 +47,6 @@ class Acte(db.Entity):
                 raise AttributeError(f"{item} n'est pas updatable")
         super().set(**kwargs)
 
-    # def name(self):
-    #     return self._discriminator_
-
-    # @property
-    # def url_name(self):
-    #     return self.name + 's'
-
 
 class Observation(Acte):
     motif = orm.Required(str)
@@ -66,5 +54,5 @@ class Observation(Acte):
 
     updatable = ("motif", "body")
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: nocover
         return f"Observation: {self.motif} par {self.owner}"
