@@ -76,6 +76,15 @@ def observation(patient, user, motif=f.sentence()):
     return b
 
 
+@pytest.fixture(scope='function')
+def ordonnance(patient, user):
+    """ simple user """
+    with orm.db_session():
+        b = db.Ordonnance(patient=patient.pk, owner=user.pk)
+        b.flush()
+    return b
+
+
 # @pytest.fixture(scope='function')
 # def patient(ponydb):
 #     """ patient dict s ans id """
