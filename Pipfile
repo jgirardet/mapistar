@@ -30,6 +30,7 @@ pytest-pythonpath = "*"
 pytest-timeit = "*"
 pytest-env = "*"
 pytest-ponyorm = "*"
+jedi = "*"
 
 
 [packages]

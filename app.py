@@ -4,25 +4,24 @@
 
 # Third Party Libraries
 import werkzeug
-from apistar import App, Document, Field, Link, Section
-from apistar.server.core import bind
+from apistar import App
 from apistar.server.handlers import serve_schema
 
 # mapistar
 from mapistar.patients import routes_patients
-from mapistar.actes.urls import routes_actes
+from mapistar.actes import routes_actes
 
-app = App(routes=[routes_patients, routes_actes])
+app = App(routes=[routes_patients, routes_actes], schema_url="/schema/")
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """
 
 
 def run_wsgi(app: App,
-             host: str = '127.0.0.1',
-             port: int = 8080,
-             debug: bool = True,
-             reloader: bool = True) -> None:  # pragma: nocover
+             host: str='127.0.0.1',
+             port: int=8080,
+             debug: bool=True,
+             reloader: bool=True) -> None:  # pragma: nocover
     """
     Run the development server.
     Args:

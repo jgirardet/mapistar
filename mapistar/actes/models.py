@@ -1,4 +1,4 @@
-from mapistar.models import db
+from mapistar.base_db import db
 from pony import orm
 from datetime import datetime
 from descriptors import classproperty
@@ -56,3 +56,4 @@ class Observation(Acte):
 
     def __repr__(self):  # pragma: nocover
         return f"Observation: {self.motif} par {self.owner}"
+
