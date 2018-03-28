@@ -7,8 +7,8 @@ from mapistar.base_db import db
 from .patients import Patient
 from .users import User
 # from mapistar.actes import Acte, Observation
-from mapistar.actes import Observation
-from mapistar.actes import Acte
+from mapistar.actes import Acte, Observation
+from mapistar.ordonnances import Ordonnance, Item, Medicament
 # from config.settings import PONY
 # db.bind(**PONY['DATABASE'])
 import os
@@ -25,9 +25,11 @@ except KeyError:
         user=url.username,
         password=url.password,
         port=url.port,
-        create_tables=True, )
+        create_tables=True,
+    )
 else:
     db.connect(
         provider="sqlite",
         filename=":memory:",
-        create_tables=True, )
+        create_tables=True,
+    )
