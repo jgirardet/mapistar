@@ -4,17 +4,19 @@
 
 # Third Party Libraries
 import werkzeug
-from apistar import App, Document, Field, Link, Section
-from apistar.server.core import bind
+from apistar import App
 from apistar.server.handlers import serve_schema
 
 # mapistar
 from mapistar.patients import routes_patients
-from mapistar.actes.urls import routes_actes
+from mapistar.actes import routes_actes
 
 from mapistar.utils import CerberusComp
 
-app = App(routes=[routes_patients, routes_actes], components=[CerberusComp()])
+app = App(
+    routes=[routes_patients, routes_actes],
+    components=[CerberusComp()],
+    schema_url="/schema/")
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """
