@@ -28,9 +28,11 @@ except KeyError:
         port=url.port,
         create_tables=True,
     )
+
 else:
     db.connect(
         provider="sqlite",
         filename=":memory:",
         create_tables=True,
+        # create_db=True,
     )

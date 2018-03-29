@@ -1,7 +1,7 @@
 from mapistar.base_db import db
 from pony import orm
-from datetime import datetime
 from descriptors import classproperty
+import pendulum
 
 
 class Acte(db.Entity):
@@ -13,8 +13,12 @@ class Acte(db.Entity):
     pk = orm.PrimaryKey(int, auto=True)
     patient = orm.Required('Patient')
     owner = orm.Required('User')
-    created = orm.Required(datetime, default=datetime.now())
-    modified = orm.Optional(datetime)
+    created = orm.Required(
+        pendulum.datetime,
+        default=pendulum.utcnow(),
+        sql_type="timestamp with time zone")
+    modified = orm.Optional(
+        pendulum.datetime, sql_type="timestamp with time zone")
 
     @classproperty
     def url_name(self):
@@ -36,7 +40,7 @@ class Acte(db.Entity):
         self.modified = self.created
 
     def before_update(self):
-        self.modified = datetime.now()
+        self.modified = pendulum.utcnow()
 
     updatable = ()
 
@@ -56,4 +60,3 @@ class Observation(Acte):
 
     def __repr__(self):  # pragma: nocover
         return f"Observation: {self.motif} par {self.owner}"
-

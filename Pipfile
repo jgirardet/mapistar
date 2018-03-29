@@ -43,3 +43,4 @@ apistar = {git = "https://github.com/encode/apistar.git", editable = true, ref =
 uwsgi = "*"
 dickens = "*"
 cerberus = "*"
+pendulum = "*"
