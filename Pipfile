@@ -42,3 +42,4 @@ apistar = {git = "https://github.com/encode/apistar.git", ref = "level-up", edit
 "6533db5" = {path = "../apistar_shell", editable = true}
 uwsgi = "*"
 dickens = "*"
+pendulum = "*"

@@ -3,13 +3,14 @@ from pony import orm
 from .actes import Acte
 from pony import orm
 from datetime import datetime
+import pendulum
 
 
 class Ordonnance(Acte):
     items = orm.Set('Item')
 
     def update(self):
-        self.modified = datetime.now()
+        self.modified = pendulum.utcnow()
 
     @property
     def dico(self):
