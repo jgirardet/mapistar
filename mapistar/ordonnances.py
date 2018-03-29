@@ -37,7 +37,14 @@ class Item(db.Entity):
 
 
 class Medicament(Item):
-    pass
+    """Medicament"""
+    cip = orm.Required(int)
+    nom = orm.Required(str)
+    posologie = orm.Optional(str)
+    duree = orm.Optional(int, default=0)
+
+    def __repr__(self):
+        return f"[{self.nom}]"
 
 
 # class Medicament(LigneOrdonnance):

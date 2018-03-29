@@ -43,3 +43,4 @@ apistar = {git = "https://github.com/encode/apistar.git", ref = "level-up", edit
 uwsgi = "*"
 dickens = "*"
 pendulum = "*"
+pythonthesorimed = "*"
