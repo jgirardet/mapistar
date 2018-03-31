@@ -10,11 +10,11 @@ from apistar.server.handlers import serve_schema
 # mapistar
 from mapistar.patients import routes_patients
 from mapistar.actes import routes_actes
-
+from mapistar.theso import routes_theso
 from mapistar.utils import CerberusComp
 
 app = App(
-    routes=[routes_patients, routes_actes],
+    routes=[routes_patients, routes_actes, routes_theso],
     components=[CerberusComp()],
     schema_url="/schema/")
 """

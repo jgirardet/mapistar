@@ -37,11 +37,11 @@ jedi = "*"
 
 pbr = ">=3.0"
 "psycopg2-binary" = "*"
-pony = {git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations", editable = true}
+pony = {git = "https://github.com/ponyorm/pony.git", editable = true, ref = "orm-migrations"}
 apistar = {git = "https://github.com/encode/apistar.git", editable = true, ref = "level-up"}
 "6533db5" = {path = "../apistar_shell", editable = true}
 uwsgi = "*"
 dickens = "*"
 cerberus = "*"
 pendulum = "*"
-pythonthesorimed = "*"
+"bf1aa56" = {path = "../pythonthesorimed", editable = true}

@@ -1,5 +1,5 @@
 # Standard Libraries
-from pendulum import date
+from datetime import date
 from string import capwords
 from typing import List
 
@@ -17,6 +17,8 @@ from .shortcuts import get_or_404
 import cerberus
 
 from .utils import date_validator, MapistarValidator
+
+import pendulum
 
 patient_schema = {
     "nom": {
@@ -75,7 +77,7 @@ class Patient(db.Entity):
     pk = PrimaryKey(int, auto=True)
     nom = Required(str, patient_schema['nom']['maxlength'])
     prenom = Required(str, patient_schema['prenom']['maxlength'])
-    ddn = Required(date)
+    ddn = Required(pendulum.date)
     sexe = Required(
         str, py_check=lambda x: x in patient_schema['sexe']['allowed'])
     rue = Optional(str, patient_schema['rue']['maxlength'])
