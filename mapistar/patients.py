@@ -1,5 +1,5 @@
 # Standard Libraries
-from datetime import date
+from pendulum import date
 from string import capwords
 from typing import List
 

@@ -6,10 +6,9 @@ from mapistar.base_db import db
 
 from .patients import Patient
 from .users import User
+
 from mapistar.actes import Acte, Observation
 from mapistar.ordonnances import Ordonnance, Item, Medicament
-# from config.settings import PONY
-# db.bind(**PONY['DATABASE'])
 
 import os
 from urllib.parse import urlparse
