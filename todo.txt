@@ -2,4 +2,4 @@ bug & fix:
 
 patient:
 email : schema email to strin  à faire
-enum un sexe schema
+alive après création

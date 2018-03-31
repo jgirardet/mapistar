@@ -12,7 +12,9 @@ from apistar.server.handlers import serve_schema
 from mapistar.patients import routes_patients
 from mapistar.actes.urls import routes_actes
 
-app = App(routes=[routes_patients, routes_actes])
+from mapistar.utils import CerberusComp
+
+app = App(routes=[routes_patients, routes_actes], components=[CerberusComp()])
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
 """

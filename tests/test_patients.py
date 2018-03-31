@@ -82,6 +82,7 @@ class TestPatientViews:
 
         # resp = cli.post(app.reverse_url('patients:add'), data=json.dumps(a))
         resp = cli.post("/patients/", data=json.dumps(a))
+        print(resp.json())
         assert resp.json() == ponydb.Patient[1].dico
         #
 

@@ -11,7 +11,7 @@ from mapistar.actes.models import Acte, Observation
 # db.bind(**PONY['DATABASE'])
 db.connect(
     provider="sqlite",
-    filename="db.sqlite3",
+    filename=":memory:",
     create_tables=True,
     create_db=True,
     # allow_auto_upgrade=True,
