@@ -1,24 +1,20 @@
 # Standard Libraries
-from pendulum import date
+from datetime import date
 from string import capwords
-from typing import List
 
 # Third Party Libraries
+import cerberus
+import pendulum
 from apistar import Include, Link, Route, Section, http, types, validators
 from apistar.exceptions import BadRequest
-from pony.orm import Optional, PrimaryKey, Required, db_session, Set
-
-# mapistar
 from mapistar.base_db import db
+from pendulum import date
+from pony.orm import Optional, PrimaryKey, Required, Set, db_session
+from typing import List
 
 # from mapistar.models import db
 from .shortcuts import get_or_404
-
-import cerberus
-
-from .utils import date_validator, MapistarValidator
-
-import pendulum
+from .utils import MapistarValidator, date_validator
 
 patient_schema = {
     "nom": {
@@ -77,7 +73,7 @@ class Patient(db.Entity):
     pk = PrimaryKey(int, auto=True)
     nom = Required(str, patient_schema['nom']['maxlength'])
     prenom = Required(str, patient_schema['prenom']['maxlength'])
-    ddn = Required(pendulum.date)
+    ddn = Required(date)
     sexe = Required(
         str, py_check=lambda x: x in patient_schema['sexe']['allowed'])
     rue = Optional(str, patient_schema['rue']['maxlength'])
