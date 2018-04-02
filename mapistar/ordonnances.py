@@ -8,15 +8,36 @@ import pendulum
 
 class Ordonnance(Acte):
     items = orm.Set('Item')
+    ordre = orm.Optional(orm.Json, default={})
+
+    # def __init__(self, *args, **kwargs):
+    #     if not "ordre" in kwargs:
+    #         kwargs['ordre'] = {'ordre': ["omkm"]}
+    #     super().__init__(*args, **kwargs)
 
     def update(self):
         self.modified = pendulum.utcnow()
+
+    # @orm.db_session
+    def _fait_ordre(self):
+        self.ordre = {i: k.id for i, k in enumerate(self.items.select())}
+
+    def _refait_orde_on_delete(self, deleted):
+        for k, v in self.ordre.items():
+            if v is deleted:
+                self.ordre.pop(k)
+                return
 
     @property
     def dico(self):
         _dico = super().dico
         _dico['items'] = [x.to_dict() for x in self.items.order_by(Item.place)]
         return _dico
+
+    # def before_insert(self):
+    #     if not self.ordre:
+    #         raise AttributeError(
+    #             'définition de ordre requis at instancitation')
 
 
 class Item(db.Entity):
@@ -28,6 +49,7 @@ class Item(db.Entity):
 
     def after_insert(self):
         self.ordonnance.update()
+        # self.ordonnance.ordre.append(self.id)
 
     def before_delete(self):
         self.ordonnance.update()

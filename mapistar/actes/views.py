@@ -20,7 +20,8 @@ class ActesViews:
         @orm.db_session
         def add(new_obs: self.schemas.adder) -> http.Response:
             a = dict(new_obs)
-            a['owner'] = 1
+            b = db.User.create_user('j', 'j', 'nom', 'prenom')
+            a['owner'] = b
             obs = db.Observation(**a)
             return http.JSONResponse(obs.dico, status_code=201)
 
@@ -30,7 +31,10 @@ class ActesViews:
     def liste(self):
         @orm.db_session
         def liste(patient_pk: int) -> List:
-            return [acte.dico for acte in self.model.select(lambda a: a.patient.pk == patient_pk)]
+            return [
+                acte.dico for acte in self.model.select(
+                    lambda a: a.patient.pk == patient_pk)
+            ]
 
         liste.__doc__ = f""" Liste les Actes de type : {self.model.name}"""
         return liste

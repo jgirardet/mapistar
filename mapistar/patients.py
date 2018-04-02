@@ -8,7 +8,6 @@ import pendulum
 from apistar import Include, Link, Route, Section, http, types, validators
 from apistar.exceptions import BadRequest
 from mapistar.base_db import db
-from pendulum import date
 from pony.orm import Optional, PrimaryKey, Required, Set, db_session
 from typing import List
 

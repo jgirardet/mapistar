@@ -33,7 +33,6 @@ class User(db.Entity):
         return check_password_hash(self.password, password)
 
     @classmethod
-    @orm.db_session
     def create_user(cls, username, password, nom, prenom):
         pwd = generate_password_hash(password)
         user = db.User(username=username, password=pwd, nom=nom, prenom=prenom)

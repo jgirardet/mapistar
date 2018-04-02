@@ -3,23 +3,11 @@ import random
 
 # Third Party Libraries
 import faker
-import pytest
-
-from pony import orm
+from mapistar.models import db
 
 f = faker.Faker('fr_FR')
 
-from mapistar.models import db
 
-# pytestmark = pytest.mark.pony
-
-
-@pytest.fixture(scope='session')
-def fk(request):
-    return f
-
-
-# @pytest.fixture(scope='function')
 def patientd():
     """ patient dict sans id """
     return {
@@ -30,16 +18,11 @@ def patientd():
     }
 
 
-@pytest.fixture(scope='function')
 def patient():
     """ patient """
-    with orm.db_session:
-        a = db.Patient(**patientd())
-        a.flush()
-    return a
+    return db.Patient(**patientd())
 
 
-# @pytest.fixture(scope='function')
 def userd():
     return {
         'username': f.profile()['username'],
@@ -49,59 +32,46 @@ def userd():
     }
 
 
-@pytest.fixture(scope='function')
 def user():
     """ simple user """
-    with orm.db_session():
-        a = db.User.create_user(**userd())
-        a.flush()
-    return a
+    return db.User.create_user(**userd())
 
 
-@pytest.fixture(scope='function')
-def acte(patient, user):
+def acte(p=None, u=None):
+    p = p if p else patient()
+    u = u if u else user()
+    return db.Acte(patient=p, owner=u)
+
+
+def observation(**kwargs):
     """ simple user """
-    with orm.db_session():
-        b = db.Acte(patient=patient.pk, owner=user.pk)
-        b.flush()
-    return b
+    if not 'patient' in kwargs:
+        kwargs['patient'] = patient()
+    if not 'owner' in kwargs:
+        kwargs['owner'] = user()
+    if not 'motif' in kwargs:
+        kwargs['motif'] = f.sentence()
+
+    return db.Observation(**kwargs)
 
 
-@pytest.fixture(scope='function')
-def observation(patient, user, motif=f.sentence()):
-    """ simple user """
-    with orm.db_session():
-        b = db.Observation(patient=patient.pk, owner=user.pk, motif=motif)
-        b.flush()
-    return b
+from pony.orm import commit
 
 
-@pytest.fixture(scope='function')
-def ordonnance(patient, user):
-    """ simple user """
-    with orm.db_session():
-        b = db.Ordonnance(patient=patient.pk, owner=user.pk)
-        b.flush()
-    return b
+def ordonnance(**kwargs):
+    if not 'patient' in kwargs:
+        kwargs['patient'] = patient()
+    if not 'owner' in kwargs:
+        kwargs['owner'] = user()
+    # commit()
+    return db.Ordonnance(**kwargs)
 
 
-# @pytest.fixture(scope='function')
-# def patient(ponydb):
-#     """ patient dict s ans id """
-#     a = ponydb.Patient(**patient_dict)
-#     ponydb.commit()
-#     return a
-
-# @pytest.fixture(scope='function')
-# def user(ponydb):
-#     """ simple user """
-#     a = ponydb.User.create_user(username = f.profile()['username'], password='j', nom=f.name(), prenom = f.first_name())
-#     ponydb.commit()
-#     return a
-
-# @pytest.fixture(scope='function')
-# def acte(ponydb, patient, user):
-#     """ simple user """
-#     b = ponydb.Acte(patient = patient, owner=user)
-#     ponydb.commit()
-#     return b
+def medicament(**kwargs):
+    if not 'ordonnance' in kwargs:
+        kwargs['ordonnance'] = ordonnance()
+    if not 'cip' in kwargs:
+        kwargs['cip'] = f.ean(8)
+    if not 'nom' in kwargs:
+        kwargs['nom'] = f.bs()
+    return db.Medicament(**kwargs)

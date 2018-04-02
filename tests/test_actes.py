@@ -1,8 +1,7 @@
 import pytest
 
-pytestmark = pytest.mark.pony
 from datetime import datetime
-from .conftest import patientd, userd
+from .factory import patientd, userd, f
 from datetime import datetime
 from pony import orm
 from pony.orm import OperationWithDeletedObjectError
@@ -10,10 +9,13 @@ from mapistar.models import db
 import json
 from .factory import patientd
 
+pytestmark = pytest.mark.pony
+
 
 class TestActeModel:
     def test_create_update_date(self, acte, ponydb):
         assert isinstance(acte.created, datetime)
+        acte.flush()
         assert acte.modified == acte.created
         acte.patient = ponydb.Patient(**patientd())
         acte.flush()
@@ -35,17 +37,17 @@ class TestViews:
         r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
         assert r.status_code == 201
 
-    def test_list_acte_pass(self, patient, app, cli, user, fk):
+    def test_list_acte_pass(self, patient, app, cli, user):
         obss = [
             db.Observation(
-                patient=patient.pk, owner=user.pk, motif=fk.sentence())
+                patient=patient.pk, owner=user.pk, motif=f.sentence())
             for i in range(3)
         ]
         fobss = [
             db.Observation(
                 patient=db.Patient(**patientd()),
                 owner=user.pk,
-                motif=fk.sentence()) for i in range(3)
+                motif=f.sentence()) for i in range(3)
         ]
         r = cli.get(
             app.reverse_url("observations:liste", patient_pk=patient.pk))

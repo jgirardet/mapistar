@@ -15,8 +15,6 @@ python_version = "3.6"
 pycodestyle = "*"
 yapf = "*"
 isort = "*"
-"autopep8" = "*"
-cryptography = "*"
 pyyaml = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -40,8 +38,8 @@ pbr = ">=3.0"
 pony = {git = "https://github.com/ponyorm/pony.git", editable = true, ref = "orm-migrations"}
 apistar = {git = "https://github.com/encode/apistar.git", editable = true, ref = "level-up"}
 "6533db5" = {path = "../apistar_shell", editable = true}
-uwsgi = "*"
 dickens = "*"
 cerberus = "*"
 pendulum = "*"
 pythonthesorimed = "*"
+pytest-ponyorm = "*"
