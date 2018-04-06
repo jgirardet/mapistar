@@ -2,7 +2,7 @@ from apistar import types, validators
 from collections import namedtuple
 from mapistar.models import db
 
-from mapistar.utils import MapistarValidator
+from apistar_cerberus import ApistarValidator
 import cerberus
 
 base_acte_schema = {
@@ -24,8 +24,8 @@ observation_schema = dict(
         },
     }))
 
-ObservationCreateSchema = MapistarValidator(observation_schema)
-ObservationUpdateSchema = MapistarValidator(observation_schema, update=True)
+ObservationCreateSchema = ApistarValidator(observation_schema)
+ObservationUpdateSchema = ApistarValidator(observation_schema, update=True)
 # class ObservationCreateSchema(types.Type):
 #     patient = validators.Integer()
 #     motif = validators.String()

@@ -14,7 +14,7 @@ from apistar_cerberus import ApistarValidator
 
 # from mapistar.models import db
 from .shortcuts import get_or_404
-from .utils import MapistarValidator, date_validator
+from .utils import date_validator
 
 patient_schema = {
     "nom": {
@@ -169,7 +169,7 @@ def delete(pk: int) -> dict:
     pat.delete()
     return {"msg": "delete success"}
 
-@db_session
+
 def update(new_data: PatientUpdateSchema, pk: int) -> dict:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
