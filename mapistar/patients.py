@@ -10,6 +10,7 @@ from apistar.exceptions import BadRequest
 from mapistar.base_db import db
 from pony.orm import Optional, PrimaryKey, Required, Set, db_session
 from typing import List
+from apistar_cerberus import ApistarValidator
 
 # from mapistar.models import db
 from .shortcuts import get_or_404
@@ -62,9 +63,9 @@ patient_schema = {
     },
 }
 
-PatientCreateSchema = MapistarValidator(patient_schema)
+PatientCreateSchema = ApistarValidator(patient_schema)
 
-PatientUpdateSchema = MapistarValidator(patient_schema, update=True)
+PatientUpdateSchema = ApistarValidator(patient_schema, update=True)
 
 
 class Patient(db.Entity):
@@ -144,7 +145,6 @@ notes divers
 #     alive = validators.Boolean(description="vivant ?", default=True)
 
 
-@db_session
 def add(patient: PatientCreateSchema) -> http.Response:
     """
     create patients
@@ -153,25 +153,21 @@ def add(patient: PatientCreateSchema) -> http.Response:
     return http.JSONResponse(a.dico, status_code=201)
 
 
-@db_session
 def liste() -> List[dict]:
     """ List patients """
     return [x.dico for x in db.Patient.select()]
 
 
-@db_session
 def get(pk: int) -> dict:
     """ Get patient details """
     return get_or_404(db.Patient, pk).dico
 
 
-@db_session
 def delete(pk: int) -> dict:
     """delete un patient"""
     pat = get_or_404(db.Patient, pk)
     pat.delete()
     return {"msg": "delete success"}
-
 
 @db_session
 def update(new_data: PatientUpdateSchema, pk: int) -> dict:

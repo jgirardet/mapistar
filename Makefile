@@ -106,7 +106,7 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	pipenv run apistar run
+	pipenv run python app.py
 
 
 # aliases to gracefully handle typos on poor dev's terminal

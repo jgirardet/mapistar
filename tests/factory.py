@@ -2,19 +2,23 @@
 import random
 
 # Third Party Libraries
-import faker
+# import faker
 from mapistar.models import db
 
-f = faker.Faker('fr_FR')
+from mimesis import Generic
+
+# f = faker.Faker('fr_FR')
+f = Generic('fr')
 
 
 def patientd():
     """ patient dict sans id """
     return {
-        "nom": f.name(),
-        "prenom": f.first_name(),
-        "ddn": f.date(),
-        "sexe": random.choice(('f', 'm')),
+        "nom": f.person.last_name(),
+        "prenom": f.person.name(),
+        "ddn": Generic().datetime.date(),
+        # "sexe": random.choice(('f', 'm')),
+        "sexe": f.person.gender()[0].lower()
     }
 
 
@@ -25,10 +29,10 @@ def patient():
 
 def userd():
     return {
-        'username': f.profile()['username'],
+        'username': f.person.username(),
         'password': 'j',
-        'nom': f.name(),
-        'prenom': f.first_name()
+        'nom': f.person.last_name(),
+        'prenom': f.person.name()
     }
 
 
@@ -50,7 +54,7 @@ def observation(**kwargs):
     if not 'owner' in kwargs:
         kwargs['owner'] = user()
     if not 'motif' in kwargs:
-        kwargs['motif'] = f.sentence()
+        kwargs['motif'] = f.text.sentence()
 
     return db.Observation(**kwargs)
 

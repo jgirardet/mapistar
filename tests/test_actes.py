@@ -40,14 +40,14 @@ class TestViews:
     def test_list_acte_pass(self, patient, app, cli, user):
         obss = [
             db.Observation(
-                patient=patient.pk, owner=user.pk, motif=f.sentence())
+                patient=patient.pk, owner=user.pk, motif=f.text.sentence())
             for i in range(3)
         ]
         fobss = [
             db.Observation(
                 patient=db.Patient(**patientd()),
                 owner=user.pk,
-                motif=f.sentence()) for i in range(3)
+                motif=f.text.sentence()) for i in range(3)
         ]
         r = cli.get(
             app.reverse_url("observations:liste", patient_pk=patient.pk))

@@ -22,12 +22,14 @@ pytest-pythonpath = "*"
 pytest-env = "*"
 pytest-ponyorm = "*"
 faker = "*"
+mimesis = "*"
+ipython = "*"
 
 [packages]
 pbr = ">=3.0"
 "psycopg2-binary" = "*"
-pony = {git = "https://github.com/ponyorm/pony.git", editable = true, ref = "orm-migrations"}
-apistar = {git = "https://github.com/encode/apistar.git", editable = true, ref = "level-up"}
+pony = {editable = true, git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations"}
+apistar = {ref = "level-up", git = "https://github.com/encode/apistar.git", editable = true}
 dickens = "*"
 cerberus = "*"
 pendulum = "*"
