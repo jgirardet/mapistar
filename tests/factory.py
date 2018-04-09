@@ -49,33 +49,29 @@ def acte(p=None, u=None):
 
 def observation(**kwargs):
     """ simple user """
-    if not 'patient' in kwargs:
+    if 'patient' not in kwargs:
         kwargs['patient'] = patient()
-    if not 'owner' in kwargs:
+    if 'owner' not in kwargs:
         kwargs['owner'] = user()
-    if not 'motif' in kwargs:
+    if 'motif' not in kwargs:
         kwargs['motif'] = f.text.sentence()
 
     return db.Observation(**kwargs)
 
 
-from pony.orm import commit
-
-
 def ordonnance(**kwargs):
-    if not 'patient' in kwargs:
+    if 'patient' not in kwargs:
         kwargs['patient'] = patient()
-    if not 'owner' in kwargs:
+    if 'owner' not in kwargs:
         kwargs['owner'] = user()
-    # commit()
     return db.Ordonnance(**kwargs)
 
 
 def medicament(**kwargs):
-    if not 'ordonnance' in kwargs:
+    if 'ordonnance' not in kwargs:
         kwargs['ordonnance'] = ordonnance()
-    if not 'cip' in kwargs:
+    if 'cip' not in kwargs:
         kwargs['cip'] = f.ean(8)
-    if not 'nom' in kwargs:
+    if 'nom' not in kwargs:
         kwargs['nom'] = f.bs()
     return db.Medicament(**kwargs)
