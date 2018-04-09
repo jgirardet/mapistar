@@ -17,7 +17,6 @@ class ActesViews:
         self.schemas = actes_schemas[model]
 
     def add(self):
-        @orm.db_session
         def add(new_obs: self.schemas.adder) -> http.Response:
             a = dict(new_obs)
             b = db.User.create_user('j', 'j', 'nom', 'prenom')
@@ -29,7 +28,6 @@ class ActesViews:
         return add
 
     def liste(self):
-        @orm.db_session
         def liste(patient_pk: int) -> List:
             return [
                 acte.dico for acte in self.model.select(
@@ -40,7 +38,6 @@ class ActesViews:
         return liste
 
     def one(self):
-        @orm.db_session
         def one(acte_pk: int) -> dict:
             obj = get_or_404(self.model, acte_pk)
             return obj.dico
@@ -49,7 +46,6 @@ class ActesViews:
         return one
 
     def delete(self):
-        @orm.db_session
         def delete(acte_pk: int) -> dict:
             obj = get_or_404(self.model, acte_pk)
             obj.delete()
@@ -59,7 +55,6 @@ class ActesViews:
         return delete
 
     def update(self):
-        @orm.db_session
         def update(acte_pk: int, new_data: self.schemas.updater):
             obj = get_or_404(self.model, acte_pk)
             obj.set(**new_data)
