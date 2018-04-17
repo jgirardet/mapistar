@@ -6,14 +6,12 @@ from apistar_ponyorm import PonyDBSession
 from mapistar.actes import routes_actes
 from mapistar.patients import routes_patients
 from mapistar.theso import routes_theso
-from mapistar.users import routes_users, IsAuthenticated
+from mapistar.users import routes_users, IsAuthenticated, ActeWritePermissions
 from apistar_jwt.token import JWT
 from mapistar import settings
 
 
-components = [
-    CerberusComp(), JWT(settings.JWT)
-]
+components = [CerberusComp(), JWT(settings.JWT), ActeWritePermissions()]
 
 app = App(
     routes=[routes_patients, routes_actes, routes_theso, routes_users],

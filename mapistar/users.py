@@ -1,7 +1,7 @@
 # Third Party Libraries
 import pendulum
 import typing
-from apistar import Include, Route, exceptions
+from apistar import Include, Route, exceptions, Component, http
 from apistar_cerberus import ApistarValidator
 from apistar_jwt.token import JWT, JWTUser
 from apistar_jwt.decorators import anonymous_allowed
@@ -135,6 +135,32 @@ class IsAuthenticated:
         Raises:
             Si échec de l'authentification
         """
+
+
+class Permission:
+    pass
+
+
+class ActeWritePermissions(Component):
+    """
+    Component gérant les permissions des actes
+    """
+
+    def resolve(
+        self, acte_pk: http.PathParams, jwt_user: JWTUser, rq: Route
+    ) -> Permission:
+
+        # obj = get_or_404(self.actesviews.model, obj_id)
+
+        # if obj.created.date() != timezone.now().date():
+        #     raise BadRequest("Observation can't be edited another day")
+
+        # if auth.user != obj.owner:
+        #     raise Forbidden('Only owner can edit an Observation')
+        import pdb
+
+        pdb.set_trace()
+        return acte_pk
 
 
 routes_users = Include(

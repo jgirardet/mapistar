@@ -8,6 +8,7 @@ from .schemas import actes_schemas
 
 from typing import List
 from mapistar.shortcuts import get_or_404
+from mapistar.users import Permission
 
 
 class ActesViews:
@@ -51,7 +52,7 @@ class ActesViews:
 
     def delete(self):
 
-        def delete(acte_pk: int) -> dict:
+        def delete(acte_pk: int, ap: Permission) -> dict:
             obj = get_or_404(self.model, acte_pk)
             obj.delete()
             return {"pk": acte_pk, "deleted": True}
