@@ -7,8 +7,10 @@ from apistar_jwt.token import JWT, JWTUser
 from apistar_jwt.decorators import anonymous_allowed
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
+
 # mapistar
 from mapistar.base_db import db
+
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
@@ -82,6 +84,7 @@ Login = ApistarValidator(
     {"username": {"type": "string"}, "password": {"type": "string"}}
 )
 
+
 @anonymous_allowed
 def login(cred: Login, jwt: JWT) -> str:
     """
@@ -124,7 +127,6 @@ class IsAuthenticated:
     Hook qui force l'authentification de toute les requêtes
     """
 
-    
     def on_request(self, jwt_user: JWTUser):
         """
         Args:
@@ -140,7 +142,6 @@ routes_users = Include(
     name="users",
     routes=[
         Route(url="/login/", method="POST", handler=login, name="login"),
-        Route(url="/login/", method="GET", handler=login, name="logine"),
         # Route(url="/", method="GET", handler=liste),
         # Route(url="/{pk}/", method="PUT", handler=update),
         # # Route(url="/patients/", method="DELETE", handler=delete),
