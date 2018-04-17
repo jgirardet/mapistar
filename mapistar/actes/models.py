@@ -12,28 +12,27 @@ class Acte(db.Entity):
     Updatable fields by user must be set in updatable
     """
     pk = orm.PrimaryKey(int, auto=True)
-    patient = orm.Required('Patient')
-    owner = orm.Required('User')
+    patient = orm.Required("Patient")
+    owner = orm.Required("User")
     created = orm.Required(
-        datetime,
-        default=pendulum.utcnow(),
-        sql_type="timestamp with time zone")
+        datetime, default=pendulum.utcnow(), sql_type="timestamp with time zone"
+    )
     modified = orm.Optional(datetime, sql_type="timestamp with time zone")
 
     @classproperty
     def url_name(self):
-        return self.__name__.lower() + 's'
+        return self.__name__.lower() + "s"
 
     @classproperty
     def name(self):
-        return self.__name__.lower() + 's'
+        return self.__name__.lower() + "s"
 
     @property
     def dico(self):
         " return to_dict but serializable"
         _dico = self.to_dict()
-        _dico['created'] = _dico['created'].isoformat()
-        _dico['modified'] = _dico['modified'].isoformat()
+        _dico["created"] = _dico["created"].isoformat()
+        _dico["modified"] = _dico["modified"].isoformat()
         return _dico
 
     def before_insert(self):
@@ -49,6 +48,7 @@ class Acte(db.Entity):
         for item in kwargs:
             if item not in self.updatable:
                 raise AttributeError(f"{item} n'est pas updatable")
+
         super().set(**kwargs)
 
 

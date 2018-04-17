@@ -8,4 +8,5 @@ def get_or_404(model, id: [str, int]):
         item = model[id]
     except orm.ObjectNotFound as e:
         raise NotFound
+
     return item

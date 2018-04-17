@@ -1,13 +1,18 @@
-from mapistar.models import db
-from pony import orm
-from .actes import Acte
-from pony import orm
+# Standard Libraries
 from datetime import datetime
+
+# Third Party Libraries
 import pendulum
+from pony import orm
+
+# mapistar
+from mapistar.models import db
+
+from .actes import Acte
 
 
 class Ordonnance(Acte):
-    items = orm.Set('Item')
+    items = orm.Set("Item")
     ordre = orm.Optional(orm.Json, default={})
 
     # def __init__(self, *args, **kwargs):
@@ -18,7 +23,6 @@ class Ordonnance(Acte):
     def update(self):
         self.modified = pendulum.utcnow()
 
-    # @orm.db_session
     def _fait_ordre(self):
         self.ordre = {i: k.id for i, k in enumerate(self.items.select())}
 
@@ -31,13 +35,14 @@ class Ordonnance(Acte):
     @property
     def dico(self):
         _dico = super().dico
-        _dico['items'] = [x.to_dict() for x in self.items.order_by(Item.place)]
+        _dico["items"] = [x.to_dict() for x in self.items.order_by(Item.place)]
         return _dico
 
-    # def before_insert(self):
-    #     if not self.ordre:
-    #         raise AttributeError(
-    #             'définition de ordre requis at instancitation')
+
+# def before_insert(self):
+#     if not self.ordre:
+#         raise AttributeError(
+#             'définition de ordre requis at instancitation')
 
 
 class Item(db.Entity):
@@ -48,8 +53,8 @@ class Item(db.Entity):
         self.place = self.ordonnance.items.count()
 
     def after_insert(self):
-        self.ordonnance.update()
         # self.ordonnance.ordre.append(self.id)
+        self.ordonnance.update()
 
     def before_delete(self):
         self.ordonnance.update()

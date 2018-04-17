@@ -1,7 +1,6 @@
 from . import factory
 import pytest
 
-# pytestmark = pytest.mark.pony
 
 
 @pytest.fixture(scope='function')
@@ -13,7 +12,6 @@ def patient():
 @pytest.fixture(scope='function')
 def user(request):
     return factory.user()
-
 
 @pytest.fixture(scope='function')
 def acte(request):

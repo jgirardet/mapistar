@@ -1,7 +1,7 @@
 from pythonthesorimed.thesoitem import ThesoItem
 from apistar import Include, Route
 
-theso_session = ThesoItem('localhost', 'thesorimed', 'j', 'j')
+theso_session = ThesoItem("localhost", "thesorimed", "j", "j")
 
 
 def fuzzy(chaine: str):
@@ -9,11 +9,10 @@ def fuzzy(chaine: str):
 
 
 routes_theso = Include(
-    url='/theso',
-    name='theso',
-    routes=[
-        Route(url="/fuzzy/{chaine}/", method="GET", handler=fuzzy),
-    ])
+    url="/theso",
+    name="theso",
+    routes=[Route(url="/fuzzy/{chaine}/", method="GET", handler=fuzzy)],
+)
 """
 
 api utils :

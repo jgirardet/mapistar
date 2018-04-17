@@ -1,13 +1,17 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
+
 [requires]
+
 python_version = "3.6"
 
+
 [dev-packages]
+
 "flake8" = "*"
-yapf = "*"
 isort = "*"
 pyyaml = "*"
 pytest = "*"
@@ -24,15 +28,21 @@ pytest-ponyorm = "*"
 faker = "*"
 mimesis = "*"
 ipython = "*"
+sphinx-rtd-theme = "*"
+black = "*"
+
 
 [packages]
+
 pbr = ">=3.0"
 "psycopg2-binary" = "*"
 pony = {editable = true, git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations"}
-apistar = {ref = "level-up", git = "https://github.com/encode/apistar.git", editable = true}
+apistar = "*"
 dickens = "*"
 cerberus = "*"
 pendulum = "*"
 pythonthesorimed = "*"
 apistar-ponyorm = "*"
 apistar-cerberus = "*"
+apistar-jwt = "*"
+sphinxcontrib-napoleon = "*"

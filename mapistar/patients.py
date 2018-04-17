@@ -17,50 +17,16 @@ from .shortcuts import get_or_404
 from .utils import date_validator
 
 patient_schema = {
-    "nom": {
-        "type": "string",
-        "maxlength": 100,
-        "required": True
-    },
-    "prenom": {
-        "type": "string",
-        "maxlength": 100,
-        "required": True
-    },
-    "ddn": {
-        "type": "string",
-        "required": True,
-        "validator": date_validator,
-    },
-    "sexe": {
-        "type": "string",
-        "maxlength": 1,
-        "required": True,
-        "allowed": ['m', 'f']
-    },
-    "rue": {
-        "type": "string",
-        "maxlength": 200
-    },
-    "cp": {
-        "type": "integer",
-        "max": 10000000,
-    },
-    "ville": {
-        "type": "string",
-        "maxlength": 100
-    },
-    "tel": {
-        "type": "string",
-        "maxlength": 20
-    },
-    "email": {
-        "type": "string",
-        "maxlength": 100
-    },
-    "alive": {
-        "type": "boolean"
-    },
+    "nom": {"type": "string", "maxlength": 100, "required": True},
+    "prenom": {"type": "string", "maxlength": 100, "required": True},
+    "ddn": {"type": "string", "required": True, "validator": date_validator},
+    "sexe": {"type": "string", "maxlength": 1, "required": True, "allowed": ["m", "f"]},
+    "rue": {"type": "string", "maxlength": 200},
+    "cp": {"type": "integer", "max": 10000000},
+    "ville": {"type": "string", "maxlength": 100},
+    "tel": {"type": "string", "maxlength": 20},
+    "email": {"type": "string", "maxlength": 100},
+    "alive": {"type": "boolean"},
 }
 
 PatientCreateSchema = ApistarValidator(patient_schema)
@@ -69,20 +35,25 @@ PatientUpdateSchema = ApistarValidator(patient_schema, update=True)
 
 
 class Patient(db.Entity):
+    """
+    Base class pour les patients
 
+    Attributes:
+        pk(int): clé primaire
+    """
+    
     pk = PrimaryKey(int, auto=True)
-    nom = Required(str, patient_schema['nom']['maxlength'])
-    prenom = Required(str, patient_schema['prenom']['maxlength'])
+    nom = Required(str, patient_schema["nom"]["maxlength"])
+    prenom = Required(str, patient_schema["prenom"]["maxlength"])
     ddn = Required(date)
-    sexe = Required(
-        str, py_check=lambda x: x in patient_schema['sexe']['allowed'])
-    rue = Optional(str, patient_schema['rue']['maxlength'])
-    cp = Optional(int, max=patient_schema['cp']['max'])
-    ville = Optional(str, patient_schema['ville']['maxlength'])
-    tel = Optional(str, patient_schema['tel']['maxlength'])
-    email = Optional(str, patient_schema['email']['maxlength'])
+    sexe = Required(str, py_check=lambda x: x in patient_schema["sexe"]["allowed"])
+    rue = Optional(str, patient_schema["rue"]["maxlength"])
+    cp = Optional(int, max=patient_schema["cp"]["max"])
+    ville = Optional(str, patient_schema["ville"]["maxlength"])
+    tel = Optional(str, patient_schema["tel"]["maxlength"])
+    email = Optional(str, patient_schema["email"]["maxlength"])
     alive = Optional(bool, default=True)
-    actes = Set('Acte')
+    actes = Set("Acte")
 
     def __repr__(self):
         """
@@ -94,7 +65,7 @@ class Patient(db.Entity):
     def dico(self):
         " return to_dict but serializable"
         _dico = self.to_dict()
-        _dico['ddn'] = _dico['ddn'].isoformat()
+        _dico["ddn"] = _dico["ddn"].isoformat()
         return _dico
 
     def _capwords(self):
@@ -178,8 +149,8 @@ def update(new_data: PatientUpdateSchema, pk: int) -> dict:
 
 
 routes_patients = Include(
-    url='/patients',
-    name='patients',
+    url="/patients",
+    name="patients",
     routes=[
         Route(url="/", method="POST", handler=add),
         Route(url="/", method="GET", handler=liste),
@@ -187,5 +158,6 @@ routes_patients = Include(
         # Route(url="/patients/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="GET", handler=get),
-    ])
+    ],
+)
 #

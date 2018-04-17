@@ -70,10 +70,13 @@ push:
 	git push origin --all
 	git push origin --tags
 
-doc:
+apidoc: 
+	pipenv run sphinx-apidoc -f -o docs/api mapistar
+
+doc: apidoc
 	pipenv run python setup.py build_sphinx
 
-doc-auto:
+doc-auto: apidoc
 	pipenv run sphinx-autobuild docs docs/_build
 	
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts

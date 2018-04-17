@@ -36,9 +36,6 @@ db.connect(
 )
 
 # else:
-#     db.connect(
-#         provider="sqlite",
-#         filename=":memory:",
-#         create_tables=True,
+# db.connect(provider="sqlite", filename=":memory:", create_tables=True)
 #         # create_db=True,
 #     )
