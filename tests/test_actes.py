@@ -34,10 +34,10 @@ class TestActeModel:
 
 class TestViews:
 
-    def test_add(self, patient, user, cli, app):
-        a = {"patient": patient.pk, "motif": "omk", "body": "mkmok"}
-        r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
-        assert r.status_code == 201
+    # def test_add(self, patient, user, cli, app):
+    #     a = {"patient": patient.pk, "motif": "omk", "body": "mkmok"}
+    #     r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
+    #     assert r.status_code == 201
 
     def test_list_acte_pass(self, patient, app, cli, ponydb):
         # obss = [

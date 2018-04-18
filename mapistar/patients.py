@@ -3,12 +3,9 @@ from datetime import date
 from string import capwords
 
 # Third Party Libraries
-import cerberus
-import pendulum
-from apistar import Include, Link, Route, Section, http, types, validators
-from apistar.exceptions import BadRequest
+from apistar import Include, Route, http
 from mapistar.base_db import db
-from pony.orm import Optional, PrimaryKey, Required, Set, db_session
+from pony.orm import Optional, PrimaryKey, Required, Set
 from typing import List
 from apistar_cerberus import ApistarValidator
 
@@ -41,7 +38,7 @@ class Patient(db.Entity):
     Attributes:
         pk(int): clé primaire
     """
-    
+
     pk = PrimaryKey(int, auto=True)
     nom = Required(str, patient_schema["nom"]["maxlength"])
     prenom = Required(str, patient_schema["prenom"]["maxlength"])
@@ -116,7 +113,7 @@ notes divers
 #     alive = validators.Boolean(description="vivant ?", default=True)
 
 
-def add(patient: PatientCreateSchema) -> http.Response:
+def addd(patient: PatientCreateSchema) -> http.JSONResponse:
     """
     create patients
     """
@@ -152,12 +149,13 @@ routes_patients = Include(
     url="/patients",
     name="patients",
     routes=[
-        Route(url="/", method="POST", handler=add),
+        Route(url="/", method="POST", handler=addd),
         Route(url="/", method="GET", handler=liste),
         Route(url="/{pk}/", method="PUT", handler=update),
         # Route(url="/patients/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="GET", handler=get),
+        # Route(url="/eee/", method="POST", handler=add_ed),
     ],
 )
 #

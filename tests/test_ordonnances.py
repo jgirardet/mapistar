@@ -34,10 +34,10 @@ class TestItemModel:
     def test_update_modified(self, ordonnance, ponydb):
         debut = ordonnance.modified
         i = ponydb.Item(ordonnance=ordonnance)
+        i.flush()
         import time
 
-        time.sleep(1)
-        i.flush()
+        time.sleep(2)
         after_insert = ordonnance.modified
         i.place = 2
         i.flush()
@@ -45,4 +45,5 @@ class TestItemModel:
         i.delete()
         ordonnance.flush()
         after_delete = ordonnance.modified
+
         assert debut < after_insert  # < after_modif < after_delete

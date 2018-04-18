@@ -20,7 +20,7 @@ class ActesViews:
 
     def add(self):
 
-        def add(new_obs: self.schemas.adder) -> http.Response:
+        def add(new_obs: self.schemas.adder) -> http.JSONResponse:
             a = dict(new_obs)
             b = db.User.create_user("j", "j", "nom", "prenom")
             a["owner"] = b
