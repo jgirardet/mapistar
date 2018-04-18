@@ -18,20 +18,20 @@ def cli_anonymous(request):
     return test.TestClient(main_app)
 
 
-
 @pytest.fixture(scope="function")
 def cli(user):
 
     payload = {
         "user": user.pk,
         "username": user.username,
-        "iat": pendulum.utcnow(),
-        "exp": pendulum.utcnow() + pendulum.Interval(seconds=10),
+        "iat": pendulum.now(),
+        "exp": pendulum.now() + pendulum.Duration(seconds=10),
     }
-    token = jwt.encode(payload, key=settings.JWT['JWT_SECRET']).decode()
+    token = jwt.encode(payload, key=settings.JWT["JWT_SECRET"]).decode()
 
     client = test.TestClient(main_app)
-    client.headers.update({'Authorization': f'Bearer {token}'})
+    client.headers.update({"Authorization": f"Bearer {token}"})
+    client.user = user
     # import pdb
     # pdb.set_trace()
     return client

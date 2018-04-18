@@ -112,8 +112,8 @@ def login(cred: Login, jwt: JWT) -> str:
     payload = {
         "user": user.pk,
         "username": user.username,
-        "iat": pendulum.utcnow(),
-        "exp": pendulum.utcnow() + pendulum.Interval(seconds=5),
+        "iat": pendulum.now(),
+        "exp": pendulum.now() + pendulum.Duration(seconds=5),
     }
     token = jwt.encode(payload)
     if token is None:
@@ -157,9 +157,7 @@ class ActeWritePermissions(Component):
 
         # if auth.user != obj.owner:
         #     raise Forbidden('Only owner can edit an Observation')
-        import pdb
 
-        pdb.set_trace()
         return acte_pk
 
 

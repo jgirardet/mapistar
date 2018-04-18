@@ -9,6 +9,9 @@ from pony import orm
 from mapistar.models import db
 
 from .actes import Acte
+from datetime import datetime
+
+from mapistar.settings import tz
 
 
 class Ordonnance(Acte):
@@ -21,7 +24,7 @@ class Ordonnance(Acte):
     #     super().__init__(*args, **kwargs)
 
     def update(self):
-        self.modified = pendulum.utcnow()
+        self.modified = datetime.utcnow()
 
     def _fait_ordre(self):
         self.ordre = {i: k.id for i, k in enumerate(self.items.select())}

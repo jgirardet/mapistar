@@ -3,6 +3,9 @@ from pony import orm
 from descriptors import classproperty
 import pendulum
 from datetime import datetime
+from mapistar.settings import tz
+import pendulum
+import pytz
 
 
 class Acte(db.Entity):
@@ -14,10 +17,8 @@ class Acte(db.Entity):
     pk = orm.PrimaryKey(int, auto=True)
     patient = orm.Required("Patient")
     owner = orm.Required("User")
-    created = orm.Required(
-        datetime, default=pendulum.utcnow(), sql_type="timestamp with time zone"
-    )
-    modified = orm.Optional(datetime, sql_type="timestamp with time zone")
+    _created = orm.Required(datetime, default=datetime.utcnow)
+    _modified = orm.Optional(datetime)
 
     @classproperty
     def url_name(self):
@@ -28,18 +29,38 @@ class Acte(db.Entity):
         return self.__name__.lower() + "s"
 
     @property
+    def created(self):
+        return self._created.replace(tzinfo=pytz.utc).astimezone(tz)
+
+    @created.setter
+    def created(self, value):
+        self._created = value.astimezone(pytz.utc).replace(tzinfo=None)
+
+    @property
+    def modified(self):
+        return self._modified.replace(tzinfo=pytz.utc).astimezone(tz)
+
+    @created.setter
+    def modified(self, value):
+        self._modified = value.astimezone(pytz.utc).replace(tzinfo=None)
+
+    @property
     def dico(self):
         " return to_dict but serializable"
         _dico = self.to_dict()
-        _dico["created"] = _dico["created"].isoformat()
-        _dico["modified"] = _dico["modified"].isoformat()
+        del _dico["_created"]
+        del _dico["_modified"]
+        _dico["created"] = self.created.isoformat()
+        _dico["modified"] = self.modified.isoformat()
         return _dico
 
     def before_insert(self):
-        self.modified = self.created
+        self._modified = self._created
+
+    # pass
 
     def before_update(self):
-        self.modified = pendulum.utcnow()
+        self._modified = datetime.utcnow()
 
     updatable = ()
 

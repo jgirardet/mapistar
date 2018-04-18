@@ -40,7 +40,7 @@ pony = {editable = true, git = "https://github.com/ponyorm/pony.git", ref = "orm
 apistar = "*"
 dickens = "*"
 cerberus = "*"
-pendulum = "*"
+pendulum = ">=2.*"
 pythonthesorimed = "*"
 apistar-ponyorm = "*"
 apistar-cerberus = "*"
