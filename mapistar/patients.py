@@ -3,32 +3,28 @@ from datetime import date
 from string import capwords
 
 # Third Party Libraries
-from apistar import Include, Route, http
+from apistar import Include, Route, http, types, validators
 from mapistar.base_db import db
 from pony.orm import Optional, PrimaryKey, Required, Set
 from typing import List
-from apistar_cerberus import ApistarValidator
 
 # from mapistar.models import db
 from .shortcuts import get_or_404
-from .utils import date_validator
 
-patient_schema = {
-    "nom": {"type": "string", "maxlength": 100, "required": True},
-    "prenom": {"type": "string", "maxlength": 100, "required": True},
-    "ddn": {"type": "string", "required": True, "validator": date_validator},
-    "sexe": {"type": "string", "maxlength": 1, "required": True, "allowed": ["m", "f"]},
-    "rue": {"type": "string", "maxlength": 200},
-    "cp": {"type": "integer", "max": 10000000},
-    "ville": {"type": "string", "maxlength": 100},
-    "tel": {"type": "string", "maxlength": 20},
-    "email": {"type": "string", "maxlength": 100},
-    "alive": {"type": "boolean"},
+
+MAX_LENGTH = {
+    "nom": 100,
+    "prenom": 100,
+    "sexe": 1,
+    "rue": 200,
+    "ville": 100,
+    "tel": 20,
+    "email": 100,
 }
 
-PatientCreateSchema = ApistarValidator(patient_schema)
+SEXE = ["f", "m"]
 
-PatientUpdateSchema = ApistarValidator(patient_schema, update=True)
+MAX = {"cp": 10000000}
 
 
 class Patient(db.Entity):
@@ -40,15 +36,15 @@ class Patient(db.Entity):
     """
 
     pk = PrimaryKey(int, auto=True)
-    nom = Required(str, patient_schema["nom"]["maxlength"])
-    prenom = Required(str, patient_schema["prenom"]["maxlength"])
+    nom = Required(str, MAX_LENGTH["nom"])
+    prenom = Required(str, MAX_LENGTH["prenom"])
     ddn = Required(date)
-    sexe = Required(str, py_check=lambda x: x in patient_schema["sexe"]["allowed"])
-    rue = Optional(str, patient_schema["rue"]["maxlength"])
-    cp = Optional(int, max=patient_schema["cp"]["max"])
-    ville = Optional(str, patient_schema["ville"]["maxlength"])
-    tel = Optional(str, patient_schema["tel"]["maxlength"])
-    email = Optional(str, patient_schema["email"]["maxlength"])
+    sexe = Required(str, MAX_LENGTH["sexe"], py_check=lambda x: x in SEXE)
+    rue = Optional(str, MAX_LENGTH["rue"])
+    cp = Optional(int, max=MAX["cp"])
+    ville = Optional(str, MAX_LENGTH["ville"])
+    tel = Optional(str, MAX_LENGTH["tel"])
+    email = Optional(str, MAX_LENGTH["email"])
     alive = Optional(bool, default=True)
     actes = Set("Acte")
 
@@ -86,34 +82,36 @@ médecin traitant déclaré
 notes divers
 """
 
-# class PatientCreateSchema(types.Type):
-#     nom = validators.String(max_length=MAX_LENGTH['nom'])
-#     prenom = validators.String(max_length=MAX_LENGTH['prenom'])
-#     ddn = validators.Date()
-#     sexe = validators.String(
-#         description="sexe", max_length=MAX_LENGTH['sexe'], enum=SEXE)
 
-# class PatientUpdateSchema(types.Type):
-#     nom = validators.String(max_length=MAX_LENGTH['nom'], default='')
-#     prenom = validators.String(max_length=MAX_LENGTH['prenom'], default='')
-#     ddn = validators.Date(default='')
-#     sexe = validators.String(enum=SEXE, default=None, allow_null=True)
-#     rue = validators.String(
-#         description="rue", max_length=MAX_LENGTH['rue'], default='')
-#     cp = validators.Integer(
-#         description="Code Postal", default=None, allow_null=True)
-#     ville = validators.String(
-#         description="Ville", max_length=MAX_LENGTH['ville'], default='')
-#     tel = validators.String(
-#         description="Numéro de Téléphone",
-#         max_length=MAX_LENGTH['tel'],
-#         default='')
-#     email = validators.String(
-#         description="email", max_length=MAX_LENGTH['email'], default="")
-#     alive = validators.Boolean(description="vivant ?", default=True)
+class PatientCreateSchema(types.Type):
+    nom = validators.String(max_length=MAX_LENGTH["nom"])
+    prenom = validators.String(max_length=MAX_LENGTH["prenom"])
+    ddn = validators.Date()
+    sexe = validators.String(
+        description="sexe", max_length=MAX_LENGTH["sexe"], enum=SEXE
+    )
 
 
-def addd(patient: PatientCreateSchema) -> http.JSONResponse:
+class PatientUpdateSchema(types.Type):
+    nom = validators.String(max_length=MAX_LENGTH["nom"], default="")
+    prenom = validators.String(max_length=MAX_LENGTH["prenom"], default="")
+    ddn = validators.Date(default="")
+    sexe = validators.String(enum=SEXE, default=None, allow_null=True)
+    rue = validators.String(description="rue", max_length=MAX_LENGTH["rue"], default="")
+    cp = validators.Integer(description="Code Postal", default=None, allow_null=True)
+    ville = validators.String(
+        description="Ville", max_length=MAX_LENGTH["ville"], default=""
+    )
+    tel = validators.String(
+        description="Numéro de Téléphone", max_length=MAX_LENGTH["tel"], default=""
+    )
+    email = validators.String(
+        description="email", max_length=MAX_LENGTH["email"], default=""
+    )
+    alive = validators.Boolean(description="vivant ?", default=True)
+
+
+def add(patient: PatientCreateSchema) -> http.JSONResponse:
     """
     create patients
     """
@@ -138,7 +136,7 @@ def delete(pk: int) -> dict:
     return {"msg": "delete success"}
 
 
-def update(new_data: PatientUpdateSchema, pk: int) -> dict:
+def update(new_data: PatientUpdateSchema, pk: int) -> http.JSONResponse:
     """ modify patients """
     to_update = get_or_404(db.Patient, pk)
     to_update.set(**{k: v for k, v in new_data.items() if v})
@@ -149,13 +147,11 @@ routes_patients = Include(
     url="/patients",
     name="patients",
     routes=[
-        Route(url="/", method="POST", handler=addd),
+        Route(url="/", method="POST", handler=add),
         Route(url="/", method="GET", handler=liste),
         Route(url="/{pk}/", method="PUT", handler=update),
-        # Route(url="/patients/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="DELETE", handler=delete),
         Route(url="/{pk}/", method="GET", handler=get),
-        # Route(url="/eee/", method="POST", handler=add_ed),
     ],
 )
 #

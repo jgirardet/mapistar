@@ -1,8 +1,6 @@
 # Third Party Libraries
 import pendulum
-import typing
-from apistar import Include, Route, exceptions, Component, http
-from apistar_cerberus import ApistarValidator
+from apistar import Include, Route, exceptions, Component, http, types, validators
 from apistar_jwt.token import JWT, JWTUser
 from apistar_jwt.decorators import anonymous_allowed
 from pony import orm
@@ -80,13 +78,13 @@ class User(db.Entity):
         return user
 
 
-Login = ApistarValidator(
-    {"username": {"type": "string"}, "password": {"type": "string"}}
-)
+class LoginSchema(types.Type):
+    username = validators.String(max_length=100)
+    password = validators.String(max_length=100)
 
 
 @anonymous_allowed
-def login(cred: Login, jwt: JWT) -> str:
+def login(cred: LoginSchema, jwt: JWT) -> str:
     """
     View d'authentification
 

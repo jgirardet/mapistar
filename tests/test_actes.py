@@ -69,8 +69,9 @@ class TestViews:
     def test_update_pass(self, observation, cli, app):
         upd = {"motif": "mokmokmok"}
         r = cli.put(
-            app.reverse_url("observations:delete", acte_pk=observation.pk),
+            app.reverse_url("observations:update", acte_pk=observation.pk),
             data=json.dumps(upd),
         )
+        print(r.json())
         assert r.status_code == 200
         assert r.json()["motif"] == "mokmokmok"

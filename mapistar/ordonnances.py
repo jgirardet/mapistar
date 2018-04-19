@@ -2,16 +2,12 @@
 from datetime import datetime
 
 # Third Party Libraries
-import pendulum
 from pony import orm
 
 # mapistar
 from mapistar.models import db
 
 from .actes import Acte
-from datetime import datetime
-
-from mapistar.settings import tz
 
 
 class Ordonnance(Acte):
@@ -61,9 +57,6 @@ class Item(db.Entity):
 
     def before_update(self):
         self.ordonnance.before_update()
-
-
-# self.ordonnance.update()
 
 
 class Medicament(Item):

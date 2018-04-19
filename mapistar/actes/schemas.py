@@ -1,30 +1,23 @@
-from apistar import types, validators
+# Standard Libraries
 from collections import namedtuple
+
+# Third Party Libraries
+from apistar import types, validators
+
+# mapistar
 from mapistar.models import db
 
-from apistar_cerberus import ApistarValidator
-import cerberus
 
-base_acte_schema = {"patient": {"type": "integer", "required": True}}
+class ObservationCreateSchema(types.Type):
+    motif = validators.String()
+    body = validators.String(default="")
 
-from collections import ChainMap
 
-observation_schema = dict(
-    ChainMap(
-        base_acte_schema, {"motif": {"type": "string"}, "body": {"type": "string"}}
-    )
-)
+class ObservationUpdateSchema(types.Type):
 
-ObservationCreateSchema = ApistarValidator(observation_schema)
-ObservationUpdateSchema = ApistarValidator(observation_schema, update=True)
-# class ObservationCreateSchema(types.Type):
-#     patient = validators.Integer()
-#     motif = validators.String()
-#     body = validators.String(default='')
+    motif = validators.String(default="")
+    body = validators.String(default="")
 
-# class ObservationUpdateSchema(types.Type):
-#     motif = validators.String(default='')
-#     body = validators.String(default='')
 
 SchemasCollection = namedtuple("SchemasCollection", "adder updater")
 

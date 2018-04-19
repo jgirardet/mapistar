@@ -71,11 +71,11 @@ class TestPatientViews:
             "nom": "Mokmomokok", "prenom": "Ljlijjlj", "ddn": "1234-12-12", "sexe": "m"
         }
 
-        resp = cli.post(app.reverse_url("patients:addd"), data=json.dumps(a))
+        resp = cli.post(app.reverse_url("patients:add"), data=json.dumps(a))
         print(resp.json())
 
         # r = resp.json().pop['pk']
-        assert resp.json()["pk"] == 1
+        assert resp.json()["pk"] is not None
 
     # assert resp.json() == ponydb.Patient.select()[:][0].dico
 
