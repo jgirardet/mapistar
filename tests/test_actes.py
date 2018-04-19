@@ -66,11 +66,12 @@ class TestViews:
         with pytest.raises(OperationWithDeletedObjectError):
             observation.dico
 
-    def test_update_pass(self, observation, cli, app):
+    def test_update_pass(self, cli, app):
+        o = observation(owner=cli.user)
+        o.flush()
         upd = {"motif": "mokmokmok"}
         r = cli.put(
-            app.reverse_url("observations:update", acte_pk=observation.pk),
-            data=json.dumps(upd),
+            app.reverse_url("observations:update", acte_pk=o.pk), data=json.dumps(upd)
         )
         print(r.json())
         assert r.status_code == 200

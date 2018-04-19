@@ -1,32 +1,19 @@
-# Standard Libraries
-import re
-
-# Third Party Libraries
-
 import importlib
+from apistar import exceptions
 
 
-def date_validator(field, value, error):
-    if not re.match(r"(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2})$", value):
-        error(field, "Must be parsable date")
+def check_actes_alter_permission(obj, user_id):
+    """
+    Permissions pour update et delete
+    """
 
+    # if obj.created.date() != timezone.now().date():
+    #     raise BadRequest("Observation can't be edited another day")
 
-# from mapistar.users import User
-
-# class MapistarUserComponent:
-#     def on_request(self,
-
-
-# def check_actes_alter_permission(obj, user_id):
-#     """
-#     Permissions pour update et delete
-#     """
-
-#     if obj.created.date() != timezone.now().date():
-#         raise BadRequest("Observation can't be edited another day")
-
-#     if auth.user != obj.owner:
-#         raise Forbidden("Only owner can edit an Observation")
+    if obj.owner != obj.owner:
+        raise exceptions.Forbidden(
+            "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
+        )
 
 
 def import_models(module_liste: list):

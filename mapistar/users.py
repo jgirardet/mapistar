@@ -5,9 +5,11 @@ from apistar_jwt.token import JWT, JWTUser
 from apistar_jwt.decorators import anonymous_allowed
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
+import inspect
 
 # mapistar
 from mapistar.base_db import db
+from mapistar.shortcuts import get_or_404
 
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
@@ -135,28 +137,44 @@ class IsAuthenticated:
         """
 
 
-class Permission:
-    pass
+from typing import TypeVar, Union
+
+# Permissions = typing.TypeVar("Permissions")
+ActesPermissions = TypeVar("ActesPermissions")
 
 
-class ActeWritePermissions(Component):
+class PermissionsComponent(Component):
     """
     Component gérant les permissions des actes
     """
 
-    def resolve(
-        self, acte_pk: http.PathParams, jwt_user: JWTUser, rq: Route
-    ) -> Permission:
+    def only_owner_can_edit(self):
+        if self.user.username != self.obj.owner.username:
+            raise exceptions.Forbidden(
+                "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
+            )
 
-        # obj = get_or_404(self.actesviews.model, obj_id)
+    def only_editable_today(self):
+        today = pendulum.now()
+        if not today.is_same_day(self.obj.created):
+            raise exceptions.Forbidden(
+                "Un acte ne peut être modifié en dehors du jours même"
+            )
+
+    def resolve(
+        self, acte_pk: http.PathParams, jwt_user: JWTUser, parameter: inspect.Parameter
+    ) -> Union[ActesPermissions]:
+        self.obj = get_or_404(db.Acte, acte_pk["acte_pk"])
+        self.user = jwt_user
+
+        if parameter.annotation is ActesPermissions:
+            self.only_owner_can_edit()
+            self.only_editable_today()
 
         # if obj.created.date() != timezone.now().date():
         #     raise BadRequest("Observation can't be edited another day")
 
-        # if auth.user != obj.owner:
-        #     raise Forbidden('Only owner can edit an Observation')
-
-        return acte_pk
+        return self.obj
 
 
 routes_users = Include(

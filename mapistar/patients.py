@@ -112,9 +112,7 @@ class PatientUpdateSchema(types.Type):
 
 
 def add(patient: PatientCreateSchema) -> http.JSONResponse:
-    """
-    create patients
-    """
+    """    Ajouter u nnouveau patient    """
     a = db.Patient(**patient)
     return http.JSONResponse(a.dico, status_code=201)
 

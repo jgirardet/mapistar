@@ -1,5 +1,3 @@
-from pony import orm
-from .schemas import ObservationCreateSchema
 from mapistar.models import db
 from apistar import http
 from apistar import Route, http, Include
@@ -8,7 +6,7 @@ from .schemas import actes_schemas
 
 from typing import List
 from mapistar.shortcuts import get_or_404
-from mapistar.users import Permission
+from mapistar.users import ActesPermissions
 
 
 class ActesViews:
@@ -52,7 +50,7 @@ class ActesViews:
 
     def delete(self):
 
-        def delete(acte_pk: int, ap: Permission) -> dict:
+        def delete(acte_pk: int) -> dict:
             obj = get_or_404(self.model, acte_pk)
             obj.delete()
             return {"pk": acte_pk, "deleted": True}
@@ -62,8 +60,8 @@ class ActesViews:
 
     def update(self):
 
-        def update(acte_pk: int, new_data: self.schemas.updater):
-            obj = get_or_404(self.model, acte_pk)
+        def update(acte_pk: int, new_data: self.schemas.updater, obj: ActesPermissions):
+            # obj = get_or_404(self.model, acte_pk)
             obj.set(**new_data)
             return obj.dico
 
