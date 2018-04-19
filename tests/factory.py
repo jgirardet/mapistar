@@ -8,7 +8,7 @@ from mapistar.models import db
 from mimesis import Generic
 
 # f = faker.Faker('fr_FR')
-f = Generic('fr')
+f = Generic("fr")
 
 
 def patientd():
@@ -18,7 +18,7 @@ def patientd():
         "prenom": f.person.name(),
         "ddn": Generic().datetime.date(),
         # "sexe": random.choice(('f', 'm')),
-        "sexe": f.person.gender()[0].lower()
+        "sexe": f.person.gender()[0].lower(),
     }
 
 
@@ -29,10 +29,10 @@ def patient():
 
 def userd():
     return {
-        'username': f.person.username(),
-        'password': 'j',
-        'nom': f.person.last_name(),
-        'prenom': f.person.name()
+        "username": f.person.username(),
+        "password": "j",
+        "nom": f.person.last_name(),
+        "prenom": f.person.name(),
     }
 
 
@@ -49,29 +49,35 @@ def acte(p=None, u=None):
 
 def observation(**kwargs):
     """ simple user """
-    if 'patient' not in kwargs:
-        kwargs['patient'] = patient()
-    if 'owner' not in kwargs:
-        kwargs['owner'] = user()
-    if 'motif' not in kwargs:
-        kwargs['motif'] = f.text.sentence()
+    if "patient" not in kwargs:
+        kwargs["patient"] = patient()
+    if "owner" not in kwargs:
+        kwargs["owner"] = user()
+    if "motif" not in kwargs:
+        kwargs["motif"] = f.text.sentence()
 
     return db.Observation(**kwargs)
 
 
 def ordonnance(**kwargs):
-    if 'patient' not in kwargs:
-        kwargs['patient'] = patient()
-    if 'owner' not in kwargs:
-        kwargs['owner'] = user()
+    if "patient" not in kwargs:
+        kwargs["patient"] = patient()
+    if "owner" not in kwargs:
+        kwargs["owner"] = user()
     return db.Ordonnance(**kwargs)
 
 
+def item(**kwargs):
+    if "ordonnance" not in kwargs:
+        kwargs["ordonnance"] = ordonnance()
+    return db.Item(**kwargs)
+
+
 def medicament(**kwargs):
-    if 'ordonnance' not in kwargs:
-        kwargs['ordonnance'] = ordonnance()
-    if 'cip' not in kwargs:
-        kwargs['cip'] = f.ean(8)
-    if 'nom' not in kwargs:
-        kwargs['nom'] = f.bs()
+    if "ordonnance" not in kwargs:
+        kwargs["ordonnance"] = ordonnance()
+    if "cip" not in kwargs:
+        kwargs["cip"] = f.code.ean()
+    if "nom" not in kwargs:
+        kwargs["nom"] = f.food.drink()
     return db.Medicament(**kwargs)

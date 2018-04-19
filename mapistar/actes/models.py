@@ -40,7 +40,7 @@ class Acte(db.Entity):
     def modified(self):
         return self._modified.replace(tzinfo=pytz.utc).astimezone(tz)
 
-    @created.setter
+    @modified.setter
     def modified(self, value):
         self._modified = value.astimezone(pytz.utc).replace(tzinfo=None)
 

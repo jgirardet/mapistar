@@ -1,6 +1,6 @@
 import pytest
 import time
-from pony.orm import commit, db_session
+from pony.orm import commit, flush, db_session
 
 pytestmark = pytest.mark.pony
 
@@ -35,9 +35,6 @@ class TestItemModel:
         debut = ordonnance.modified
         i = ponydb.Item(ordonnance=ordonnance)
         i.flush()
-        import time
-
-        time.sleep(2)
         after_insert = ordonnance.modified
         i.place = 2
         i.flush()
@@ -45,5 +42,4 @@ class TestItemModel:
         i.delete()
         ordonnance.flush()
         after_delete = ordonnance.modified
-
-        assert debut < after_insert  # < after_modif < after_delete
+        assert debut < after_insert < after_modif < after_delete

@@ -23,9 +23,6 @@ class Ordonnance(Acte):
     #         kwargs['ordre'] = {'ordre': ["omkm"]}
     #     super().__init__(*args, **kwargs)
 
-    def update(self):
-        self.modified = datetime.utcnow()
-
     def _fait_ordre(self):
         self.ordre = {i: k.id for i, k in enumerate(self.items.select())}
 
@@ -57,18 +54,21 @@ class Item(db.Entity):
 
     def after_insert(self):
         # self.ordonnance.ordre.append(self.id)
-        self.ordonnance.update()
+        self.ordonnance.before_update()
 
     def before_delete(self):
-        self.ordonnance.update()
+        self.ordonnance.before_update()
 
-    def after_update(self):
-        self.ordonnance.update()
+    def before_update(self):
+        self.ordonnance.before_update()
+
+
+# self.ordonnance.update()
 
 
 class Medicament(Item):
     """Medicament"""
-    cip = orm.Required(int)
+    cip = orm.Required(str)
     nom = orm.Required(str)
     posologie = orm.Optional(str)
     duree = orm.Optional(int, default=0)

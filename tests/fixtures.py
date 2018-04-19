@@ -29,5 +29,10 @@ def ordonnance(request):
 
 
 @pytest.fixture(scope="function")
+def item(request):
+    return factory.item()
+
+
+@pytest.fixture(scope="function")
 def medicament(request):
     return factory.medicament()
