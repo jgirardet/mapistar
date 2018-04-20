@@ -72,12 +72,7 @@ class TestPatientViews:
         }
 
         resp = cli.post(app.reverse_url("patients:add"), data=json.dumps(a))
-        print(resp.json())
-
-        # r = resp.json().pop['pk']
         assert resp.json()["pk"] is not None
-
-    # assert resp.json() == ponydb.Patient.select()[:][0].dico
 
     def test_cli_get_patient(self, patient, cli, app):
         resp = cli.get(app.reverse_url("patients:get", pk=patient.pk))

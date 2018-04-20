@@ -7,6 +7,7 @@ from .schemas import actes_schemas
 from typing import List
 from mapistar.shortcuts import get_or_404
 from mapistar.users import ActesPermissions
+from apistar_jwt.token import JWTUser
 
 
 class ActesViews:
@@ -18,12 +19,9 @@ class ActesViews:
 
     def add(self):
 
-        def add(new_obs: self.schemas.adder) -> http.JSONResponse:
-            a = dict(new_obs)
-            b = db.User.create_user("j", "j", "nom", "prenom")
-            a["owner"] = b
-            obs = db.Observation(**a)
-            return http.JSONResponse(obs.dico, status_code=201)
+        def add(data: self.schemas.adder, user: JWTUser) -> http.JSONResponse:
+            obj = self.model(owner=user.id, **data)
+            return http.JSONResponse(obj.dico, status_code=201)
 
         add.__doc__ = f"""Ajoute un nouvel Acte de type : {self.model.name}"""
         return add
@@ -50,8 +48,8 @@ class ActesViews:
 
     def delete(self):
 
-        def delete(acte_pk: int) -> dict:
-            obj = get_or_404(self.model, acte_pk)
+        def delete(acte_pk: int, obj: ActesPermissions) -> dict:
+            # obj = get_or_404(self.model, acte_pk)
             obj.delete()
             return {"pk": acte_pk, "deleted": True}
 

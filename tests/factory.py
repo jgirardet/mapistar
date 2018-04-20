@@ -22,7 +22,7 @@ def patientd():
     }
 
 
-def patient():
+def patientf():
     """ patient """
     return db.Patient(**patientd())
 
@@ -36,46 +36,46 @@ def userd():
     }
 
 
-def user():
+def userf():
     """ simple user """
     return db.User.create_user(**userd())
 
 
-def acte(p=None, u=None):
-    p = p if p else patient()
-    u = u if u else user()
+def actef(p=None, u=None):
+    p = p if p else patientf()
+    u = u if u else userf()
     return db.Acte(patient=p, owner=u)
 
 
-def observation(**kwargs):
+def observationf(**kwargs):
     """ simple user """
     if "patient" not in kwargs:
-        kwargs["patient"] = patient()
+        kwargs["patient"] = patientf()
     if "owner" not in kwargs:
-        kwargs["owner"] = user()
+        kwargs["owner"] = userf()
     if "motif" not in kwargs:
         kwargs["motif"] = f.text.sentence()
 
     return db.Observation(**kwargs)
 
 
-def ordonnance(**kwargs):
+def ordonnancef(**kwargs):
     if "patient" not in kwargs:
-        kwargs["patient"] = patient()
+        kwargs["patient"] = patientf()
     if "owner" not in kwargs:
-        kwargs["owner"] = user()
+        kwargs["owner"] = userf()
     return db.Ordonnance(**kwargs)
 
 
-def item(**kwargs):
+def itemf(**kwargs):
     if "ordonnance" not in kwargs:
-        kwargs["ordonnance"] = ordonnance()
+        kwargs["ordonnance"] = ordonnancef()
     return db.Item(**kwargs)
 
 
-def medicament(**kwargs):
+def medicamentf(**kwargs):
     if "ordonnance" not in kwargs:
-        kwargs["ordonnance"] = ordonnance()
+        kwargs["ordonnance"] = ordonnancef()
     if "cip" not in kwargs:
         kwargs["cip"] = f.code.ean()
     if "nom" not in kwargs:

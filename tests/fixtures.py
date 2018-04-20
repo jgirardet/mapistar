@@ -5,34 +5,34 @@ import pytest
 @pytest.fixture(scope="function")
 def patient():
     """ patient """
-    return factory.patient()
+    return factory.patientf()
 
 
 @pytest.fixture(scope="function")
 def user(request):
-    return factory.user()
+    return factory.userf()
 
 
 @pytest.fixture(scope="function")
 def acte(request):
-    return factory.acte()
+    return factory.actef()
 
 
 @pytest.fixture(scope="function")
 def observation(request):
-    return factory.observation()
+    return factory.observationf()
 
 
 @pytest.fixture(scope="function")
 def ordonnance(request):
-    return factory.ordonnance()
+    return factory.ordonnancef()
 
 
 @pytest.fixture(scope="function")
 def item(request):
-    return factory.item()
+    return factory.itemf()
 
 
 @pytest.fixture(scope="function")
 def medicament(request):
-    return factory.medicament()
+    return factory.medicamentf()

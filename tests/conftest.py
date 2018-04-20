@@ -9,6 +9,7 @@ from app import app as main_app
 from mapistar import settings
 
 from .fixtures import *
+from .factory import *
 
 
 @pytest.fixture(scope="session")
@@ -20,9 +21,10 @@ def cli_anonymous(request):
 
 @pytest.fixture(scope="function")
 def cli(user):
-
+    # user = userf()
+    user.flush()
     payload = {
-        "user": user.pk,
+        "id": user.pk,
         "username": user.username,
         "iat": pendulum.now(),
         "exp": pendulum.now() + pendulum.Duration(seconds=10),
@@ -32,8 +34,6 @@ def cli(user):
     client = test.TestClient(main_app)
     client.headers.update({"Authorization": f"Bearer {token}"})
     client.user = user
-    # import pdb
-    # pdb.set_trace()
     return client
 
 

@@ -2,6 +2,8 @@
 import pytest
 import json
 from apistar import exceptions
+from .factory import patientd, userd, f
+from unittest.mock import MagicMock
 
 pytestmark = pytest.mark.pony
 
@@ -72,10 +74,6 @@ class TestLogin:
         assert r.json() == "Incorrect username or password."
 
 
-
-
-
-
 class TestIsAuthenticated:
 
     def test_no_header(self, cli_anonymous, app):
@@ -97,3 +95,36 @@ class TestIsAuthenticated:
         head = {"Authorization": f"Bearer {token}"}
         r = cli.get(app.reverse_url("patients:liste"), headers=head)
         assert r.status_code == 200
+
+
+from mapistar.users import PermissionsComponent
+import pendulum
+
+
+@pytest.fixture(scope="function")
+def actes_permission(request, observation):
+    m = MagicMock()
+    m.user.id = 999
+    p = PermissionsComponent()
+    p.user = m
+    p.obj = observation
+    return p
+
+
+class TestPermission:
+
+    def test_aonly_owner_can_edit(self, actes_permission):
+
+        with pytest.raises(exceptions.Forbidden) as e:
+            actes_permission.only_owner_can_edit()
+        assert (
+            str(e.value)
+            == "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
+        )
+
+    def test_only_editable_today(self, actes_permission):
+        a = actes_permission
+        a.obj.created = pendulum.yesterday()
+        with pytest.raises(exceptions.BadRequest) as e:
+            a.only_editable_today()
+        assert str(e.value) == "Un acte ne peut être modifié en dehors du jours même"

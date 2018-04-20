@@ -1,24 +1,19 @@
 import pytest
 
 from datetime import datetime
-from .factory import patientd, userd, f
-from datetime import datetime
-from pony import orm
 from pony.orm import OperationWithDeletedObjectError
-from mapistar.models import db
 import json
-from .factory import patientd, observation
+from .factory import patientd, observationf
 
 pytestmark = pytest.mark.pony
 
 
 class TestActeModel:
 
-    def test_create_update_date(self, acte, ponydb):
+    def test_create_update_date(self, acte, ponydb, patient):
         assert isinstance(acte.created, datetime)
-        acte.flush()
         assert acte.modified == acte.created
-        acte.patient = ponydb.Patient(**patientd())
+        acte.patient = patient
         acte.flush()
         assert acte.modified >= acte.created
 
@@ -32,25 +27,21 @@ class TestActeModel:
         assert acte.to_dict()["_created"] == e
 
 
+# def test_date_modified(self, acte, patient):
+#     acte.patient = patient
+#     acte.flush()
+
+
 class TestViews:
 
-    # def test_add(self, patient, user, cli, app):
-    #     a = {"patient": patient.pk, "motif": "omk", "body": "mkmok"}
-    #     r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
-    #     assert r.status_code == 201
+    def test_add(self, patient, cli, app):
+        a = {"patient": patient.pk, "motif": "omk", "body": "mkmok"}
+        r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
+        assert r.status_code == 201
 
     def test_list_acte_pass(self, patient, app, cli, ponydb):
-        # obss = [
-        #     db.Observation(patient=patient.pk, owner=user.pk, motif=f.text.sentence())
-        #     for i in range(3)
-        # ]
-        # fobss = [
-        #     db.Observation(
-        #         patient=db.Patient(**patientd()), owner=user.pk, motif=f.text.sentence()
-        #     )
-        #     for i in range(3)
-        # ]
-        obs = [observation(owner=cli.user, patient=patient) for i in range(3)]
+
+        obs = [observationf(owner=cli.user, patient=patient) for i in range(3)]
         ponydb.commit()
         r = cli.get(app.reverse_url("observations:liste", patient_pk=patient.pk))
         assert {x["pk"] for x in r.json()} == {x.pk for x in obs}
@@ -61,18 +52,18 @@ class TestViews:
         assert r.json() == observation.dico
 
     def test_delete_pass(self, observation, cli, app):
+        observation.owner = cli.user
         r = cli.delete(app.reverse_url("observations:delete", acte_pk=observation.pk))
         assert r.status_code == 200
         with pytest.raises(OperationWithDeletedObjectError):
             observation.dico
 
-    def test_update_pass(self, cli, app):
-        o = observation(owner=cli.user)
-        o.flush()
+    def test_update_pass(self, cli, app, observation):
+        observation.owner = cli.user
         upd = {"motif": "mokmokmok"}
         r = cli.put(
-            app.reverse_url("observations:update", acte_pk=o.pk), data=json.dumps(upd)
+            app.reverse_url("observations:update", acte_pk=observation.pk),
+            data=json.dumps(upd),
         )
-        print(r.json())
         assert r.status_code == 200
         assert r.json()["motif"] == "mokmokmok"

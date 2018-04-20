@@ -9,6 +9,7 @@ from mapistar.models import db
 
 
 class ObservationCreateSchema(types.Type):
+    patient = validators.Integer()
     motif = validators.String()
     body = validators.String(default="")
 

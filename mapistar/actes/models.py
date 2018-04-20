@@ -30,19 +30,19 @@ class Acte(db.Entity):
 
     @property
     def created(self):
-        return self._created.replace(tzinfo=pytz.utc).astimezone(tz)
+        return pendulum.instance(self._created).in_tz("UTC")
 
     @created.setter
     def created(self, value):
-        self._created = value.astimezone(pytz.utc).replace(tzinfo=None)
+        self._created = value.in_tz("UTC").naive()
 
     @property
     def modified(self):
-        return self._modified.replace(tzinfo=pytz.utc).astimezone(tz)
+        return pendulum.instance(self._modified).in_tz("UTC")
 
     @modified.setter
     def modified(self, value):
-        self._modified = value.astimezone(pytz.utc).replace(tzinfo=None)
+        self._modified = value.in_tz("UTC").naive()
 
     @property
     def dico(self):
@@ -60,7 +60,7 @@ class Acte(db.Entity):
     # pass
 
     def before_update(self):
-        self._modified = datetime.utcnow()
+        self.modified = pendulum.now()
 
     updatable = ()
 

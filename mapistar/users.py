@@ -1,16 +1,18 @@
+# Standard Libraries
+import inspect
+
 # Third Party Libraries
 import pendulum
-from apistar import Include, Route, exceptions, Component, http, types, validators
-from apistar_jwt.token import JWT, JWTUser
+from apistar import Component, Include, Route, exceptions, http, types, validators
 from apistar_jwt.decorators import anonymous_allowed
+from apistar_jwt.token import JWT, JWTUser
 from pony import orm
+from typing import TypeVar, Union
 from werkzeug.security import check_password_hash, generate_password_hash
-import inspect
 
 # mapistar
 from mapistar.base_db import db
 from mapistar.shortcuts import get_or_404
-
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
@@ -106,11 +108,10 @@ def login(cred: LoginSchema, jwt: JWT) -> str:
         raise exceptions.Forbidden("Incorrect username or password.")
 
     if not user.actif:
-        print("forb")
         raise exceptions.Forbidden("Utilisateur inactif")
 
     payload = {
-        "user": user.pk,
+        "id": user.pk,
         "username": user.username,
         "iat": pendulum.now(),
         "exp": pendulum.now() + pendulum.Duration(seconds=5),
@@ -137,9 +138,6 @@ class IsAuthenticated:
         """
 
 
-from typing import TypeVar, Union
-
-# Permissions = typing.TypeVar("Permissions")
 ActesPermissions = TypeVar("ActesPermissions")
 
 
@@ -149,7 +147,7 @@ class PermissionsComponent(Component):
     """
 
     def only_owner_can_edit(self):
-        if self.user.username != self.obj.owner.username:
+        if self.user.id != self.obj.owner.pk:
             raise exceptions.Forbidden(
                 "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
             )
@@ -157,7 +155,7 @@ class PermissionsComponent(Component):
     def only_editable_today(self):
         today = pendulum.now()
         if not today.is_same_day(self.obj.created):
-            raise exceptions.Forbidden(
+            raise exceptions.BadRequest(
                 "Un acte ne peut être modifié en dehors du jours même"
             )
 
