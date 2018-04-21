@@ -1,13 +1,15 @@
-from apistar import Component, exceptions, http
-import pendulum
+# Standard Libraries
+from typing import TypeVar
 
-from mapistar.utils import get_or_404
+# Third Party Libraries
+import pendulum
+from apistar import Component, exceptions, http
 from apistar_jwt.token import JWTUser
 
+# mapistar
 # from mapistar.models import db
 from mapistar.models import db
-
-from typing import TypeVar
+from mapistar.utils import get_or_404
 
 
 class IsAuthenticated:

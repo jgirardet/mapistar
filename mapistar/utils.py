@@ -1,5 +1,7 @@
-# Third Party Libraries
+# Standard Libraries
 import importlib
+
+# Third Party Libraries
 import pendulum
 from apistar.exceptions import NotFound
 from pony import orm
@@ -58,7 +60,7 @@ class PendulumDateTime:
 def get_or_404(model: orm.core.Entity, id: [str, int]):
     """
     Classique get or raisse http404
-    
+
     Args:
         model: Modèle sur lequel la requête est effectuée.
         id: identifiant en base de donnée.

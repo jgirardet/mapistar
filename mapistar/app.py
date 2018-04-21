@@ -7,9 +7,9 @@ from apistar_ponyorm import PonyDBSession
 from mapistar import settings
 from mapistar.actes.urls import routes_actes
 from mapistar.patients import routes_patients
+from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
 from mapistar.users import routes_users
-from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 
 components = [JWT(settings.JWT), ActesPermissionsComponent()]
 

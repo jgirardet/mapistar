@@ -1,10 +1,9 @@
 # Standard Libraries
 import json
+
+# Third Party Libraries
 import pytest
 from apistar import exceptions
-
-# mapistar
-
 
 pytestmark = pytest.mark.pony
 

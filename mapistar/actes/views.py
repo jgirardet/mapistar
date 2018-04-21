@@ -6,8 +6,8 @@ from apistar import Include, Route, http
 from apistar_jwt.token import JWTUser
 
 # mapistar
-from mapistar.utils import get_or_404
 from mapistar.permissions import ActesPermissions
+from mapistar.utils import get_or_404
 
 from .schemas import actes_schemas
 
