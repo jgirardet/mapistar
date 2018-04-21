@@ -11,10 +11,26 @@ Subpackages
 Submodules
 ----------
 
+mapistar.app module
+-------------------
+
+.. automodule:: mapistar.app
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 mapistar.base\_db module
 ------------------------
 
 .. automodule:: mapistar.base_db
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mapistar.exceptions module
+--------------------------
+
+.. automodule:: mapistar.exceptions
     :members:
     :undoc-members:
     :show-inheritance:

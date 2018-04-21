@@ -1,6 +1,4 @@
-
 # Standard Libraries
-import os
 from urllib.parse import urlparse
 
 # mapistar
@@ -16,7 +14,7 @@ import_models(settings.models)
 #     os.environ['TEST_RUNNING']
 # except KeyError:
 # url = urlparse(os.environ['MAPISTAR_PONY_DB'])
-# url = urlparse("postgres://j:j@localhost:5432/mapistar")
+url = urlparse("postgres://j:j@localhost:5432/mapistar")
 # db.connect(
 #     provider=url.scheme,
 #     host=url.hostname,

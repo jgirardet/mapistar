@@ -3,10 +3,10 @@ import jwt
 import pendulum
 import pytest
 from apistar import Client, test
-from app import app as main_app
 
 # mapistar
 from mapistar import settings
+from mapistar.app import app as main_app
 
 from .factory import *
 from .fixtures import *

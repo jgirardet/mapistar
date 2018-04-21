@@ -13,13 +13,13 @@ install-local:
 install-system:
 	pipenv install --system
 
-style: isort yapf
+style: isort black flake8 check
 
 isort:
 	pipenv run isort -y
 
-yapf:
-	pipenv run yapf --recursive -i $(MODULE)
+black:
+	black $(MODULE)
 
 checks:
 	pipenv check
@@ -29,9 +29,6 @@ flake8:
 
 build: dists
 
-shell:
-	pipenv run apistar shell
-
 test-unit:
 	pipenv run pytest 
 
@@ -39,7 +36,6 @@ test-coverage:
 	pipenv run py.test  --cov $(MODULE) --cov-report term-missing --cov-report html
 
 requirements.txt:
-	
 	
 	# generate requirements.txt frm Pipfile.lock
 	# needed until PBR supports `Pipfile`
@@ -63,8 +59,6 @@ pypi-publish: build
 update:
 	pipenv update
 
-githook: clean checks style requirements.txt
-	
 push:
 	git status
 	git push origin --all
@@ -88,6 +82,7 @@ clean-build: ## remove build artifacts
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
+	find . -name 'requirements*' -exec rm -f {} +
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
@@ -109,7 +104,7 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	pipenv run python app.py
+	pipenv run python manage.py
 
 
 # aliases to gracefully handle typos on poor dev's terminal

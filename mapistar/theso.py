@@ -30,7 +30,7 @@ spe
 
 
 
-scénario : 
+scénario :
 sélection d'un medicament:
     - on part du code
         - si présent : ok

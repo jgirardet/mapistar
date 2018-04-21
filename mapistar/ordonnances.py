@@ -1,6 +1,3 @@
-# Standard Libraries
-from datetime import datetime
-
 # Third Party Libraries
 from pony import orm
 

@@ -1,6 +1,5 @@
 # Standard Libraries
 import inspect
-from typing import NewType
 
 # Third Party Libraries
 import pendulum
@@ -195,8 +194,6 @@ class PermissionsComponent(Component):
             )
 
         return self.obj
-
-
 
 
 routes_users = Include(
