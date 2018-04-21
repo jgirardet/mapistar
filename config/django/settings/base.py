@@ -1,17 +1,6 @@
 # Third Party Libraries
 from config.get_env import env
 
-DATABASES = {
-    'default': {
-        'ENGINE': env['DB_ENGINE'],
-        'PORT': env['DB_PORT'],
-        'NAME': env['DB_NAME'],
-        'HOST': env['DB_HOST'],
-        'USER': env['DB_USER'],
-        'PASSWORD': env['DB_PASSWORD'],
-    }
-}
-
 DJANGO_APPS = [
     # 'django.contrib.admin',
     'django.contrib.auth',

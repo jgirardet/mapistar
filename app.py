@@ -1,47 +1,28 @@
-""" 
-    Apistar Main App
-"""
-
-# Standard Libraries
-import importlib
-import os
-
 # Third Party Libraries
-import django
-from apistar.backends import django_orm
-from apistar.frameworks.wsgi import WSGIApp as App
-from apistar_shell import commands as apistar_shell_commands
-from apistar_shell import components as apistar_shell_components
-from config.django import settings as django_settings
-from django.apps import apps
+from apistar import App
+from apistar_jwt.token import JWT
+from apistar_ponyorm import PonyDBSession
 
-# Django Must Be configured before anything in apistar
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.django.settings')
-if not apps.ready:
-    django.setup()
+# mapistar
+from mapistar import settings
+from mapistar.actes import routes_actes
+from mapistar.patients import routes_patients
+from mapistar.theso import routes_theso
+from mapistar.users import IsAuthenticated, PermissionsComponent, routes_users
 
-# apistar configs, urls have to be imported AFTER django is ready
-apistar_settings = importlib.import_module('config.settings')
-
-# All routes are based on config.urls.routes
-routes = importlib.import_module('config.urls').routes
-
-# collect All components
-components = [
-    *django_orm.components,
-    *apistar_shell_components.components,
-]
-
-# Merge apistar and django settings, so everything is in Settings component
-# For testing and doc, this one bellow schould be imported
-settings = {**apistar_settings.__dict__, **django_settings.__dict__}
-print(settings['AUTHENTICATION'])
-
-# Collect all commands
-commands = [*django_orm.commands, *apistar_shell_commands.django_commands]
+components = [JWT(settings.JWT), PermissionsComponent()]
 
 app = App(
-    routes=routes, settings=settings, commands=commands, components=components)
+    routes=[routes_patients, routes_actes, routes_theso, routes_users],
+    components=components,
+    event_hooks=[PonyDBSession(), IsAuthenticated()],
+    schema_url="/schema/",
+)
+"""
+curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
+"""
 
-if __name__ == '__main__':
-    app.main()
+if __name__ == "__main__":
+    # app.serve(ho starun_wsgi(app)
+    options = {"use_debugger": True, "use_reloader": True}
+    app.serve("127.0.0.1", 5000, **options)

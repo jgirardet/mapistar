@@ -5,7 +5,7 @@ MODULE:=mapistar
 all: dev style checks requirements.txt migrate build dists doc test-unit test-coverage
 
 dev:
-	pipenv install --dev --python 3.6
+	pipenv install --dev --python 3.6 --skip-lock
 
 install-local:
 	pipenv install --python 3.6
@@ -13,13 +13,10 @@ install-local:
 install-system:
 	pipenv install --system
 
-style: isort autopep8 yapf
+style: isort yapf
 
 isort:
 	pipenv run isort -y
-
-autopep8:
-	pipenv run autopep8 --in-place --recursive setup.py $(MODULE)
 
 yapf:
 	pipenv run yapf --recursive -i $(MODULE)
@@ -73,10 +70,13 @@ push:
 	git push origin --all
 	git push origin --tags
 
-doc:
+apidoc: 
+	pipenv run sphinx-apidoc -f -o docs/api mapistar
+
+doc: apidoc
 	pipenv run python setup.py build_sphinx
 
-doc-auto:
+doc-auto: apidoc
 	pipenv run sphinx-autobuild docs docs/_build
 	
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
@@ -109,7 +109,7 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	pipenv run apistar run
+	pipenv run python app.py
 
 
 # aliases to gracefully handle typos on poor dev's terminal

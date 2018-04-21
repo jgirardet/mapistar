@@ -1,99 +1,73 @@
+# Standard Libraries
+from datetime import datetime
+
 # Third Party Libraries
-from django.conf import settings
-from django.db import models
-from django.utils import timezone
-from patients.models import Patient
+import pendulum
+from descriptors import classproperty
+from pony import orm
+
+# mapistar
+from mapistar.base_db import db
+from mapistar.utils import PendulumDateTime
 
 
-class BaseActe(models.Model):
+class Acte(db.Entity):
     """
-    Base Abstract class for for differnets actions
+    Base class for for differnets actions
     made by users
     Updatable fields by user must be set in updatable
     """
-    patient = models.ForeignKey(Patient, related_name="%(class)ss", on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(default=timezone.now)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="%(class)ss", on_delete=models.PROTECT)
+    pk = orm.PrimaryKey(int, auto=True)
+    patient = orm.Required("Patient")
+    owner = orm.Required("User")
+    _created = orm.Required(datetime, default=datetime.utcnow)
+    _modified = orm.Optional(datetime)
 
-    updatable = []
+    @classproperty
+    def url_name(self):
+        return self.__name__.lower() + "s"
 
-    class Meta:
-        abstract = True
+    @classproperty
+    def name(self):
+        return self.__name__.lower() + "s"
 
-    def save(self, *args, **kwargs):
-        self.modified = timezone.now()
-        super().save(*args, **kwargs)
+    created = PendulumDateTime()
+    modified = PendulumDateTime()
 
-    def update(self, **kwargs):
-        """
-        Update depending updatable items
-        """
-        for k, v in kwargs.items():
-            getattr(self, k)  # raise attributeerror if k not in model
-            assert k in self.updatable, "k is not in updatable"  # prevent
-            setattr(self, k, v)
+    @property
+    def dico(self):
+        " return to_dict but serializable"
+        _dico = self.to_dict()
+        del _dico["_created"]
+        del _dico["_modified"]
+        _dico["created"] = self.created.isoformat()
+        _dico["modified"] = self.modified.isoformat()
+        return _dico
 
-        self.save()
+    def before_insert(self):
+        self._modified = self._created
 
+    # pass
 
-class Observation(BaseActe):
-    """
-    A small text of  user about a patient
+    def before_update(self):
+        self.modified = pendulum.now()
 
-    motif : purpose of the visit. can't be blank.this is the most minimam
-    thing a user schould enter.
-    """
-    motif = models.CharField(max_length=60, blank=False)
-    body = models.TextField(blank=True)
+    updatable = ()
 
-    updatable = ['motif', 'body']
+    def set(self, **kwargs):
+        """ override default set pour vérifier si updatable"""
+        for item in kwargs:
+            if item not in self.updatable:
+                raise AttributeError(f"{item} n'est pas updatable")
 
-    def __str__(self):
-        return self.motif  # no
-
-
-class PrescriptionLibre(BaseActe):
-    """
-    small prescirption free
-    """
-    titre = models.CharField(max_length=60, blank=False)
-    body = models.TextField(blank=True)
-
-    updatable = ['titre', 'body']
-
-    def __str__(self):
-        return self.titre
+        super().set(**kwargs)
 
 
-"""
-BAseActe:
-Observation :
-    TA/pouls
-    conclusion
+class Observation(Acte):
+    motif = orm.Required(str)
+    body = orm.Optional(str)
 
-ordonnance
-vaccin
-certif
-    titre
-    texte
-courries
-    dest
-    corps
-courriers reçus
-    spé
-    nom
-    contenu
-    pdf
-examens:
-    type
-    effecteur
-    pdf
-REGROUPER courrier et examens ?
+    updatable = ("motif", "body")
 
-bio
-antécédants
-intolérances
-allergies
-"""
+    def __repr__(self):  # pragma: nocover
+        return f"Observation: {self.motif} par {self.owner}"

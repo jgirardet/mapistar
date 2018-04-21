@@ -1,0 +1,351 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "",
+        "description": "",
+        "version": ""
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "patients"
+                ],
+                "description": " List patients ",
+                "operationId": "liste"
+            },
+            "post": {
+                "tags": [
+                    "observations"
+                ],
+                "description": "Ajoute un nouvel Acte de type : observations",
+                "operationId": "add",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObservationCreateSchema"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{pk}/": {
+            "get": {
+                "tags": [
+                    "patients"
+                ],
+                "description": " Get patient details ",
+                "operationId": "get",
+                "parameters": [
+                    {
+                        "name": "pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "patients"
+                ],
+                "description": " modify patients ",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatientUpdateSchema"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "patients"
+                ],
+                "description": "delete un patient",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ]
+            }
+        },
+        "/{acte_pk}/": {
+            "get": {
+                "tags": [
+                    "observations"
+                ],
+                "description": "Accède à un Acte de type : observations",
+                "operationId": "one",
+                "parameters": [
+                    {
+                        "name": "acte_pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "observations"
+                ],
+                "description": "Modifie un acte de type : observations",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "acte_pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObservationUpdateSchema"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "observations"
+                ],
+                "description": "Efface un Acte de type : observations",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "acte_pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ]
+            }
+        },
+        "/patient/{patient_pk}/": {
+            "get": {
+                "tags": [
+                    "observations"
+                ],
+                "description": " Liste les Actes de type : observations",
+                "operationId": "liste",
+                "parameters": [
+                    {
+                        "name": "patient_pk",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ]
+            }
+        },
+        "/fuzzy/{chaine}/": {
+            "get": {
+                "tags": [
+                    "theso"
+                ],
+                "operationId": "fuzzy",
+                "parameters": [
+                    {
+                        "name": "chaine",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/login/": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "description": "\n    View d'authentification\n\n    Args:\n        cred: credentials username/password\n        jwt: JWT componement pour l'endocdage du payload\n\n    Toutes les erreurs \"raise\"\n\n    Returns:\n        token type str\n    ",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginSchema"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PatientCreateSchema": {
+                "type": "object",
+                "properties": {
+                    "nom": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "ddn": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "sexe": {
+                        "description": "sexe",
+                        "type": "string",
+                        "maxLength": 1
+                    }
+                },
+                "required": [
+                    "nom",
+                    "prenom",
+                    "ddn",
+                    "sexe"
+                ]
+            },
+            "PatientUpdateSchema": {
+                "type": "object",
+                "properties": {
+                    "nom": {
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "prenom": {
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "ddn": {
+                        "default": "",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "sexe": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "rue": {
+                        "description": "rue",
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "cp": {
+                        "description": "Code Postal",
+                        "default": null,
+                        "nullable": true,
+                        "type": "integer"
+                    },
+                    "ville": {
+                        "description": "Ville",
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "tel": {
+                        "description": "Numéro de Téléphone",
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "email": {
+                        "description": "email",
+                        "default": "",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "alive": {
+                        "description": "vivant ?",
+                        "default": true,
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ObservationCreateSchema": {
+                "type": "object",
+                "properties": {
+                    "motif": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "default": "",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "motif"
+                ]
+            },
+            "ObservationUpdateSchema": {
+                "type": "object",
+                "properties": {
+                    "motif": {
+                        "default": "",
+                        "type": "string"
+                    },
+                    "body": {
+                        "default": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginSchema": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 100
+                    }
+                },
+                "required": [
+                    "username",
+                    "password"
+                ]
+            }
+        }
+    }
+}
