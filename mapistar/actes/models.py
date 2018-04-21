@@ -1,7 +1,14 @@
-from mapistar.models import db
-from pony import orm
+# Standard Libraries
 from datetime import datetime
+
+# Third Party Libraries
+import pendulum
 from descriptors import classproperty
+from pony import orm
+
+# mapistar
+from mapistar.base_db import db
+from mapistar.utils import PendulumDateTime
 
 
 class Acte(db.Entity):
@@ -11,32 +18,39 @@ class Acte(db.Entity):
     Updatable fields by user must be set in updatable
     """
     pk = orm.PrimaryKey(int, auto=True)
-    patient = orm.Required('Patient')
-    owner = orm.Required('User')
-    created = orm.Required(datetime, default=datetime.now())
-    modified = orm.Optional(datetime)
+    patient = orm.Required("Patient")
+    owner = orm.Required("User")
+    _created = orm.Required(datetime, default=datetime.utcnow)
+    _modified = orm.Optional(datetime)
 
     @classproperty
     def url_name(self):
-        return self.__name__.lower() + 's'
+        return self.__name__.lower() + "s"
 
     @classproperty
     def name(self):
-        return self.__name__.lower() + 's'
+        return self.__name__.lower() + "s"
+
+    created = PendulumDateTime()
+    modified = PendulumDateTime()
 
     @property
     def dico(self):
         " return to_dict but serializable"
         _dico = self.to_dict()
-        _dico['created'] = _dico['created'].isoformat()
-        _dico['modified'] = _dico['modified'].isoformat()
+        del _dico["_created"]
+        del _dico["_modified"]
+        _dico["created"] = self.created.isoformat()
+        _dico["modified"] = self.modified.isoformat()
         return _dico
 
     def before_insert(self):
-        self.modified = self.created
+        self._modified = self._created
+
+    # pass
 
     def before_update(self):
-        self.modified = datetime.now()
+        self.modified = pendulum.now()
 
     updatable = ()
 
@@ -45,6 +59,7 @@ class Acte(db.Entity):
         for item in kwargs:
             if item not in self.updatable:
                 raise AttributeError(f"{item} n'est pas updatable")
+
         super().set(**kwargs)
 
 

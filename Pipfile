@@ -12,11 +12,7 @@ python_version = "3.6"
 [dev-packages]
 
 "flake8" = "*"
-pycodestyle = "*"
-yapf = "*"
 isort = "*"
-"autopep8" = "*"
-cryptography = "*"
 pyyaml = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -27,17 +23,27 @@ pipenv-to-requirements = "*"
 sphinx = "*"
 sphinx-autobuild = "*"
 pytest-pythonpath = "*"
-pytest-timeit = "*"
 pytest-env = "*"
 pytest-ponyorm = "*"
+faker = "*"
+mimesis = "*"
+ipython = "*"
+sphinx-rtd-theme = "*"
+black = "*"
+mypy = "*"
+pdbpp = "*"
 
 
 [packages]
 
 pbr = ">=3.0"
 "psycopg2-binary" = "*"
-pony = {git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations", editable = true}
-apistar = {git = "https://github.com/encode/apistar.git", ref = "level-up", editable = true}
-"6533db5" = {path = "../apistar_shell", editable = true}
-uwsgi = "*"
+pony = {editable = true, git = "https://github.com/ponyorm/pony.git", ref = "orm-migrations"}
+apistar = "*"
 dickens = "*"
+cerberus = "*"
+pendulum = ">=2.*"
+pythonthesorimed = "*"
+apistar-ponyorm = ""
+apistar-jwt = "*"
+sphinxcontrib-napoleon = "*"
