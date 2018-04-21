@@ -1,18 +1,13 @@
-# Standard Libraries
-import inspect
-
 # Third Party Libraries
 import pendulum
-from apistar import Component, Include, Route, exceptions, http, types, validators
+from apistar import Include, Route, exceptions, types, validators
 from apistar_jwt.decorators import anonymous_allowed
-from apistar_jwt.token import JWT, JWTUser
+from apistar_jwt.token import JWT
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.exceptions import MapistarProgrammingError
-from mapistar.shortcuts import get_or_404
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
@@ -89,7 +84,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
     View d'authentification
 
     Args:
-        cred: credentials username/password
+        credentials: credentials username/password
         jwt: JWT componement pour l'encodage du payload
 
     Toutes les erreurs "raise"

@@ -7,7 +7,6 @@ Todo vers 1.0
 * Patient:
     - revoir les données accessoires
     - schema email
-    - alive apres creation
 
 * User :
 
@@ -28,22 +27,20 @@ Todo vers 1.0
   
 * Divers :
 
-    - id en lieu et place de pk
 	- mettre models.db dans app ?
 	- settings :  chargement/gestion/env
 	- doc: 100%
-	- type annotation dans fonction
 	- deploiement
     - entry point
     - git pre commit
 
 * Documentation:
 
-    - patient
-    - utils
-    - shorcuts
-    - users
-    - authentification
+    - patient +
+    - utils +
+    - users +
+    - permissions +
+    - actes
     - ordonnances
     - theso
     - exceptions

@@ -64,10 +64,7 @@ push:
 	git push origin --all
 	git push origin --tags
 
-apidoc: 
-	pipenv run sphinx-apidoc -f -o docs/api mapistar
-
-doc: apidoc
+doc:
 	pipenv run python setup.py build_sphinx
 
 doc-auto:

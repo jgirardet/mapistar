@@ -5,13 +5,13 @@ from typing import List
 
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
-from pony.orm import Optional, PrimaryKey, Required, Set
+from pony.orm import Optional, Required, Set
 
 # mapistar
 from mapistar.base_db import db
 
 # from mapistar.models import db
-from .shortcuts import get_or_404
+from .utils import get_or_404
 
 MAX_LENGTH = {
     "nom": 100,
@@ -22,6 +22,7 @@ MAX_LENGTH = {
     "tel": 20,
     "email": 100,
 }
+""" Valeurs maximales pour chaque field"""
 
 SEXE = ["f", "m"]
 
@@ -33,7 +34,18 @@ class Patient(db.Entity):
     Base class pour les patients
 
     Attributes:
-        pk(int): clé primaire
+        nom (str): Nom du patient. Requis
+        prenom (str): prenom du patient. Requis
+        ddn (datetime.Datetime): date de naissance. Requis
+        sexe (str): "m" ou "f". Requis
+        rue (str): Rue
+        cp(int): Code Postal
+        ville(str): Ville
+        tel(str): Téléphone
+        email(str): E-mail
+        alive(bool): Patient Vivant ou non.
+        actes(mapistar.actes.models.Acte): Actes ratachés au patient.
+
     """
 
     nom = Required(str, MAX_LENGTH["nom"])
@@ -55,22 +67,34 @@ class Patient(db.Entity):
         return f"[Patient: {self.prenom} {self.nom}]"
 
     @property
-    def dico(self):
-        " return to_dict but serializable"
+    def dico(self) -> dict:
+        """
+        return `Entity.to_dict` but serializable
+        """
         _dico = self.to_dict()
         _dico["ddn"] = _dico["ddn"].isoformat()
         return _dico
 
     def _capwords(self):
+        """
+        Majusculise la première lettre
+        """
 
         self.nom = capwords(self.nom)
         self.prenom = capwords(self.prenom)
 
     def before_insert(self):
+        """
+        * La patient est spécifié vivant.
+        * Nom et Prenom sont Majsuculisés
+        """
         self.alive = True
         self._capwords()
 
     def before_update(self):
+        """
+        * Nom et Prénom sont Majsuculisés
+        """
         self._capwords()
 
 
@@ -112,30 +136,62 @@ class PatientUpdateSchema(types.Type):
 
 
 def add(patient: PatientCreateSchema) -> http.JSONResponse:
-    """    Ajouter u nnouveau patient    """
+    """
+    Ajouter un nouveau patient
+
+    Args:
+        patient: données du nouveau patient
+    """
     a = db.Patient(**patient)
     return http.JSONResponse(a.dico, status_code=201)
 
 
 def liste() -> List[dict]:
-    """ List patients """
+    """ List patients
+
+    Returns:
+        Liste de tous les patients
+    """
     return [x.dico for x in db.Patient.select()]
 
 
 def get(id: int) -> dict:
-    """ Get patient details """
+    """ Get patient details
+
+    Args:
+        id: id du patient
+
+    Returns:
+        Le patient
+    Raises:
+        NotFound si non trouvé.
+    """
     return get_or_404(db.Patient, id).dico
 
 
 def delete(id: int) -> dict:
-    """delete un patient"""
+    """
+    delete un patient
+
+    Args:
+        id: id du patient
+    Returns:
+        msg "delete success"
+    Raises:
+        NotFound si non trouvé
+    """
     pat = get_or_404(db.Patient, id)
     pat.delete()
     return {"msg": "delete success"}
 
 
 def update(new_data: PatientUpdateSchema, id: int) -> http.JSONResponse:
-    """ modify patients """
+    """modify patients
+
+    Args:
+        new_data: Rien n'est requis.
+        id: patient id.
+    """
     to_update = get_or_404(db.Patient, id)
     to_update.set(**{k: v for k, v in new_data.items() if v})
     return http.JSONResponse(to_update.dico, status_code=201)

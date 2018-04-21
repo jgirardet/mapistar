@@ -1,7 +1,7 @@
 from apistar import Component, exceptions, http
 import pendulum
 
-from mapistar.shortcuts import get_or_404
+from mapistar.utils import get_or_404
 from apistar_jwt.token import JWTUser
 
 # from mapistar.models import db
