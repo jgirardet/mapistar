@@ -6,9 +6,6 @@ from string import capwords
 import pytest
 from pony import orm
 
-# mapistar
-
-
 pytestmark = pytest.mark.pony
 
 # @pytest.mark.usefixtures('patientd')

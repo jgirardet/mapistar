@@ -21,7 +21,6 @@
 import os
 import sys
 
-# Third Party Libraries
 # ----Django settings
 # import config.settings
 sys.path.insert(0, "../mapistar")

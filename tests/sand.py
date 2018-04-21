@@ -1,10 +1,15 @@
+# Standard Libraries
+import random
 import sys
 
-sys.path.append("/home/jim/dev/maison/mapistar")
+# Third Party Libraries
+from pony.orm import db_session
+
+# mapistar
 from mapistar.models import db
 
-from pony.orm import db_session
-import random
+sys.path.append("/home/jim/dev/maison/mapistar")
+
 
 
 def fake_patient():

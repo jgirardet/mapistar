@@ -3,13 +3,13 @@ import jwt
 import pendulum
 import pytest
 from apistar import Client, test
+from app import app as main_app
 
 # mapistar
-from app import app as main_app
 from mapistar import settings
 
-from .fixtures import *
 from .factory import *
+from .fixtures import *
 
 
 @pytest.fixture(scope="session")
@@ -21,7 +21,6 @@ def cli_anonymous(request):
 
 @pytest.fixture(scope="function")
 def cli(user):
-    # user = userf()
     user.flush()
     payload = {
         "id": user.pk,

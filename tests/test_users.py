@@ -1,9 +1,17 @@
-# Third Party Libraries
-import pytest
+# Standard Libraries
 import json
-from apistar import exceptions
-from .factory import patientd, userd, f
 from unittest.mock import MagicMock
+
+# Third Party Libraries
+import pendulum
+import pytest
+from apistar import exceptions
+
+# mapistar
+from mapistar.exceptions import MapistarProgrammingError
+from mapistar.users import PermissionsComponent
+
+from .factory import f, patientd, userd
 
 pytestmark = pytest.mark.pony
 
@@ -97,10 +105,6 @@ class TestIsAuthenticated:
         assert r.status_code == 200
 
 
-from mapistar.users import PermissionsComponent
-import pendulum
-
-
 @pytest.fixture(scope="function")
 def actes_permission(request, observation):
     m = MagicMock()
@@ -128,3 +132,13 @@ class TestPermission:
         with pytest.raises(exceptions.BadRequest) as e:
             a.only_editable_today()
         assert str(e.value) == "Un acte ne peut être modifié en dehors du jours même"
+
+    def test_permission_non_evaluée(self, actes_permission, monkeypatch):
+        a = actes_permission
+        monkeypatch.setattr("mapistar.users.get_or_404", lambda x, y: a.obj)
+        NoDeclaredClass = type("NoDeclaredClass", (), {"__name__": "BLALBA"})
+        param = MagicMock()
+        param.annotation = NoDeclaredClass
+        with pytest.raises(MapistarProgrammingError) as e:
+            a.resolve({"acte_pk": 1}, "bla", param)
+        assert str(e.value) == "Permission NoDeclaredClass non évaluée dans resolve"

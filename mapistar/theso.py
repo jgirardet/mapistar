@@ -1,5 +1,6 @@
-from pythonthesorimed.thesoitem import ThesoItem
+# Third Party Libraries
 from apistar import Include, Route
+from pythonthesorimed.thesoitem import ThesoItem
 
 theso_session = ThesoItem("localhost", "thesorimed", "j", "j")
 

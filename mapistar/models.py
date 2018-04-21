@@ -1,12 +1,12 @@
 
-# mapistar
-from mapistar.base_db import db
-
-from mapistar.utils import import_models
-from mapistar import settings
+# Standard Libraries
 import os
 from urllib.parse import urlparse
 
+# mapistar
+from mapistar import settings
+from mapistar.base_db import db
+from mapistar.utils import import_models
 
 import_models(settings.models)
 

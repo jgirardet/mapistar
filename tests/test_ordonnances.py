@@ -1,6 +1,5 @@
+# Third Party Libraries
 import pytest
-import time
-from pony.orm import commit, flush, db_session
 
 pytestmark = pytest.mark.pony
 

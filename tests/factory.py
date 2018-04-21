@@ -2,10 +2,11 @@
 import random
 
 # Third Party Libraries
+from mimesis import Generic
+
+# mapistar
 # import faker
 from mapistar.models import db
-
-from mimesis import Generic
 
 # f = faker.Faker('fr_FR')
 f = Generic("fr")

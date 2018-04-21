@@ -1,13 +1,14 @@
 # Third Party Libraries
 from apistar import App
+from apistar_jwt.token import JWT
 from apistar_ponyorm import PonyDBSession
+
+# mapistar
+from mapistar import settings
 from mapistar.actes import routes_actes
 from mapistar.patients import routes_patients
 from mapistar.theso import routes_theso
-from mapistar.users import routes_users, IsAuthenticated, PermissionsComponent
-from apistar_jwt.token import JWT
-from mapistar import settings
-
+from mapistar.users import IsAuthenticated, PermissionsComponent, routes_users
 
 components = [JWT(settings.JWT), PermissionsComponent()]
 

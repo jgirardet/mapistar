@@ -1,13 +1,16 @@
-from mapistar.models import db
-from apistar import http
-from apistar import Route, http, Include
-
-from .schemas import actes_schemas
-
+# Standard Libraries
 from typing import List
+
+# Third Party Libraries
+from apistar import Include, Route, http
+from apistar_jwt.token import JWTUser
+
+# mapistar
+from mapistar.models import db
 from mapistar.shortcuts import get_or_404
 from mapistar.users import ActesPermissions
-from apistar_jwt.token import JWTUser
+
+from .schemas import actes_schemas
 
 
 class ActesViews:
@@ -29,7 +32,7 @@ class ActesViews:
     def liste(self):
 
         def liste(patient_pk: int) -> List:
-            return [
+            return [  # pragma: nocover
                 acte.dico
                 for acte in self.model.select(lambda a: a.patient.pk == patient_pk)
             ]

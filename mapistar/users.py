@@ -1,5 +1,6 @@
 # Standard Libraries
 import inspect
+from typing import NewType
 
 # Third Party Libraries
 import pendulum
@@ -7,11 +8,11 @@ from apistar import Component, Include, Route, exceptions, http, types, validato
 from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT, JWTUser
 from pony import orm
-from typing import TypeVar, Union
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # mapistar
 from mapistar.base_db import db
+from mapistar.exceptions import MapistarProgrammingError
 from mapistar.shortcuts import get_or_404
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
@@ -138,30 +139,49 @@ class IsAuthenticated:
         """
 
 
-ActesPermissions = TypeVar("ActesPermissions")
+BasePermissions = type("BasePermissions", (), {})
+ActesPermissions = type("ActesPermissions", (BasePermissions,), {})
 
 
 class PermissionsComponent(Component):
     """
     Component gérant les permissions des actes
+
+    Les classes de permissions sont définies en subclassant BasePermissions::
+        MyClassPermissions = type("MyClassPermissions", (BasePermissions,), {})
+
+    On ajoute ensuite les permissions::
+        if parameter.annotation is MyClassPermissions:
+            self.only_owner_can_edit()
+            self.my_new_method()
+
     """
 
     def only_owner_can_edit(self):
+        """
+        Vérifie que seul l'utilisateur ayant créé l'acte puisse le modifier
+        """
         if self.user.id != self.obj.owner.pk:
             raise exceptions.Forbidden(
                 "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
             )
 
     def only_editable_today(self):
+        """
+        Vérifie que le jour de modification corresponde au jours même
+        """
         today = pendulum.now()
         if not today.is_same_day(self.obj.created):
             raise exceptions.BadRequest(
                 "Un acte ne peut être modifié en dehors du jours même"
             )
 
+    def can_handle_parameter(self, parameter: inspect.Parameter):
+        return issubclass(parameter.annotation, BasePermissions)
+
     def resolve(
         self, acte_pk: http.PathParams, jwt_user: JWTUser, parameter: inspect.Parameter
-    ) -> Union[ActesPermissions]:
+    ):
         self.obj = get_or_404(db.Acte, acte_pk["acte_pk"])
         self.user = jwt_user
 
@@ -169,10 +189,14 @@ class PermissionsComponent(Component):
             self.only_owner_can_edit()
             self.only_editable_today()
 
-        # if obj.created.date() != timezone.now().date():
-        #     raise BadRequest("Observation can't be edited another day")
+        else:
+            raise MapistarProgrammingError(
+                f"Permission {parameter.annotation.__name__} non évaluée dans resolve"
+            )
 
         return self.obj
+
+
 
 
 routes_users = Include(

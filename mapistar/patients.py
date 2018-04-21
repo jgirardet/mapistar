@@ -1,16 +1,17 @@
 # Standard Libraries
 from datetime import date
 from string import capwords
+from typing import List
 
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
-from mapistar.base_db import db
 from pony.orm import Optional, PrimaryKey, Required, Set
-from typing import List
+
+# mapistar
+from mapistar.base_db import db
 
 # from mapistar.models import db
 from .shortcuts import get_or_404
-
 
 MAX_LENGTH = {
     "nom": 100,
