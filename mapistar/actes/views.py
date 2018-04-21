@@ -7,7 +7,7 @@ from apistar_jwt.token import JWTUser
 
 # mapistar
 from mapistar.shortcuts import get_or_404
-from mapistar.users import ActesPermissions
+from mapistar.permissions import ActesPermissions
 
 from .schemas import actes_schemas
 

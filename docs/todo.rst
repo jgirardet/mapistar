@@ -1,3 +1,5 @@
+Todo
+****
 
 Todo vers 1.0
 ===============
@@ -34,3 +36,14 @@ Todo vers 1.0
     - entry point
     - git pre commit
 
+* Documentation:
+
+    - patient
+    - utils
+    - shorcuts
+    - users
+    - authentification
+    - ordonnances
+    - theso
+    - exceptions
+    - app

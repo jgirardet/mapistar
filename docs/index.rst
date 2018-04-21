@@ -2,11 +2,13 @@ Welcome to mapistar documentation!
 ===========================================
 
 .. toctree::
-	:maxdepth: 2
+	:maxdepth: 1
 
-		
-	api/modules
+	users
+	permissions
+	changelog
 	todo
+	composants
 
 Indices and tables
 ==================

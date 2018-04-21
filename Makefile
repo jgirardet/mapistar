@@ -70,7 +70,7 @@ apidoc:
 doc: apidoc
 	pipenv run python setup.py build_sphinx
 
-doc-auto: apidoc
+doc-auto:
 	pipenv run sphinx-autobuild docs docs/_build
 	
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
@@ -83,6 +83,9 @@ clean-build: ## remove build artifacts
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 	find . -name 'requirements*' -exec rm -f {} +
+	rm -rf docs/_build/
+
+
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +

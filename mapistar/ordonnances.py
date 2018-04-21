@@ -4,7 +4,7 @@ from pony import orm
 # mapistar
 from mapistar.models import db
 
-from .actes import Acte
+from mapistar.actes.models import Acte
 
 
 class Ordonnance(Acte):

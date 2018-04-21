@@ -11,7 +11,6 @@ from mapistar.models import db
 sys.path.append("/home/jim/dev/maison/mapistar")
 
 
-
 def fake_patient():
     return db.Patient(nom="fake", prenom="fake", ddn="1234-12-12", sexe="f")
 
@@ -19,11 +18,12 @@ def fake_patient():
 def fake_user():
     u = db.User.create_user(
         **{
-            'username': 'fakeuser' + str(random.random()),
-            'password': 'j',
-            'nom': "fake",
-            'prenom': "fake"
-        })
+            "username": "fakeuser" + str(random.random()),
+            "password": "j",
+            "nom": "fake",
+            "prenom": "fake",
+        }
+    )
     return u
 
 

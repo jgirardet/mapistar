@@ -20,8 +20,6 @@ STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 class User(db.Entity):
     """Class Utilisateur Principale
 
-    blabla
-
     Attributes:
         pk (int): primary key.
         username (str): Identifiant utilisteur.
@@ -88,13 +86,13 @@ class LoginSchema(types.Type):
 
 
 @anonymous_allowed
-def login(cred: LoginSchema, jwt: JWT) -> str:
+def login(credentials: LoginSchema, jwt: JWT) -> str:
     """
     View d'authentification
 
     Args:
         cred: credentials username/password
-        jwt: JWT componement pour l'endocdage du payload
+        jwt: JWT componement pour l'encodage du payload
 
     Toutes les erreurs "raise"
 
@@ -102,9 +100,9 @@ def login(cred: LoginSchema, jwt: JWT) -> str:
         token type str
     """
 
-    user = User.get(username=cred["username"])
+    user = User.get(username=credentials["username"])
 
-    if not user or not user.check_password(cred["password"]):
+    if not user or not user.check_password(credentials["password"]):
         raise exceptions.Forbidden("Incorrect username or password.")
 
     if not user.actif:
@@ -121,79 +119,6 @@ def login(cred: LoginSchema, jwt: JWT) -> str:
         raise exceptions.ConfigurationError("échec de l'encodage jwt")
 
     return token
-
-
-class IsAuthenticated:
-    """
-    Hook qui force l'authentification de toute les requêtes
-    """
-
-    def on_request(self, jwt_user: JWTUser):
-        """
-        Args:
-            jwt_user: Force l'exécution du componement JWTUser.
-
-        Raises:
-            Si échec de l'authentification
-        """
-
-
-BasePermissions = type("BasePermissions", (), {})
-ActesPermissions = type("ActesPermissions", (BasePermissions,), {})
-
-
-class PermissionsComponent(Component):
-    """
-    Component gérant les permissions des actes
-
-    Les classes de permissions sont définies en subclassant BasePermissions::
-        MyClassPermissions = type("MyClassPermissions", (BasePermissions,), {})
-
-    On ajoute ensuite les permissions::
-        if parameter.annotation is MyClassPermissions:
-            self.only_owner_can_edit()
-            self.my_new_method()
-
-    """
-
-    def only_owner_can_edit(self):
-        """
-        Vérifie que seul l'utilisateur ayant créé l'acte puisse le modifier
-        """
-        if self.user.id != self.obj.owner.pk:
-            raise exceptions.Forbidden(
-                "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
-            )
-
-    def only_editable_today(self):
-        """
-        Vérifie que le jour de modification corresponde au jours même
-        """
-        today = pendulum.now()
-        if not today.is_same_day(self.obj.created):
-            raise exceptions.BadRequest(
-                "Un acte ne peut être modifié en dehors du jours même"
-            )
-
-    def can_handle_parameter(self, parameter: inspect.Parameter):
-        return issubclass(parameter.annotation, BasePermissions)
-
-    def resolve(
-        self, acte_pk: http.PathParams, jwt_user: JWTUser, parameter: inspect.Parameter
-    ):
-        self.obj = get_or_404(db.Acte, acte_pk["acte_pk"])
-        self.user = jwt_user
-
-        if parameter.annotation is ActesPermissions:
-            self.only_owner_can_edit()
-            self.only_editable_today()
-
-        else:
-            raise MapistarProgrammingError(
-                f"Permission {parameter.annotation.__name__} non évaluée dans resolve"
-            )
-
-        return self.obj
 
 
 routes_users = Include(
