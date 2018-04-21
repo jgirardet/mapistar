@@ -3,7 +3,6 @@ from mapistar.permissions import ActesPermissionsComponent
 from apistar import exceptions
 import pendulum
 from unittest.mock import MagicMock
-from mapistar.exceptions import MapistarProgrammingError
 
 pytestmark = pytest.mark.pony
 

@@ -23,7 +23,7 @@ def cli_anonymous(request):
 def cli(user):
     user.flush()
     payload = {
-        "id": user.pk,
+        "id": user.id,
         "username": user.username,
         "iat": pendulum.now(),
         "exp": pendulum.now() + pendulum.Duration(seconds=10),

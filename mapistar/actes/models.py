@@ -17,7 +17,6 @@ class Acte(db.Entity):
     made by users
     Updatable fields by user must be set in updatable
     """
-    pk = orm.PrimaryKey(int, auto=True)
     patient = orm.Required("Patient")
     owner = orm.Required("User")
     _created = orm.Required(datetime, default=datetime.utcnow)

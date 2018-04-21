@@ -30,10 +30,10 @@ class ActesViews:
 
     def liste(self):
 
-        def liste(patient_pk: int) -> List:
+        def liste(patient_id: int) -> List:
             return [  # pragma: nocover
                 acte.dico
-                for acte in self.model.select(lambda a: a.patient.pk == patient_pk)
+                for acte in self.model.select(lambda a: a.patient.id == patient_id)
             ]
 
         liste.__doc__ = f""" Liste les Actes de type : {self.model.name}"""
@@ -41,8 +41,8 @@ class ActesViews:
 
     def one(self):
 
-        def one(acte_pk: int) -> dict:
-            obj = get_or_404(self.model, acte_pk)
+        def one(acte_id: int) -> dict:
+            obj = get_or_404(self.model, acte_id)
             return obj.dico
 
         one.__doc__ = f"""Accède à un Acte de type : {self.model.name}"""
@@ -50,18 +50,18 @@ class ActesViews:
 
     def delete(self):
 
-        def delete(acte_pk: int, obj: ActesPermissions) -> dict:
-            # obj = get_or_404(self.model, acte_pk)
+        def delete(acte_id: int, obj: ActesPermissions) -> dict:
+            # obj = get_or_404(self.model, acte_id)
             obj.delete()
-            return {"pk": acte_pk, "deleted": True}
+            return {"id": acte_id, "deleted": True}
 
         delete.__doc__ = f"""Efface un Acte de type : {self.model.name}"""
         return delete
 
     def update(self):
 
-        def update(acte_pk: int, new_data: self.schemas.updater, obj: ActesPermissions):
-            # obj = get_or_404(self.model, acte_pk)
+        def update(acte_id: int, new_data: self.schemas.updater, obj: ActesPermissions):
+            # obj = get_or_404(self.model, acte_id)
             obj.set(**new_data)
             return obj.dico
 
@@ -74,9 +74,9 @@ class ActesViews:
             name=self.model.url_name,
             routes=[
                 Route("/", method="POST", handler=self.add()),
-                Route("/{acte_pk}/", method="GET", handler=self.one()),
-                Route("/{acte_pk}/", method="DELETE", handler=self.delete()),
-                Route("/{acte_pk}/", method="PUT", handler=self.update()),
-                Route("/patient/{patient_pk}/", method="GET", handler=self.liste()),
+                Route("/{acte_id}/", method="GET", handler=self.one()),
+                Route("/{acte_id}/", method="DELETE", handler=self.delete()),
+                Route("/{acte_id}/", method="PUT", handler=self.update()),
+                Route("/patient/{patient_id}/", method="GET", handler=self.liste()),
             ],
         )

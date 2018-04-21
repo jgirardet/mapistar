@@ -21,7 +21,6 @@ class User(db.Entity):
     """Class Utilisateur Principale
 
     Attributes:
-        pk (int): primary key.
         username (str): Identifiant utilisteur.
         password (str): Mot de passe. Ne doit pas être modifié directement
         nom (str): Nom de l'utilisteur.
@@ -31,7 +30,6 @@ class User(db.Entity):
 
     """
 
-    pk = orm.PrimaryKey(int, auto=True)
     username = orm.Required(str, unique=True)
     password = orm.Required(str)
     nom = orm.Required(str)
@@ -109,7 +107,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
         raise exceptions.Forbidden("Utilisateur inactif")
 
     payload = {
-        "id": user.pk,
+        "id": user.id,
         "username": user.username,
         "iat": pendulum.now(),
         "exp": pendulum.now() + pendulum.Duration(seconds=5),
@@ -127,10 +125,10 @@ routes_users = Include(
     routes=[
         Route(url="/login/", method="POST", handler=login, name="login"),
         # Route(url="/", method="GET", handler=liste),
-        # Route(url="/{pk}/", method="PUT", handler=update),
+        # Route(url="/{id}/", method="PUT", handler=update),
         # # Route(url="/patients/", method="DELETE", handler=delete),
-        # Route(url="/{pk}/", method="DELETE", handler=delete),
-        # Route(url="/{pk}/", method="GET", handler=get),
+        # Route(url="/{id}/", method="DELETE", handler=delete),
+        # Route(url="/{id}/", method="GET", handler=get),
     ],
 )
 """

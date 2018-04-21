@@ -36,7 +36,6 @@ class Patient(db.Entity):
         pk(int): clé primaire
     """
 
-    pk = PrimaryKey(int, auto=True)
     nom = Required(str, MAX_LENGTH["nom"])
     prenom = Required(str, MAX_LENGTH["prenom"])
     ddn = Required(date)
@@ -123,21 +122,21 @@ def liste() -> List[dict]:
     return [x.dico for x in db.Patient.select()]
 
 
-def get(pk: int) -> dict:
+def get(id: int) -> dict:
     """ Get patient details """
-    return get_or_404(db.Patient, pk).dico
+    return get_or_404(db.Patient, id).dico
 
 
-def delete(pk: int) -> dict:
+def delete(id: int) -> dict:
     """delete un patient"""
-    pat = get_or_404(db.Patient, pk)
+    pat = get_or_404(db.Patient, id)
     pat.delete()
     return {"msg": "delete success"}
 
 
-def update(new_data: PatientUpdateSchema, pk: int) -> http.JSONResponse:
+def update(new_data: PatientUpdateSchema, id: int) -> http.JSONResponse:
     """ modify patients """
-    to_update = get_or_404(db.Patient, pk)
+    to_update = get_or_404(db.Patient, id)
     to_update.set(**{k: v for k, v in new_data.items() if v})
     return http.JSONResponse(to_update.dico, status_code=201)
 
@@ -148,9 +147,9 @@ routes_patients = Include(
     routes=[
         Route(url="/", method="POST", handler=add),
         Route(url="/", method="GET", handler=liste),
-        Route(url="/{pk}/", method="PUT", handler=update),
-        Route(url="/{pk}/", method="DELETE", handler=delete),
-        Route(url="/{pk}/", method="GET", handler=get),
+        Route(url="/{id}/", method="PUT", handler=update),
+        Route(url="/{id}/", method="DELETE", handler=delete),
+        Route(url="/{id}/", method="GET", handler=get),
     ],
 )
 #

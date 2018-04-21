@@ -12,7 +12,7 @@ pytestmark = pytest.mark.pony
 class TestModel:
 
     def test_create_user(self, user):
-        assert user.pk
+        assert user.id
 
     def test_repr(self, user):
         assert repr(user) == f"[User: {user.prenom} {user.nom}]"

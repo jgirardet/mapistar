@@ -69,14 +69,14 @@ class TestPatientViews:
         }
 
         resp = cli.post(app.reverse_url("patients:add"), data=json.dumps(a))
-        assert resp.json()["pk"] is not None
+        assert resp.json()["id"] is not None
 
     def test_cli_get_patient(self, patient, cli, app):
-        resp = cli.get(app.reverse_url("patients:get", pk=patient.pk))
+        resp = cli.get(app.reverse_url("patients:get", id=patient.id))
         assert resp.json() == patient.dico
 
     def test_cli_del_patient(self, patient, cli, app):
-        resp = cli.delete(app.reverse_url("patients:delete", pk=patient.pk))
+        resp = cli.delete(app.reverse_url("patients:delete", id=patient.id))
         assert resp.json() == {"msg": "delete success"}
 
     def test_cli_list_patient(self, patient, cli, app):
@@ -92,7 +92,7 @@ class TestPatientViews:
         patient.flush()
         update = {"prenom": "omkmok", "ddn": "1237-03-03", "rue": "mokmokmok"}
         response = cli.put(
-            app.reverse_url("patients:update", pk=patient.pk), data=json.dumps(update)
+            app.reverse_url("patients:update", id=patient.id), data=json.dumps(update)
         )
         for i in update:
             assert response.json() == patient.dico
@@ -114,7 +114,7 @@ class TestPatientViews:
 #     )
 
 #     assert r.status_code == 201
-#     assert r.json()["pk"] == 1
+#     assert r.json()["id"] == 1
 
 
 # def test_aaa(ponydb, cli):

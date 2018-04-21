@@ -1,5 +1,4 @@
 from apistar import Component, exceptions, http
-import inspect
 import pendulum
 
 from mapistar.shortcuts import get_or_404
@@ -47,7 +46,7 @@ class ActesPermissionsComponent(Component):
         """
         Permission où seul l'utilisateur ayant créé l'acte peut le modifier.
         """
-        if self.user.id != self.obj.owner.pk:
+        if self.user.id != self.obj.owner.id:
             raise exceptions.Forbidden(
                 "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
             )
@@ -62,12 +61,12 @@ class ActesPermissionsComponent(Component):
                 "Un acte ne peut être modifié en dehors du jours même"
             )
 
-    def resolve(self, acte_pk: http.PathParams, jwt_user: JWTUser) -> ActesPermissions:
+    def resolve(self, acte_id: http.PathParams, jwt_user: JWTUser) -> ActesPermissions:
         """
         Résolution des permissions
 
         Args:
-            acte_pk (dict): dont on extrait le clé `acte_pk`
+            acte_id (dict): dont on extrait le clé `acte_id`
 
         Returns:
             obj de type :class:`~mapistar.actes.models.Acte`
@@ -75,7 +74,7 @@ class ActesPermissionsComponent(Component):
         Raises:
             Si une permission n'est pas accordée. Exception de type apistar.exceptions
         """
-        self.obj = get_or_404(db.Acte, acte_pk["acte_pk"])
+        self.obj = get_or_404(db.Acte, acte_id["acte_id"])
         self.user = jwt_user
 
         self.only_owner_can_edit()

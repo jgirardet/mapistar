@@ -16,5 +16,5 @@ def test_cli_get_patient_404(ponydb):
 
 @pytest.mark.pony
 def test_cli_get_patient_ok(ponydb, patient):
-    r = get_or_404(ponydb.Patient, patient.pk)
-    assert r == ponydb.Patient[patient.pk]
+    r = get_or_404(ponydb.Patient, patient.id)
+    assert r == ponydb.Patient[patient.id]
