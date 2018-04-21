@@ -28,6 +28,7 @@ Todo vers 1.0
   
 * Divers :
 
+    - id en lieu et place de pk
 	- mettre models.db dans app ?
 	- settings :  chargement/gestion/env
 	- doc: 100%
@@ -47,3 +48,4 @@ Todo vers 1.0
     - theso
     - exceptions
     - app
+

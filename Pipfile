@@ -11,7 +11,7 @@ python_version = "3.6"
 
 [dev-packages]
 
-flake8 = "*"
+"flake8" = "*"
 isort = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -40,3 +40,4 @@ pendulum = ">=2.*"
 pythonthesorimed = "*"
 apistar-ponyorm = ""
 apistar-jwt = "*"
+sphinx-autodoc-typehints = "*"

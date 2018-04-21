@@ -97,7 +97,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
     Toutes les erreurs "raise"
 
     Returns:
-        token type str
+        token
     """
 
     user = User.get(username=credentials["username"])

@@ -35,10 +35,11 @@ sys.path.insert(0, "../mapistar")
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinxcontrib.napoleon",
+    "sphinx_autodoc_typehints",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
-    "sphinxcontrib.napoleon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
