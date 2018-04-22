@@ -14,7 +14,7 @@ from mapistar.utils import PendulumDateTime
 class Acte(db.Entity):
     """
     Base Entity pour les différents actes.
-    
+
     Les fields updatables sont spécifiés dans updatable
 
     Attributes:

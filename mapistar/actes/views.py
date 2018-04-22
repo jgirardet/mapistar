@@ -1,10 +1,14 @@
+# Standard Libraries
+from typing import Callable, List
+
 # Third Party Libraries
 from apistar import Include, Route, http
 from apistar_jwt.token import JWTUser
+
+# mapistar
 from mapistar.db import db
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import get_or_404
-from typing import List, Callable
 
 from .schemas import actes_schemas
 
@@ -18,7 +22,7 @@ class ActesViews:
 
     Args:
         model: modèle pony, hérité de :class:`BaseActe`
-    
+
     Returns:
         Une liste d'URL
     """
