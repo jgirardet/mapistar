@@ -1,7 +1,7 @@
 # Third Party Libraries
 from apistar import Include, Route, http
 from apistar_jwt.token import JWTUser
-from mapistar.models import db
+from mapistar.db import db
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import get_or_404
 from typing import List, Callable

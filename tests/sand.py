@@ -6,7 +6,7 @@ import sys
 from pony.orm import db_session
 
 # mapistar
-from mapistar.models import db
+from mapistar.db import db
 
 sys.path.append("/home/jim/dev/maison/mapistar")
 

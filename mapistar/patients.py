@@ -10,7 +10,7 @@ from pony.orm import Optional, Required, Set
 # mapistar
 from mapistar.base_db import db
 
-# from mapistar.models import db
+# from mapistar.db import db
 from .utils import get_or_404
 
 MAX_LENGTH = {

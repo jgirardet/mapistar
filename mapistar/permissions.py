@@ -7,8 +7,8 @@ from apistar import Component, exceptions, http
 from apistar_jwt.token import JWTUser
 
 # mapistar
-# from mapistar.models import db
-from mapistar.models import db
+# from mapistar.db import db
+from mapistar.db import db
 from mapistar.utils import get_or_404
 
 

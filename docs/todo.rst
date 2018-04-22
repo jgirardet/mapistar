@@ -28,7 +28,6 @@ Todo vers 1.0
   
 * Divers :
 
-	- mettre models.db dans app ?
 	- settings :  chargement/gestion/env
 	- doc: 100%
 	- deploiement
@@ -41,7 +40,7 @@ Todo vers 1.0
     - utils +
     - users +
     - permissions +
-    - actes
+    - actes +
     - ordonnances
     - theso
     - exceptions

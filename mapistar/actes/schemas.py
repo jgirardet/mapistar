@@ -5,7 +5,7 @@ from collections import namedtuple
 from apistar import types, validators
 
 # mapistar
-from mapistar.models import db
+from mapistar.db import db
 
 
 class ObservationCreateSchema(types.Type):
