@@ -6,12 +6,13 @@ from typing import List
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
 from pony.orm import Optional, Required, Set
+import pendulum
 
 # mapistar
 from mapistar.base_db import db
 
 # from mapistar.db import db
-from .utils import get_or_404
+from .utils import get_or_404, DicoMixin
 
 MAX_LENGTH = {
     "nom": 100,
@@ -29,7 +30,7 @@ SEXE = ["f", "m"]
 MAX = {"cp": 10000000}
 
 
-class Patient(db.Entity):
+class Patient(db.Entity, DicoMixin):
     """
     Entity Patient
 
@@ -65,15 +66,6 @@ class Patient(db.Entity):
         nice printing Firstname Name
         """
         return f"[Patient: {self.prenom} {self.nom}]"
-
-    @property
-    def dico(self) -> dict:
-        """
-        return `Entity.to_dict` but serializable
-        """
-        _dico = self.to_dict()
-        _dico["ddn"] = _dico["ddn"].isoformat()
-        return _dico
 
     def _capwords(self):
         """

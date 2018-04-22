@@ -7,20 +7,22 @@ Todo vers 1.0
 * Patient:
     - revoir les données accessoires
     - schema email
+    - descriptor pour Date
 
 * User :
 
     - type : médecin, secrétaire ...
     - Etat civil
     - Change Password/create password views
-    - updatable field
 
 * Actes :
-    - Presription libre
-    - ordonnances
+    - updatable field
 
-        + medicaments base (sans controle)
-        + monographie
+* Presription libre
+
+* ordonnances
+    - medicaments base (sans controle)
+    - monographie
 
 * Laboratoires
   

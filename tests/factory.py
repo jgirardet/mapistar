@@ -5,10 +5,8 @@ import random
 from mimesis import Generic
 
 # mapistar
-# import faker
 from mapistar.db import db
 
-# f = faker.Faker('fr_FR')
 f = Generic("fr")
 
 

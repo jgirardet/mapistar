@@ -8,10 +8,10 @@ from pony import orm
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import PendulumDateTime
+from mapistar.utils import PendulumDateTime, DicoMixin
 
 
-class Acte(db.Entity):
+class Acte(db.Entity, DicoMixin):
     """
     Base Entity pour les différents actes.
 
@@ -43,14 +43,14 @@ class Acte(db.Entity):
     created = PendulumDateTime()
     modified = PendulumDateTime()
 
-    @property
-    def dico(self):
-        " return to_dict but serializable"
-        _dico = self.to_dict()
-        [_dico.pop(x) for x in ("_created", "_modified")]
-        _dico["created"] = self.created.isoformat()
-        _dico["modified"] = self.modified.isoformat()
-        return _dico
+    # @property
+    # def dico(self):
+    #     " return to_dict but serializable"
+    #     _dico = self.to_dict()
+    #     [_dico.pop(x) for x in ("_created", "_modified")]
+    #     _dico["created"] = self.created.isoformat()
+    #     _dico["modified"] = self.modified.isoformat()
+    #     return _dico
 
     def before_insert(self):
         """

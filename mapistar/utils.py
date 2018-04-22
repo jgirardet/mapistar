@@ -5,6 +5,7 @@ import importlib
 import pendulum
 from apistar.exceptions import NotFound
 from pony import orm
+from datetime import datetime, date
 
 
 def import_models(module_liste: list):
@@ -71,3 +72,36 @@ def get_or_404(model: orm.core.Entity, id: [str, int]):
         raise NotFound
 
     return item
+
+
+class DicoMixin:
+
+    @property
+    def dico(self) -> dict:
+        """
+        Transforme un dict en dict serializable.
+
+        remplace un champs "_champs" par son équivalent "champs" au sein de self.
+
+        Marche pour:
+            *object datetime
+            *object date
+
+        Args:
+            dico: le dict à transformer
+        Returns:
+            un nouveau dict.
+        """
+        dicoco = self.to_dict()
+        new_dict = {}
+
+        for k, v in dicoco.items():
+            if isinstance(v, datetime) and k.startswith("_"):
+                attr = k.lstrip("_")
+                new_dict[attr] = getattr(self, attr).isoformat()
+
+            elif isinstance(v, date):
+                new_dict[k] = v.isoformat()
+            else:
+                new_dict[k] = v
+        return new_dict
