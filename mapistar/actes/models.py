@@ -47,8 +47,7 @@ class Acte(db.Entity):
     def dico(self):
         " return to_dict but serializable"
         _dico = self.to_dict()
-        del _dico["_created"]
-        del _dico["_modified"]
+        [_dico.pop(x) for x in ("_created", "_modified")]
         _dico["created"] = self.created.isoformat()
         _dico["modified"] = self.modified.isoformat()
         return _dico
