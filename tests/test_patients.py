@@ -69,6 +69,7 @@ class TestPatientViews:
         }
 
         resp = cli.post(app.reverse_url("patients:add"), data=json.dumps(a))
+        self.patient_id = resp.json()["id"]
         assert resp.json()["id"] is not None
 
     def test_cli_get_patient(self, patient, cli, app):
