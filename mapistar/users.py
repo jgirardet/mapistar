@@ -13,7 +13,8 @@ STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
 
 class User(db.Entity):
-    """Class Utilisateur Principale
+    """
+    Entity Utilisateur
 
     Attributes:
         username (str): Identifiant utilisteur.

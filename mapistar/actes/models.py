@@ -13,9 +13,17 @@ from mapistar.utils import PendulumDateTime
 
 class Acte(db.Entity):
     """
-    Base class for for differnets actions
-    made by users
-    Updatable fields by user must be set in updatable
+    Base Entity pour les différents actes.
+    
+    Les fields updatables sont spécifiés dans updatable
+
+    Attributes:
+        patient(mapistar.Patient): Patient
+        owner(mapistar.User): Créateur de l'Acte
+        created: date de création
+        modified: dernière modification
+
+
     """
     patient = orm.Required("Patient")
     owner = orm.Required("User")
@@ -23,11 +31,13 @@ class Acte(db.Entity):
     _modified = orm.Optional(datetime)
 
     @classproperty
-    def url_name(self):
-        return self.__name__.lower() + "s"
+    def name(self) -> str:
+        """nom du modèle"""
+        return self.__name__
 
     @classproperty
-    def name(self):
+    def url_name(self) -> str:
+        """url du modèle, utilisé dans :class:`~mapistar.actes.views.ActeViews`"""
         return self.__name__.lower() + "s"
 
     created = PendulumDateTime()
@@ -44,17 +54,31 @@ class Acte(db.Entity):
         return _dico
 
     def before_insert(self):
+        """
+        Avant insert:
+            * dernière modification == création
+        """
         self._modified = self._created
 
-    # pass
-
     def before_update(self):
+        """
+        Avant update:
+            * dernière modification == maintenant
+        """
         self.modified = pendulum.now()
 
     updatable = ()
 
-    def set(self, **kwargs):
-        """ override default set pour vérifier si updatable"""
+    def set(self, **kwargs: dict):
+        """
+        Override default set pour vérifier si updatable
+
+        Args:
+            kwargs: field : nouvelle valeur
+
+        Raises:
+            AttributeError: si le field n'est pas dans :attr:`updatable`.
+        """
         for item in kwargs:
             if item not in self.updatable:
                 raise AttributeError(f"{item} n'est pas updatable")
@@ -63,6 +87,14 @@ class Acte(db.Entity):
 
 
 class Observation(Acte):
+    """
+    Entity Observation
+
+    Attributes:
+        motif(str)*: Motif de la consultation
+        body(str): Corps de lobservation
+    """
+
     motif = orm.Required(str)
     body = orm.Optional(str)
 

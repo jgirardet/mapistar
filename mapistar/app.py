@@ -5,7 +5,7 @@ from apistar_ponyorm import PonyDBSession
 
 # mapistar
 from mapistar import settings
-from mapistar.actes.urls import routes_actes
+from mapistar.actes.views import routes_observations
 from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
@@ -14,7 +14,7 @@ from mapistar.users import routes_users
 components = [JWT(settings.JWT), ActesPermissionsComponent()]
 
 app = App(
-    routes=[routes_patients, routes_actes, routes_theso, routes_users],
+    routes=[routes_patients, routes_observations, routes_theso, routes_users],
     components=components,
     event_hooks=[PonyDBSession(), IsAuthenticated()],
     schema_url="/schema/",

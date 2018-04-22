@@ -31,7 +31,7 @@ MAX = {"cp": 10000000}
 
 class Patient(db.Entity):
     """
-    Base class pour les patients
+    Entity Patient
 
     Attributes:
         nom (str): Nom du patient. Requis

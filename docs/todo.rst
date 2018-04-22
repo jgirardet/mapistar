@@ -13,6 +13,7 @@ Todo vers 1.0
     - type : médecin, secrétaire ...
     - Etat civil
     - Change Password/create password views
+    - updatable field
 
 * Actes :
     - Presription libre
@@ -45,4 +46,5 @@ Todo vers 1.0
     - theso
     - exceptions
     - app
+    - champs requies de pony
 
