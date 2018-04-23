@@ -4,6 +4,10 @@ Todo
 Todo vers 1.0
 ===============
 
+* Bug:
+    - permission is today wrong
+
+
 * Patient:
     - revoir les données accessoires
     - schema email
