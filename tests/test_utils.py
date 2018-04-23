@@ -24,10 +24,35 @@ def test_pendulum_datetime():
     assert a == pendulum.DateTime(2007, 12, 5, 12, 12).in_tz("UTC")
 
     # set
-    # peut échouer au
     a = pendulum.DateTime(2007, 12, 5, 12, 12, tzinfo=pendulum.timezone("Europe/Paris"))
     pd.__set__(instance, a)
     assert instance._lenom == a.in_tz("UTC").naive()
+
+    # type error
+    instance._lenom = "mauvais type"
+    with pytest.raises(TypeError) as exc:
+        a = pd.__get__(instance, "owner")
+    assert str(exc.value) == "instance date/datetime requis"
+
+    with pytest.raises(TypeError) as exc:
+        pd.__set__(instance, "bad type")
+    assert str(exc.value) == "instance pendulum Date/Datetime requis"
+
+
+def test_pendulum_datetime_with_date():
+    # get
+    pd.__set_name__("owner", "lenom")
+    instance = MagicMock()
+    instance._lenom = date(2007, 12, 5)
+    a = pd.__get__(instance, "owner")
+    assert a == pendulum.Date(2007, 12, 5)
+    # set
+    a = pendulum.Date(2007, 12, 5)
+    pd.__set__(instance, a)
+    assert instance._lenom == a
+
+    # reget but form current state not from database
+    a = pd.__get__(instance, "owner")
 
 
 def test_get_or_404_pass_int_and_string(observation):

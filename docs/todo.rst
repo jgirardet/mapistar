@@ -7,7 +7,6 @@ Todo vers 1.0
 * Patient:
     - revoir les données accessoires
     - schema email
-    - descriptor pour Date
 
 * User :
 

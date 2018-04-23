@@ -49,13 +49,26 @@ class PendulumDateTime:
         Convertit naif datetime  en aware.
         On ajoute le in_tz('UTC') pour s'assurer que l'objet ne reste pas unaware
         """
-        return pendulum.instance(getattr(instance, self.field)).in_tz("UTC")
+        dd = getattr(instance, self.field)
+        if isinstance(dd, datetime):
+            return pendulum.instance(dd).in_tz("UTC")
+
+        elif isinstance(dd, date):
+            return pendulum.date(dd.year, dd.month, dd.day)
+
+        else:
+            raise TypeError("instance date/datetime requis")
 
     def __set__(self, instance, value):
         """
         Convertit aware en naif. Tout est sauvé en UTC
         """
-        setattr(instance, self.field, value.in_tz("UTC").naive())
+        if isinstance(value, pendulum.DateTime):
+            setattr(instance, self.field, value.in_tz("UTC").naive())
+        elif isinstance(value, pendulum.Date):
+            setattr(instance, self.field, value)
+        else:
+            raise TypeError("instance pendulum Date/Datetime requis")
 
 
 def get_or_404(model: orm.core.Entity, id: [str, int]):

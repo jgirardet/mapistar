@@ -12,7 +12,7 @@ import pendulum
 from mapistar.base_db import db
 
 # from mapistar.db import db
-from .utils import get_or_404, DicoMixin
+from .utils import get_or_404, DicoMixin, PendulumDateTime
 
 MAX_LENGTH = {
     "nom": 100,
