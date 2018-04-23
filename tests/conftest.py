@@ -5,7 +5,7 @@ import pytest
 from apistar import Client, test
 
 # mapistar
-from mapistar import settings
+from simple_settings import settings
 from mapistar.app import app as main_app
 
 from .factory import *
