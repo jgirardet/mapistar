@@ -33,7 +33,6 @@ Todo vers 1.0
   
 * Divers :
 
-	- settings :  chargement/gestion/env
 	- doc: 100%
 	- deploiement
     - entry point
