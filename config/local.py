@@ -1,31 +1,23 @@
 from .base import *
+from urllib.parse import urlparse
+import os
 
 print("Local Config")
 
 JWT = {"JWT_SECRET": "a"}
 
-# db.connect(provider="sqlite", filename="db.sqlite", create_tables=True, create_db=True)
 
-# try:
-#     os.environ['TEST_RUNNING']
-# except KeyError:
-url = urlparse(os.environ["MAPISTAR_DATABASE"])
 # forme : postgres://user:password@host:port/databasename
-# url = urlparse("postgres://j:j@localhost:5432/mapistar")
-provider = url.scheme,
-host = url.hostname,
-database = url.path.strip("/"),
-user = url.username,
-password = url.password,
-port = url.port,
-create_tables = True,
-
-# else:
-
+url = urlparse(os.environ["MAPISTAR_DATABASE"])
+DATABASE = {
+    "provider": url.scheme,
+    "host": url.hostname,
+    "port": url.port,
+    "database": "mapistar_test",
+    "user": url.username,
+    "password": url.password,
+    "create_tables": True,
+}
 
 # sqlite memory
 DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}
-
-
-# create_db=True,
-# )

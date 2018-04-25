@@ -58,8 +58,6 @@ class ActesPermissionsComponent(Component):
         Permission où le jour de modification doit correspondre au jour de création.
         """
         today = pendulum.now()
-        # fmt: off
-        import pdb; pdb.set_trace() # fmt: on
         if not today.is_same_day(self.obj.created):
             raise exceptions.BadRequest(
                 "Un acte ne peut être modifié en dehors du jours même"
