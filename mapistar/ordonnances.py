@@ -9,29 +9,20 @@ from mapistar.utils import DicoMixin
 
 class Ordonnance(Acte):
     items = orm.Set("Item")
-    ordre = orm.Optional(str)
+    ordre = orm.Optional(str, default="")
+    duree = orm.Optional(int)
+    oar = orm.Optional(int)
 
-    # def __init__(self, *args, **kwargs):
-    #     if "ordre" not in kwargs:
-    #         kwargs["ordre"] = {"ordre": ["omkm"]}
-    #     super().__init__(*args, **kwargs)
-
-    def _fait_ordre(self):
-        self.ordre = "-".join([str(k.id) for k in self.items.select()])
-        # fmt: off
-        import pdb; pdb.set_trace() # fmt: on
-        print(self.ordre)
-
-    def _refait_orde_on_delete(self, deleted):
-        for k, v in self.ordre.items():
-            if v is deleted:
-                self.ordre.pop(k)
-                return
+    def get_ordered_items(self):
+        items = []
+        for it in self.ordre.strip("-").split("-"):
+            items.append(db.Item[it])
+        return items
 
     @property
     def dico(self):
         _dico = super().dico
-        _dico["items"] = [x.dico for x in self.items.order_by(Item.place)]
+        _dico["items"] = [x.dico for x in self.get_ordered_items()]
         return _dico
 
 
@@ -43,18 +34,17 @@ class Ordonnance(Acte):
 
 class Item(db.Entity, DicoMixin):
     ordonnance = orm.Required(Ordonnance)
-    place = orm.Optional(int)
 
     def before_insert(self):
         self.place = self.ordonnance.items.count()
-        self.ordonnance._fait_ordre()
 
     def after_insert(self):
-        # self.ordonnance.ordre.append(self.id)
         self.ordonnance.before_update()
+        self.ordonnance.ordre += f"-{self.id}"
 
     def before_delete(self):
         self.ordonnance.before_update()
+        self.ordonnance.ordre = self.ordonnance.ordre.replace(f"-{self.id}", "")
 
     def before_update(self):
         self.ordonnance.before_update()

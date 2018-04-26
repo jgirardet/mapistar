@@ -100,3 +100,4 @@ class ActesViews:
 
 
 routes_observations = ActesViews(db.Observation)()
+routes_ordonnances = ActesViews(db.Ordonnance)()

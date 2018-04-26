@@ -104,7 +104,7 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	pipenv run python manage.py --settingconfig.local
+	pipenv run python manage.py --settings=config.local
 
 shell:
 	pipenv run ipython --settings=config.local

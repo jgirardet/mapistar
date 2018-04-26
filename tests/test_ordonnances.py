@@ -1,5 +1,6 @@
 # Third Party Libraries
 import pytest
+from tests.factory import itemf
 
 pytestmark = pytest.mark.pony
 
@@ -13,6 +14,15 @@ class TestOrdonnanceModel:
         dico.pop("items")
         assert isinstance(dico["created"], str), "confirme l'appel de super()"
 
+    def test_item_in_dico_ordre_ok(self, ordonnance, ponydb):
+        i = itemf(ordonnance=ordonnance)
+        j = itemf(ordonnance=ordonnance)
+        k = itemf(ordonnance=ordonnance)
+        ponydb.flush()
+        ordonnance.ordre = f"-{j.id}-{k.id}-{i.id}"
+        d = ordonnance.dico["items"]
+        assert [x["id"] for x in d] == [j.id, k.id, i.id]
+
 
 # assert str(
 #     items
@@ -21,22 +31,28 @@ class TestOrdonnanceModel:
 
 class TestItemModel:
 
-    def test_ajout_place(self, ordonnance, ponydb):
-        for i in range(3):
-            a = ponydb.Item(ordonnance=ordonnance)
-        a = ponydb.Item(ordonnance=ordonnance)
-        a.flush()
-        assert a.place == 4
-
     def test_update_modified(self, ordonnance, ponydb):
         debut = ordonnance.modified
-        i = ponydb.Item(ordonnance=ordonnance)
+        i = ponydb.Medicament(ordonnance=ordonnance, cip="km", nom="omokm")
         i.flush()
         after_insert = ordonnance.modified
-        i.place = 2
+        i.duree = 3
         i.flush()
         after_modif = ordonnance.modified
         i.delete()
         ordonnance.flush()
         after_delete = ordonnance.modified
         assert debut < after_insert < after_modif < after_delete
+
+    def test_update_ordre_at_insert(self, ordonnance):
+        i = itemf(ordonnance=ordonnance)
+        j = itemf(ordonnance=ordonnance)
+        assert ordonnance.dico["ordre"] == f"-{i.id}-{j.id}"
+
+    def test_update_ordre_at_delete(self, ordonnance):
+        i = itemf(ordonnance=ordonnance)
+        j = itemf(ordonnance=ordonnance)
+        k = itemf(ordonnance=ordonnance)
+        ordonnance.dico
+        j.delete()
+        assert ordonnance.dico["ordre"] == f"-{i.id}-{k.id}"
