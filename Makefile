@@ -106,6 +106,9 @@ migrations:
 run:
 	pipenv run python manage.py
 
+shell:
+	pipenv run ipython --settings=config.local
+
 
 # aliases to gracefully handle typos on poor dev's terminal
 check: checks
