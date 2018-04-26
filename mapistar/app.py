@@ -2,9 +2,9 @@
 from apistar import App
 from apistar_jwt.token import JWT
 from apistar_ponyorm import PonyDBSession
+from simple_settings import settings
 
 # mapistar
-from simple_settings import settings
 from mapistar.actes.views import routes_observations
 from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated

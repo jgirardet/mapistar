@@ -1,5 +1,7 @@
-# mapistar
+# Standard Libraries
 import os
+
+# mapistar
 from mapistar.app import app
 
 if __name__ == "__main__":

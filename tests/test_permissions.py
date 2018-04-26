@@ -1,9 +1,9 @@
 # Standard Libraries
+from datetime import datetime
 from unittest.mock import MagicMock
 
 # Third Party Libraries
 import pendulum
-from datetime import datetime
 import pytest
 from apistar import exceptions
 

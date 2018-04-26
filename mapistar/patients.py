@@ -6,13 +6,12 @@ from typing import List
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
 from pony.orm import Optional, Required, Set
-import pendulum
 
 # mapistar
 from mapistar.base_db import db
 
 # from mapistar.db import db
-from .utils import get_or_404, DicoMixin, PendulumDateTime
+from .utils import DicoMixin, get_or_404
 
 MAX_LENGTH = {
     "nom": 100,
