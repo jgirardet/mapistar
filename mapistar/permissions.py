@@ -8,7 +8,6 @@ from apistar_jwt.token import JWTUser
 from simple_settings import settings
 
 # mapistar
-# from mapistar.db import db
 from mapistar.db import db
 from mapistar.utils import get_or_404
 

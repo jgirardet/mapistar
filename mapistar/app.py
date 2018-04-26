@@ -13,11 +13,11 @@ from mapistar.users import routes_users
 
 components = [JWT(settings.JWT), ActesPermissionsComponent()]
 
+
 app = App(
     routes=[routes_patients, routes_observations, routes_theso, routes_users],
     components=components,
     event_hooks=[PonyDBSession(), IsAuthenticated()],
-    schema_url="/schema/",
 )
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
@@ -25,5 +25,5 @@ curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz"
 
 if __name__ == "__main__":
     # app.serve(ho starun_wsgi(app)
-    options = {"use_debugger": True, "use_reloader": True}
-    app.serve("127.0.0.1", 5000, **options)
+    # options = {"use_debugger": True, "use_reloader": True}
+    app.serve("127.0.0.1", 5000, debug=True)
