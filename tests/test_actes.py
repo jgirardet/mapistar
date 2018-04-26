@@ -26,8 +26,8 @@ class TestActeModel:
         assert str(e.value) == "_created n'est pas updatable"
         acte.updatable = ("_created")
         e = datetime.now()
-        acte.set(**{"_created": e})
-        assert acte.to_dict()["_created"] == e
+        acte.set(**{"created": e})
+        assert acte.to_dict()["created"] == e
 
 
 # def test_date_modified(self, acte, patient):

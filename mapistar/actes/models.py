@@ -2,13 +2,12 @@
 from datetime import datetime
 
 # Third Party Libraries
-import pendulum
 from descriptors import classproperty
 from pony import orm
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import PendulumDateTime, DicoMixin
+from mapistar.utils import DicoMixin
 
 
 class Acte(db.Entity, DicoMixin):
@@ -27,8 +26,8 @@ class Acte(db.Entity, DicoMixin):
     """
     patient = orm.Required("Patient")
     owner = orm.Required("User")
-    _created = orm.Required(datetime, default=datetime.utcnow)
-    _modified = orm.Optional(datetime)
+    created = orm.Required(datetime, default=datetime.utcnow)
+    modified = orm.Optional(datetime)
 
     @classproperty
     def name(self) -> str:
@@ -40,31 +39,19 @@ class Acte(db.Entity, DicoMixin):
         """url du modèle, utilisé dans :class:`~mapistar.actes.views.ActeViews`"""
         return self.__name__.lower() + "s"
 
-    created = PendulumDateTime()
-    modified = PendulumDateTime()
-
-    # @property
-    # def dico(self):
-    #     " return to_dict but serializable"
-    #     _dico = self.to_dict()
-    #     [_dico.pop(x) for x in ("_created", "_modified")]
-    #     _dico["created"] = self.created.isoformat()
-    #     _dico["modified"] = self.modified.isoformat()
-    #     return _dico
-
     def before_insert(self):
         """
         Avant insert:
             * dernière modification == création
         """
-        self._modified = self._created
+        self.modified = self.created
 
     def before_update(self):
         """
         Avant update:
             * dernière modification == maintenant
         """
-        self.modified = pendulum.now()
+        self.modified = datetime.utcnow()
 
     updatable = ()
 

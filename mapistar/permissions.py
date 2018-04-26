@@ -10,6 +10,7 @@ from apistar_jwt.token import JWTUser
 # from mapistar.db import db
 from mapistar.db import db
 from mapistar.utils import get_or_404
+from simple_settings import settings
 
 
 class IsAuthenticated:
@@ -57,8 +58,9 @@ class ActesPermissionsComponent(Component):
         """
         Permission où le jour de modification doit correspondre au jour de création.
         """
-        today = pendulum.now()
-        if not today.is_same_day(self.obj.created):
+        today = pendulum.now(settings.TZ)
+        created = pendulum.instance(self.obj.created).in_tz(settings.TZ)
+        if not today.is_same_day(created):
             raise exceptions.BadRequest(
                 "Un acte ne peut être modifié en dehors du jours même"
             )

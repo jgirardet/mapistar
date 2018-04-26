@@ -94,8 +94,6 @@ class DicoMixin:
         """
         Transforme un dict en dict serializable.
 
-        remplace un champs "_champs" par son équivalent "champs" au sein de self.
-
         Marche pour:
             *object datetime
             *object date
@@ -105,13 +103,11 @@ class DicoMixin:
         Returns:
             un nouveau dict.
         """
-        dicoco = self.to_dict()
         new_dict = {}
 
-        for k, v in dicoco.items():
-            if isinstance(v, datetime) and k.startswith("_"):
-                attr = k.lstrip("_")
-                new_dict[attr] = getattr(self, attr).isoformat()
+        for k, v in self.to_dict().items():
+            if isinstance(v, datetime):
+                new_dict[k] = v.isoformat()
 
             elif isinstance(v, date):
                 new_dict[k] = v.isoformat()

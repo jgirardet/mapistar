@@ -9,7 +9,7 @@ class TestOrdonnanceModel:
     def test_dico(self, ordonnance, ponydb):
         for i in range(3):
             a = ponydb.Item(ordonnance=ordonnance)
-            a.flush()
+        # a.flush()
 
         dico = ordonnance.dico
         items = dico.pop("items")

@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 # Third Party Libraries
 import pendulum
+from datetime import datetime
 import pytest
 from apistar import exceptions
 
@@ -39,3 +40,12 @@ class TestActesPermission:
         with pytest.raises(exceptions.BadRequest) as e:
             a.only_editable_today()
         assert str(e.value) == "Un acte ne peut être modifié en dehors du jours même"
+
+    def test_only_editable_today_23h_utc(self, actes_permission):
+        a = actes_permission
+        a.obj.created = datetime(2012, 12, 12, 23, 50)
+        fakedatetime = pendulum.datetime(
+            2012, 12, 13, 0, 30, tz=pendulum.timezone("Europe/Paris")
+        )
+        with pendulum.test(fakedatetime):
+            assert a.only_editable_today() == None
