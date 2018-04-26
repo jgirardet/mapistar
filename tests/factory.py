@@ -35,9 +35,17 @@ def userd():
     }
 
 
-def userf():
+def userf(**kwargs):
     """ simple user """
-    return db.User.create_user(**userd())
+    if "username" not in kwargs:
+        kwargs["username"] = f.person.username()
+    if "password" not in kwargs:
+        kwargs["password"] = "j"
+    if "nom" not in kwargs:
+        kwargs["nom"] = f.person.last_name()
+    if "prenom" not in kwargs:
+        kwargs["prenom"] = f.person.name()
+    return db.User.create_user(**kwargs)
 
 
 def actef(p=None, u=None):

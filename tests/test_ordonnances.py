@@ -6,13 +6,11 @@ pytestmark = pytest.mark.pony
 
 class TestOrdonnanceModel:
 
-    def test_dico(self, ordonnance, ponydb):
+    def test_dico_super_is_called(self, ordonnance, ponydb):
         for i in range(3):
             a = ponydb.Item(ordonnance=ordonnance)
-        # a.flush()
-
         dico = ordonnance.dico
-        items = dico.pop("items")
+        dico.pop("items")
         assert isinstance(dico["created"], str), "confirme l'appel de super()"
 
 

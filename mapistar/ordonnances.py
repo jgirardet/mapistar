@@ -4,19 +4,23 @@ from pony import orm
 # mapistar
 from mapistar.actes.models import Acte
 from mapistar.db import db
+from mapistar.utils import DicoMixin
 
 
 class Ordonnance(Acte):
     items = orm.Set("Item")
-    ordre = orm.Optional(orm.Json, default={})
+    ordre = orm.Optional(str)
 
     # def __init__(self, *args, **kwargs):
-    #     if not "ordre" in kwargs:
-    #         kwargs['ordre'] = {'ordre': ["omkm"]}
+    #     if "ordre" not in kwargs:
+    #         kwargs["ordre"] = {"ordre": ["omkm"]}
     #     super().__init__(*args, **kwargs)
 
     def _fait_ordre(self):
-        self.ordre = {i: k.id for i, k in enumerate(self.items.select())}
+        self.ordre = "-".join([str(k.id) for k in self.items.select()])
+        # fmt: off
+        import pdb; pdb.set_trace() # fmt: on
+        print(self.ordre)
 
     def _refait_orde_on_delete(self, deleted):
         for k, v in self.ordre.items():
@@ -27,7 +31,7 @@ class Ordonnance(Acte):
     @property
     def dico(self):
         _dico = super().dico
-        _dico["items"] = [x.to_dict() for x in self.items.order_by(Item.place)]
+        _dico["items"] = [x.dico for x in self.items.order_by(Item.place)]
         return _dico
 
 
@@ -37,12 +41,13 @@ class Ordonnance(Acte):
 #             'définition de ordre requis at instancitation')
 
 
-class Item(db.Entity):
+class Item(db.Entity, DicoMixin):
     ordonnance = orm.Required(Ordonnance)
     place = orm.Optional(int)
 
     def before_insert(self):
         self.place = self.ordonnance.items.count()
+        self.ordonnance._fait_ordre()
 
     def after_insert(self):
         # self.ordonnance.ordre.append(self.id)
@@ -64,16 +69,3 @@ class Medicament(Item):
 
     def __repr__(self):
         return f"[{self.nom}]"
-
-
-# class Medicament(LigneOrdonnance):
-#     """
-#     Medicament model
-#     """
-#     cip = models.CharField(max_length=30)
-#     nom = models.CharField(max_length=200)
-#     posologie = models.CharField(max_length=200)
-#     duree = models.PositiveIntegerField()  # en jours
-
-#     def __str__(self):
-#      return self.nom
