@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "apistar-ponyorm"
+version = "0.2.10"
+description = "Third-party for apistar using pony orm"
+authors = ["Jimmy Girardet <ijkl@netc.fr>"]
+license = "GPL-3.0+"
+readme = "README.rst"
+homepage = "https://github.com/jgirardet/apistar_ponyorm"
+repository = "https://github.com/jgirardet/apistar_ponyorm"
+keywords = ['apistar', 'pony']
+
+
+[tool.poetry.dependencies]
+python = "^3.6"
+apistar = "^0.5.10"
+pony = "^0.7.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.5"
+pytest-cov = "*"
+pytest-pythonpath = "*"
+pytest-env = "*"
+pytest-ponyorm = "*"
+mimesis = "*"
+
+flake8 = "*"
+# black = "^18"
+# isort = "*"
+
+sphinx = "*"
+sphinx-rtd-theme = "*"
+sphinx-autobuild = "*"
+sphinxcontrib-napoleon = "*"
+sphinx-autodoc-typehints = "*"
