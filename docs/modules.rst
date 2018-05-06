@@ -1,11 +1,12 @@
 Référence de l'API
 ********************
 
+
 patients
-========
+=========
 
 .. automodule:: mapistar.patients
-    :members:
+	:members:
 	:show-inheritance:
 
 

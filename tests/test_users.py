@@ -46,7 +46,7 @@ class TestLogin:
         monkeypatch.setattr("apistar_jwt.token._JWT.encode", lambda x, y: None)
         u = ponydb.User.create_user("j", "j", "j", "j")
         with pytest.raises(exceptions.ConfigurationError) as exc:
-            r = cli.post(
+            cli.post(
                 app.reverse_url("users:login"),
                 data=json.dumps({"username": u.username, "password": "j"}),
             )

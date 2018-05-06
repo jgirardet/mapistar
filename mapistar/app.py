@@ -20,7 +20,8 @@ app = App(
     schema_url="/schema/",
 )
 """
-curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}' http://localhost:8080/create/
+curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}'
+http://localhost:8080/create/
 """
 
 if __name__ == "__main__":

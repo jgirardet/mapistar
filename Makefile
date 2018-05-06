@@ -2,62 +2,37 @@
 
 MODULE:=mapistar
 
-all: dev style checks requirements.txt migrate build dists doc test-unit test-coverage
+all: dev style doc test test-coverage
 
-dev:
-	pipenv install --dev --python 3.6 --skip-lock
 
-install-local:
-	pipenv install --python 3.6
+install:
+	poetry install
 
-install-system:
-	pipenv install --system
+devtools:
+	pip install ipython pdbpp
 
-style: isort black flake8 check
+dev: devtools install
+
+style: isort black flake8
 
 isort:
-	pipenv run isort -y
+	isort -y
 
 black:
-	black $(MODULE)
-
-checks:
-	pipenv check
+	black -q $(MODULE)
 
 flake8:
-	pipenv run python setup.py flake8
+	flake8
 
-build: dists
+test:
+	poetry run pytest
 
-test-unit:
-	pipenv run pytest 
+pdb:
+	poetry run pytest pdb
 
 test-coverage:
-	pipenv run py.test  --cov $(MODULE) --cov-report term-missing --cov-report html
+	poetry run py.test  --cov $(MODULE) --cov-report term-missing --cov-report html
 
-requirements.txt:
-	
-	# generate requirements.txt frm Pipfile.lock
-	# needed until PBR supports `Pipfile`
-	pipenv run pipenv_to_requirements -f
-	
-
-Pipfile.lock:	Pipfile
-	pipenv lock
-
-dists: requirements.txt sdist wheels
-
-sdist:
-	pipenv run python setup.py sdist
-
-wheels:
-	pipenv run python setup.py bdist_wheel
-
-pypi-publish: build
-	pipenv run python setup.py upload -r pypi
-
-update:
-	pipenv update
 
 push:
 	git status
@@ -65,10 +40,10 @@ push:
 	git push origin --tags
 
 doc:
-	pipenv run python setup.py build_sphinx
+	poetry run make -C docs html
 
 doc-auto:
-	pipenv run sphinx-autobuild docs docs/_build
+	poetry run sphinx-autobuild docs docs/_build
 	
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -104,20 +79,9 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	pipenv run python manage.py
+	poetry run python manage.py --settings=config.local
 
 shell:
-	pipenv run ipython --settings=config.local
+	poetry run ipython --settings=config.local
 
 
-# aliases to gracefully handle typos on poor dev's terminal
-check: checks
-devel: dev
-develop: dev
-dist: dists
-install: install-system
-pypi: pypi-publish
-styles: style
-test: test-unit
-unittest: test-unit
-wheel: wheels

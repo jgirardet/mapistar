@@ -1,5 +1,5 @@
 # Third Party Libraries
-import pytest
+# import pytest
 
 # def test_fuzzy(cli, app):
 #     r = cli.get(app.reverse_url('theso:fuzzy', chaine="paracetamol"))

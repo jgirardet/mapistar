@@ -3,12 +3,11 @@ from datetime import date, datetime
 from unittest.mock import MagicMock
 
 # Third Party Libraries
-import pendulum
 import pytest
 from apistar import exceptions
 
 # mapistar
-from mapistar.utils import DicoMixin, PendulumDateTime, get_or_404
+from mapistar.utils import DicoMixin, get_or_404
 
 pytestmark = pytest.mark.pony
 

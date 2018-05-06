@@ -1,6 +1,3 @@
-# Standard Libraries
-import os
-
 # mapistar
 from mapistar.app import app
 
