@@ -6,7 +6,7 @@ language: python
 
 python:
   - 3.6
-  - 3.7-dev
+  # - 3.7-dev
 
 env:
   - DB_ENGINE=django.db.backends.postgresql DB=PORT= DB_NAME=test DB_HOST=localhost DB_USER=postgres DB_PASSWORD=
@@ -17,7 +17,7 @@ before_script:
 install:
   - pip install -U pip poetry
   # - pip install python-coveralls
-  - make dev
+  - poetry install
 
 script:
   - make doc
