@@ -2,15 +2,14 @@
 from datetime import datetime
 
 # Third Party Libraries
-from descriptors import classproperty
 from pony import orm
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import DicoMixin
+from mapistar.utils import DicoMixin, NameMixin
 
 
-class Acte(db.Entity, DicoMixin):
+class Acte(db.Entity, DicoMixin, NameMixin):
     """
     Base Entity pour les différents actes.
 
@@ -28,16 +27,6 @@ class Acte(db.Entity, DicoMixin):
     owner = orm.Required("User")
     created = orm.Required(datetime, default=datetime.utcnow)
     modified = orm.Optional(datetime)
-
-    @classproperty
-    def name(self) -> str:
-        """nom du modèle"""
-        return self.__name__
-
-    @classproperty
-    def url_name(self) -> str:
-        """url du modèle, utilisé dans :class:`~mapistar.actes.views.ActeViews`"""
-        return self.__name__.lower() + "s"
 
     def before_insert(self):
         """
@@ -70,24 +59,3 @@ class Acte(db.Entity, DicoMixin):
                 raise AttributeError(f"{item} n'est pas updatable")
 
         super().set(**kwargs)
-
-
-class Observation(Acte):
-    """
-    Entity Observation
-
-    Attributes:
-        motif(str)*: Motif de la consultation
-        body(str): Corps de lobservation
-
-    updatables:
-        motif, body
-    """
-
-    motif = orm.Required(str)
-    body = orm.Optional(str)
-
-    updatable = ("motif", "body")
-
-    def __repr__(self):  # pragma: nocover
-        return f"Observation: {self.motif} par {self.owner}"

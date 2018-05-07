@@ -6,6 +6,7 @@ from datetime import date, datetime
 import pendulum
 from apistar.exceptions import NotFound
 from pony import orm
+from mapistar.exceptions import MapistarProgrammingError
 
 
 def import_models(module_liste: list):
@@ -17,8 +18,16 @@ def import_models(module_liste: list):
     Args:
         module_liste: Liste des moduels où se trouvent les Entities Pony.
     """
-    for i in module_liste:
-        importlib.import_module("mapistar." + i)
+    for item in module_liste:
+        if isinstance(item, str):
+            importlib.import_module(".".join(("mapistar", item)))
+        elif isinstance(item, tuple):
+            for module in item[1]:
+                importlib.import_module(".".join(("mapistar", item[0], module)))
+        else:
+            raise MapistarProgrammingError(
+                "Déclaration de module sous la forme str ou tuple('base', ('module1','modele2'))"
+            )
 
 
 class PendulumDateTime:
@@ -114,3 +123,19 @@ class DicoMixin:
             else:
                 new_dict[k] = v
         return new_dict
+
+
+from descriptors import classproperty
+
+
+class NameMixin:
+
+    @classproperty
+    def name(self) -> str:
+        """nom du modèle"""
+        return self.__name__
+
+    @classproperty
+    def url_name(self) -> str:
+        """url du modèle"""
+        return self.__name__.lower() + "s"

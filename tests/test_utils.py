@@ -5,11 +5,22 @@ from unittest.mock import MagicMock
 # Third Party Libraries
 import pytest
 from apistar import exceptions
-
-# mapistar
-from mapistar.utils import DicoMixin, get_or_404
+from mapistar.exceptions import MapistarProgrammingError
+from mapistar.utils import DicoMixin, get_or_404, import_models
 
 pytestmark = pytest.mark.pony
+
+
+class TestImportModels:
+
+    def test_arg_format(self):
+        a = ([],)
+        with pytest.raises(MapistarProgrammingError) as exc:
+            import_models(a)
+        assert (
+            str(exc.value)
+            == "Déclaration de module sous la forme str ou tuple('base', ('module1','modele2'))"
+        )
 
 
 # pd = PendulumDateTime()

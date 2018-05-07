@@ -80,6 +80,19 @@ class TestOrdonnanceViews:
         assert r.status_code == 200
         assert r.json()["ordre"] == "1-2-3-4-5"
 
+    def test_bla(self, cli, app, ordonnance):
+        r = cli.get(
+            app.reverse_url("ordonnances:bla"))
+        assert r.status_code == 200
+        assert r.json() == {"message":"hello"}
+
+
+    def test_bla2(self, cli, app, ordonnance):
+        r = cli.get(
+            app.reverse_url("ordonnances:bla2"))
+        assert r.status_code == 200
+        assert r.json() == {"message":"hello2"}
+
 
 class TestItemModel:
 

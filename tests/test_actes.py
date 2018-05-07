@@ -68,5 +68,6 @@ class TestViews:
             app.reverse_url("observations:update", acte_id=observation.id),
             data=json.dumps(upd),
         )
+
         assert r.status_code == 200
         assert r.json()["motif"] == "mokmokmok"
