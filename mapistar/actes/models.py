@@ -79,6 +79,9 @@ class Observation(Acte):
     Attributes:
         motif(str)*: Motif de la consultation
         body(str): Corps de lobservation
+
+    updatables:
+        motif, body
     """
 
     motif = orm.Required(str)

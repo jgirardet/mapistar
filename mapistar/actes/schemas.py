@@ -25,17 +25,7 @@ class OrdonnanceCreateSchema(types.Type):
 
 
 class OrdonnanceUpdateSchema(types.Type):
-    ordre = validators.String()
-    duree = validators.Integer()
-    oar = validators.Integer()
-
-
-class MedicamentCreateSchema(types.Type):
-    ordonnance = validators.Integer()
-    cip = validators.Integer()
-    nom = validators.String()
-    posologie = validators.String()
-    duree = validators.String()
+    ordre = validators.String(default="")
 
 
 SchemasCollection = namedtuple("SchemasCollection", "adder updater")

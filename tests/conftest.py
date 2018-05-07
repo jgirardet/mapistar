@@ -2,14 +2,14 @@
 import jwt
 import pendulum
 import pytest
-from apistar import Client, test
+from apistar import test
 from simple_settings import settings
 
 # mapistar
 from mapistar.app import app as main_app
 
-from .factory import *
-from .fixtures import *
+from .factory import *  # noqa: F403, F401
+from .fixtures import *  # noqa: F403, F401
 
 
 @pytest.fixture(scope="session")

@@ -2,11 +2,11 @@
 import random
 import sys
 
-# Third Party Libraries
-from pony.orm import db_session
-
 # mapistar
 from mapistar.db import db
+
+# from pony.orm import db_session
+
 
 sys.path.append("/home/jim/dev/maison/mapistar")
 

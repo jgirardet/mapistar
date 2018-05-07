@@ -8,16 +8,41 @@ from mapistar.utils import DicoMixin
 
 
 class Ordonnance(Acte):
+    """
+    Entity ORdonnance
+
+    Attributes:
+        items(mapistar.ordonnances.Item): set d'items composants l'observation
+        ordre(str): Ordre des items.
+
+    updatables:
+        ordre
+    """
     items = orm.Set("Item")
     ordre = orm.Optional(str, default="")
-    duree = orm.Optional(int)
-    oar = orm.Optional(int)
 
-    def get_ordered_items(self):
-        items = []
-        for it in self.ordre.strip("-").split("-"):
-            items.append(db.Item[it])
-        return items
+    updatable = ["ordre"]
+
+    def ordre_add_item(self, item: "Item"):
+        if not self.ordre:
+            self.ordre += f"{item.id}"
+        else:
+            self.ordre += f"-{item.id}"
+
+    def ordre_delete_item(self, item: "Item"):
+        if "-" in self.ordre:
+            lid = "-" + f"{item.id}"
+            # print(lid)
+            # print(item.id, self.ordre, self.items.select()[:])
+            self.ordre = self.ordre.replace(lid, "")
+        else:
+            self.ordre = ""
+
+    def _refait_orde_on_delete(self, deleted):
+        for k, v in self.ordre.items():
+            if v is deleted:
+                self.ordre.pop(k)
+                return
 
     @property
     def dico(self):
@@ -25,26 +50,28 @@ class Ordonnance(Acte):
         _dico["items"] = [x.dico for x in self.get_ordered_items()]
         return _dico
 
-
-# def before_insert(self):
-#     if not self.ordre:
-#         raise AttributeError(
-#             'définition de ordre requis at instancitation')
+    def get_ordered_items(self):
+        if not self.ordre:
+            return []
+        ordre = [int(x) for x in self.ordre.split("-")]
+        try:
+            return sorted(list(self.items), key=lambda x: ordre.index(x.id))
+        except ValueError:
+            # fallback item pas dans ordre ou inversement
+            return list(self.items)
 
 
 class Item(db.Entity, DicoMixin):
     ordonnance = orm.Required(Ordonnance)
-
-    def before_insert(self):
-        self.place = self.ordonnance.items.count()
+    place = orm.Optional(int)
 
     def after_insert(self):
         self.ordonnance.before_update()
-        self.ordonnance.ordre += f"-{self.id}"
+        self.ordonnance.ordre_add_item(self)
 
     def before_delete(self):
         self.ordonnance.before_update()
-        self.ordonnance.ordre = self.ordonnance.ordre.replace(f"-{self.id}", "")
+        self.ordonnance.ordre_delete_item(self)
 
     def before_update(self):
         self.ordonnance.before_update()

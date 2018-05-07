@@ -8,4 +8,10 @@ from mapistar.utils import import_models
 import_models(settings.models)
 
 
-db.connect(**settings.DATABASE)
+# db.connect(**settings.DATABASE)
+
+settings.DATABASE.pop("create_tables")
+
+db.bind(provider="sqlite", filename=":memory:")
+
+db.generate_mapping(create_tables=True)

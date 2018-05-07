@@ -8,6 +8,7 @@ Welcome to mapistar documentation!
 	composants
 	changelog
 	todo
+	principes
 	
 Indices and tables
 ==================

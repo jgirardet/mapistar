@@ -13,7 +13,6 @@ Todo vers 1.0
     - schema email
 
 * User :
-
     - type : médecin, secrétaire ...
     - Etat civil
     - Change Password/create password views
@@ -31,15 +30,14 @@ Todo vers 1.0
   
 * Courriers reçu
   
-* Divers :
-
+* Divers:
 	- doc: 100%
 	- deploiement
+
     - entry point
     - git pre commit
 
 * Documentation:
-
     - patient +
     - utils +
     - users +

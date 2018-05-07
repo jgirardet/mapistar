@@ -48,4 +48,4 @@ class TestActesPermission:
             2012, 12, 13, 0, 30, tz=pendulum.timezone("Europe/Paris")
         )
         with pendulum.test(fakedatetime):
-            assert a.only_editable_today() == None
+            assert not a.only_editable_today()

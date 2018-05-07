@@ -1,6 +1,3 @@
-# Standard Libraries
-import random
-
 # Third Party Libraries
 from mimesis import Generic
 
