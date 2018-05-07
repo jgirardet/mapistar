@@ -1,6 +1,5 @@
 # Standard Libraries
 import os  # noqa: F401
-# forme : postgres://user:password@host:port/databasename
 from urllib.parse import urlparse
 
 from .base import *  # noqa: F401,F403
@@ -10,6 +9,7 @@ print("Local Config")
 JWT = {"JWT_SECRET": "a"}
 
 
+# forme : postgres://user:password@host:port/databasename
 url = urlparse(os.environ["MAPISTAR_DATABASE"])
 DATABASE = {
     "provider": url.scheme,
