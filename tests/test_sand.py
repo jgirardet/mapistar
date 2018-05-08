@@ -1,45 +1,62 @@
 # from mapistar.db import db
+from mapistar.utils import get_or_404
 
 
-class Meta(type):
-
-    def __new__(meta, name, bases, dico):
-
-        obj = type.__new__(meta, name, bases, dico)
-
-        obj.routes  = {'route1':obj.add()}
-
-        return obj
-        # return type.__new__(meta, name, bases, dico)
-
-
-class MyClass(metaclass=Meta):
-
-    model = None
-    updatables = None
-    schemas = None
-    # return type.__new__(name, base, dico)
-
-    @classmethod
-    def add(cls):
-
-        def add():
-            return cls.schemas
-
-        return add
-
-
-schema1 = "schema1"
-schema2 = "schema2"
-
-
-class MonC(MyClass):
+class MonC():
     b = "pùplùplùpl"
     updatables = "mokm"
-    schemas = [schema1, schema2]
+
+    def bla(self):
+        a = get_or_404("model", "rien")
+        return a
 
 
-def test_mon():
-    # e = MyClass()
-    print(MonC.routes)
-    assert True
+def test_with_object(mocker):
+    with mocker.patch.object(MonC, "bla"):
+        MonC.bla.return_value = "11"
+        e = MonC()
+        assert e.bla() == "11"
+
+
+def test_with_func(mocker):
+    with mocker.patch(
+        "tests.test_sand.get_or_404", new=mocker.MagicMock(return_value="11")
+    ):
+        # mo.return_value = "11"
+        e = MonC()
+        assert e.bla() == "11"
+
+
+# from pytest_mock import mocker
+from unittest.mock import patch, MagicMock
+
+
+@patch("tests.test_sand.get_or_404", new=MagicMock(return_value="11"))
+def test_func_deco():
+    # mo.return_value = "11"
+    e = MonC()
+    assert e.bla() == "11"
+
+
+def test_func_with():
+    with patch("tests.test_sand.get_or_404", new=MagicMock(return_value="11")):
+        # mo.return_value = "11"
+        e = MonC()
+        assert e.bla() == "11"
+
+
+def test_func_with_as():
+    with patch("tests.test_sand.get_or_404") as mo:
+        mo.return_value = "11"
+        e = MonC()
+        assert e.bla() == "11"
+
+
+# import tests
+
+
+def test_mocker_func_with_as(mocker):
+    mocker.patch("tests.test_sand.get_or_404", new=mocker.MagicMock(return_value="11"))
+    # tests.test_sand.get_or_404.return_value = "11"
+    e = MonC()
+    assert e.bla() == "11"

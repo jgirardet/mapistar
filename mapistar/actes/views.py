@@ -6,30 +6,9 @@ from apistar import Include, Route, http
 from apistar_jwt.token import JWTUser
 
 # mapistar
-from mapistar.db import db
+# from mapistar.db import db
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import get_or_404
-
-from .schemas import actes_schemas
-
-from abc import ABC, ABCMeta
-
-
-class MetaActesViews(ABCMeta):
-
-    def __new__(meta, name, bases, dico):
-        cls = type.__new__(meta, name, bases, dico)
-
-        # cls.routes = [
-        #     Route("/", method="POST", handler=cls.add()),
-        #     Route("/{acte_id}/", method="GET", handler=cls.one()),
-        #     Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
-        #     Route("/{acte_id}/", method="PUT", handler=cls.update()),
-        #     Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
-        # ]
-        # fmt: off
-        import pdb; pdb.set_trace() # fmt: on
-        return cls
 
 
 class ActesViews:
@@ -51,18 +30,6 @@ class ActesViews:
     model = None
     schema_add = None
     schema_update = None
-    # routes = []
-
-    # def __new__(cls):
-    #     classe = super().__new__(cls)
-    #     classe.routes = [
-    #         Route("/", method="POST", handler=cls.add()),
-    #         Route("/{acte_id}/", method="GET", handler=cls.one()),
-    #         Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
-    #         Route("/{acte_id}/", method="PUT", handler=cls.update()),
-    #         Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
-    #     ]
-    #     return classe
 
     @classmethod
     def add(cls) -> Callable:
@@ -127,12 +94,10 @@ class ActesViews:
     def do_routes(cls) -> Include:
         """
         Returns:
-            Les routes pour chaque action
+            Include: Les routes pour chaque action
         """
 
-
-
-        bases_routes =[
+        bases_routes = [
             Route("/", method="POST", handler=cls.add()),
             Route("/{acte_id}/", method="GET", handler=cls.one()),
             Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
@@ -140,53 +105,8 @@ class ActesViews:
             Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
         ]
 
-        routes = [*bases_routes , *cls.routes_supplementaires()]
+        routes = [*bases_routes, *cls.routes_supplementaires()]
 
         return Include(
             url=f"/{cls.model.url_name}", name=cls.model.url_name, routes=routes
         )
-
-
-# routes_observations = ActesViews(db.Observation)()
-# routes_ordonnances = ActesViews(db.Ordonnance)()
-
-
-class ObservationViews(ActesViews):
-    model = db.Observation
-    schema_add = actes_schemas[db.Observation].adder
-    schema_update = actes_schemas[db.Observation].updater
-
-
-routes_observations = ObservationViews.do_routes()
-# routes_observations = ObservationViews
-
-
-def bla2():
-    return {"message":"hello2"}
-
-class OrdonnanceViews(ActesViews):
-    model = db.Ordonnance
-    schema_add = actes_schemas[db.Ordonnance].adder
-    schema_update = actes_schemas[db.Ordonnance].updater
-
-    @classmethod
-    def bla(cls):
-        def bla():
-            return {"message":"hello"}
-
-        bla.__doc__ = f"""Efface un Acte de type : {cls.model.name}"""
-        return bla
-
-    @classmethod
-    def routes_supplementaires(cls):
-        return [
-            Route("/bla/", method="GET", handler=cls.bla(), name="bla"),
-            Route("/bla2/", method="GET", handler=bla2, name="bla2")]
-
-
-routes_ordonnances = OrdonnanceViews.do_routes()
-# routes_ordonnances = OrdonnanceViews
-
-from .ordo_items import MedicamentViews
-
-routes_medicaments = MedicamentViews.routes()

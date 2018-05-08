@@ -5,6 +5,8 @@ from unittest.mock import MagicMock
 # Third Party Libraries
 import pytest
 from apistar import exceptions
+
+# mapistar
 from mapistar.exceptions import MapistarProgrammingError
 from mapistar.utils import DicoMixin, get_or_404, import_models
 

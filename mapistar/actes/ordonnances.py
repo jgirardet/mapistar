@@ -1,13 +1,11 @@
 # Third Party Libraries
+from apistar import types, validators
 from pony import orm
 
-# mapistar
-from mapistar.db import db
-from mapistar.utils import DicoMixin
-
 from .actes import Acte
-from apistar import validators, types
 from .ordo_items import Item
+
+from .ordo_items import MedicamentCreateSchema, MedicamentUpdateSchema
 
 
 class Ordonnance(Acte):
@@ -68,4 +66,10 @@ class OrdonnanceUpdateSchema(types.Type):
     ordre = validators.String(default="")
 
 
-# Views
+from .views import ActesViews
+
+
+class OrdonnanceViews(ActesViews):
+    model = Ordonnance
+    schema_add = OrdonnanceCreateSchema
+    schema_update = OrdonnanceUpdateSchema

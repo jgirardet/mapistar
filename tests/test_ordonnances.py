@@ -67,8 +67,6 @@ class TestOrdonnanceViews:
         ordonnance.owner = cli.user
         r = cli.delete(app.reverse_url("ordonnances:delete", acte_id=ordonnance.id))
         assert r.status_code == 200
-        with pytest.raises(OperationWithDeletedObjectError):
-            ordonnance.dico
 
     def test_update_pass(self, cli, app, ordonnance):
         ordonnance.owner = cli.user
@@ -79,32 +77,3 @@ class TestOrdonnanceViews:
         )
         assert r.status_code == 200
         assert r.json()["ordre"] == "1-2-3-4-5"
-
-    def test_bla(self, cli, app, ordonnance):
-        r = cli.get(
-            app.reverse_url("ordonnances:bla"))
-        assert r.status_code == 200
-        assert r.json() == {"message":"hello"}
-
-
-    def test_bla2(self, cli, app, ordonnance):
-        r = cli.get(
-            app.reverse_url("ordonnances:bla2"))
-        assert r.status_code == 200
-        assert r.json() == {"message":"hello2"}
-
-
-class TestItemModel:
-
-    def test_item_update_ordonnnace(self, ordonnance, ponydb):
-        debut = ordonnance.modified
-        i = ponydb.Item(ordonnance=ordonnance)
-        i.flush()
-        after_insert = ordonnance.modified
-        i.place = 2
-        i.flush()
-        after_modif = ordonnance.modified
-        i.delete()
-        ordonnance.flush()
-        after_delete = ordonnance.modified
-        assert debut < after_insert < after_modif < after_delete

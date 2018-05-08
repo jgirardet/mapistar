@@ -9,8 +9,9 @@ from simple_settings import settings
 
 # mapistar
 # from mapistar.db import db
-from mapistar.db import db
+from mapistar.base_db import db
 from mapistar.utils import get_or_404
+from mapistar.exceptions import MapistarProgrammingError
 
 
 class IsAuthenticated:
@@ -65,23 +66,42 @@ class ActesPermissionsComponent(Component):
                 "Un acte ne peut être modifié en dehors du jours même"
             )
 
-    def resolve(self, acte_id: http.PathParams, jwt_user: JWTUser) -> ActesPermissions:
+    def run_actes_permissions(self):
+        self.only_owner_can_edit()
+        self.only_editable_today()
+
+    def resolve(self, params: http.PathParams, jwt_user: JWTUser) -> ActesPermissions:
         """
         Résolution des permissions
 
         Args:
-            acte_id (dict): dont on extrait le clé `acte_id`
+            params (dict): dont on extrait le clé `acte_id` et `item_id`
 
         Returns:
-            obj de type :class:`~mapistar.actes.models.Acte`
+            obj de type :class:`~mapistar.actes.models.Acte` ou :class:`~mapistar.actes.ordo_items.Item`
 
         Raises:
             Si une permission n'est pas accordée. Exception de type apistar.exceptions
         """
-        self.obj = get_or_404(db.Acte, acte_id["acte_id"])
+        acte_id = params.get("acte_id", None)
+        item_id = params.get("item_id", None)
+
+        if acte_id:
+            if item_id:
+                raise MapistarProgrammingError(
+                    "Une requête ne peut spécifier item_id et acte_id à la fois"
+                )
+
+            else:
+
+                self.obj = get_or_404(db.Acte, acte_id)
+
+        if item_id:
+            self.item = get_or_404(db.Item, item_id)
+            self.obj = self.item.ordonnance
+
         self.user = jwt_user
 
-        self.only_owner_can_edit()
-        self.only_editable_today()
+        self.run_actes_permissions()
 
-        return self.obj
+        return getattr(self, "item", self.obj)

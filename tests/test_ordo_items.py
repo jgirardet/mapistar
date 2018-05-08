@@ -1,18 +1,41 @@
+# Standard Libraries
 import json
+
+# Third Party Libraries
 import pytest
+from tests.factory import medicamentf
 
 pytestmark = pytest.mark.pony
-from tests.factory import medicamentf
 
 
 class TestMedicamentsViews:
 
     def test_add(self, ordonnance, cli, app):
         a = {"ordonnance": ordonnance.id, "cip": "1234567890123", "nom": "Un Médoc"}
-        r = cli.post(app.reverse_url("medicaments:add"), data=json.dumps(a))
-        # # fmt: off
-        # import pdb; pdb.set_trace() # fmt: on
+        r = cli.post(app.reverse_url("medicaments:add_item"), data=json.dumps(a))
         assert r.status_code == 201
+
+
+# def test_delete_item(self, ordonnance, cli, app):
+#     item = medicamentf(ordonnance=ordonnance)
+#     ordonnance.owner = cli.user
+#     item.flush()
+#     r = cli.delete(
+#         app.reverse_url(
+#             "medicaments:delete_item", acte_id=ordonnance.id, item_id=item.id
+#         )
+#     )
+#     assert r.status_code == 200
+
+
+# def test_delete_item(self, medicament, cli, app):
+#     medicament.ordonnance.owner = cli.user
+#     r = cli.delete(
+#         app.reverse_url(
+#             "medicaments:delete_item", acte_id=ordonnance.id, item_id=item.id
+#         )
+#     )
+#     assert r.status_code == 200
 
 
 # def test_list_acte_pass(self, ordonnance, app, cli, ponydb):
@@ -43,3 +66,29 @@ class TestMedicamentsViews:
 #     )
 #     assert r.status_code == 200
 #     assert r.json()["ordre"] == "1-2-3-4-5"
+
+
+# def test_add_item(self, ordonnance, cli, app):
+#     a = {"ordonnance": ordonnance.id, "cip": "1234567890123", "nom": "Un Médoc"}
+#     r = cli.post(
+#         app.reverse_url("ordonnances:add_item", ordonnance_id=ordonnance.id),
+#         data=json.dumps(a),
+#     )
+#     print(r.json())
+#     assert r.status_code == 201
+
+
+class TestItemModel:
+
+    def test_item_update_ordonnnace(self, ordonnance, ponydb):
+        debut = ordonnance.modified
+        i = ponydb.Item(ordonnance=ordonnance)
+        i.flush()
+        after_insert = ordonnance.modified
+        i.place = 2
+        i.flush()
+        after_modif = ordonnance.modified
+        i.delete()
+        ordonnance.flush()
+        after_delete = ordonnance.modified
+        assert debut < after_insert < after_modif < after_delete

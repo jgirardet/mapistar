@@ -5,16 +5,14 @@ from apistar_ponyorm import PonyDBSession
 from simple_settings import settings
 
 # mapistar
-
-from mapistar.actes.views import (
-    routes_ordonnances, routes_observations, routes_medicaments
+# from mapistar.actes.views import routes_medicaments, routes_ordonnances
+from mapistar.actes.routes import (
+    routes_observations, routes_ordonnances, routes_medicaments
 )
 from mapistar.patients import routes_patients
+from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
 from mapistar.users import routes_users
-
-from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
-
 
 routes = [
     routes_patients,

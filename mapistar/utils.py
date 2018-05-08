@@ -5,7 +5,10 @@ from datetime import date, datetime
 # Third Party Libraries
 import pendulum
 from apistar.exceptions import NotFound
+from descriptors import classproperty
 from pony import orm
+
+# mapistar
 from mapistar.exceptions import MapistarProgrammingError
 
 
@@ -123,9 +126,6 @@ class DicoMixin:
             else:
                 new_dict[k] = v
         return new_dict
-
-
-from descriptors import classproperty
 
 
 class NameMixin:

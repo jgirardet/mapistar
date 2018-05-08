@@ -36,3 +36,12 @@ class ObservationUpdateSchema(types.Type):
 
     motif = validators.String(default="")
     body = validators.String(default="")
+
+
+from .views import ActesViews
+
+
+class ObservationViews(ActesViews):
+    model = Observation
+    schema_add = ObservationCreateSchema
+    schema_update = ObservationUpdateSchema

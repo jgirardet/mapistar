@@ -1,7 +1,14 @@
-from mapistar.base_db import db
+# Standard Libraries
+from typing import Callable, List
+
+# Third Party Libraries
+from apistar import Include, Route, http, types, validators
+from apistar_jwt import JWTUser
 from pony import orm
+
+# mapistar
+from mapistar.base_db import db
 from mapistar.utils import DicoMixin, NameMixin
-from apistar import validators, types
 
 
 class Item(db.Entity, DicoMixin, NameMixin):
@@ -44,9 +51,24 @@ class MedicamentUpdateSchema(types.Type):
     duree = validators.Integer(default="")
 
 
-from typing import Callable, List
-from apistar_jwt import JWTUser
-from apistar import http, Include, Route
+# from mapistar.base_db import db
+
+# from apistar import Route, http
+from mapistar.permissions import ActesPermissions
+
+
+# def update_item(acte_id: int, new_data: MedicamentCreateSchema, obj: ActesPermissions):
+#     # obj = get_or_404(cls.model, acte_id)
+#     obj.set(**new_data)
+#     return obj.dico
+
+
+#     @classmethod
+#     def routes_supplementaires(cls):
+#         return [
+#             Route("/{ordonnance_id}/", method="POST", handler=add_item),
+#             Route("/{acte_id}/item/{item_id}/", method="DELETE", handler=delete_item),
+#         ]
 
 
 class ItemViews:
@@ -56,31 +78,41 @@ class ItemViews:
     schema_update = None
 
     @classmethod
-    def add(self) -> Callable:
+    def add_item(cls) -> Callable:
 
-        def add(data: self.schema_add, user: JWTUser) -> http.JSONResponse:
-            obj = self.model(**data)
-            return http.JSONResponse(obj.dico, status_code=201)
+        def add_item(data: cls.schema_add):
+            item = cls.model(**data)
+            return http.JSONResponse(item.dico, status_code=201)
 
-        add.__doc__ = f"""Ajoute un nouvel Item de type : {self.model.name}"""
-        return add
+        add_item.__doc__ = f"""Ajoute un nouvel Item de type : {cls.model.name}"""
+        return add_item
 
     @classmethod
-    def routes(self) -> Include:
+    def delete_item(cls) -> Callable:
+
+        def delete_item(item_id: int, obj: ActesPermissions):
+            obj.delete()
+            return {"id": item_id, "deleted": True}
+
+        delete_item.__doc__ = f"""Ajoute un nouvel Item de type : {cls.model.name}"""
+        return delete_item
+
+    @classmethod
+    def routes(cls) -> Include:
         """
         Returns:
             Les routes pour chaque action
         """
-        print(self.model.name, self.model.url_name)
         return Include(
-            url=f"/{self.model.url_name}",
-            name=self.model.url_name,
+            url=f"/{cls.model.url_name}",
+            name=cls.model.url_name,
             routes=[
-                Route("/", method="POST", handler=self.add()),
-                # Route("/{acte_id}/", method="GET", handler=self.one()),
-                # Route("/{acte_id}/", method="DELETE", handler=self.delete()),
-                # Route("/{acte_id}/", method="PUT", handler=self.update()),
-                # Route("/patient/{patient_id}/", method="GET", handler=self.liste()),
+                Route("/", method="POST", handler=cls.add_item()),
+                Route("/{item_id}/", method="DELETE", handler=cls.delete_item()),
+                # Route("/{acte_id}/", method="GET", handler=cls.one()),
+                # Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
+                # Route("/{acte_id}/", method="PUT", handler=cls.update()),
+                # Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
             ],
         )
 

@@ -1,13 +1,11 @@
 # Standard Libraries
 from collections import namedtuple
 
-
 # mapistar
 from mapistar.db import db
 
 from .observations import ObservationCreateSchema, ObservationUpdateSchema
 from .ordonnances import OrdonnanceCreateSchema, OrdonnanceUpdateSchema
-
 
 SchemasCollection = namedtuple("SchemasCollection", "adder updater")
 
