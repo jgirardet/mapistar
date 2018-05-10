@@ -30,27 +30,37 @@ class IsAuthenticated:
 
 
 # ActesPermissions = type("ActesPermissions", (), {})
-ActesPermissions = TypeVar("ActesPermissions")
-"""Type ActePermissions"""
-
-
-class ActesPermissionsComponent(Component):
+# ActesPermissions = TypeVar("ActesPermissions")
+# """Type ActePermissions"""
+class ActesPermissions:
     """
-    Component gérant les permissions des actes
+    Class regroupant les permissions et leur éxecutions
 
-    On ajoute les permissions dans :attr:`resolve`::
+    Args:
+        acte: Acte testé en permission
+        user: User testé en permission
+
+    Raises:
+        Si un permission n'est pas correct
+    """
+
+    def __init__(self, acte, user):
+        self.acte = acte
+        self.user = user
+
+    def __call__(self):
+        """
+        teste tous les permissions
+        """
 
         self.only_owner_can_edit()
-        self.my_new_method()
-        ...
-
-    """
+        self.only_editable_today()
 
     def only_owner_can_edit(self):
         """
         Permission où seul l'utilisateur ayant créé l'acte peut le modifier.
         """
-        if self.user.id != self.obj.owner.id:
+        if self.user.id != self.acte.owner.id:
             raise exceptions.Forbidden(
                 "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
             )
@@ -60,17 +70,20 @@ class ActesPermissionsComponent(Component):
         Permission où le jour de modification doit correspondre au jour de création.
         """
         today = pendulum.now(settings.TZ)
-        created = pendulum.instance(self.obj.created).in_tz(settings.TZ)
+        created = pendulum.instance(self.acte.created).in_tz(settings.TZ)
         if not today.is_same_day(created):
             raise exceptions.BadRequest(
                 "Un acte ne peut être modifié en dehors du jours même"
             )
 
-    def run_actes_permissions(self):
-        self.only_owner_can_edit()
-        self.only_editable_today()
 
-    def resolve(self, params: http.PathParams, jwt_user: JWTUser) -> ActesPermissions:
+class ActesPermissionsComponent(Component):
+    """
+    Component associant les permissions
+
+    """
+
+    def resolve(self, params: http.PathParams, user: JWTUser) -> ActesPermissions:
         """
         Résolution des permissions
 
@@ -93,22 +106,18 @@ class ActesPermissionsComponent(Component):
                 )
 
             else:
-
-                self.obj = get_or_404(db.Acte, acte_id)
+                acte = get_or_404(db.Acte, acte_id)
 
         elif item_id:
-            self.item = get_or_404(db.Item, item_id)
-            self.obj = self.item.ordonnance
+            item = get_or_404(db.Item, item_id)
+            acte = item.ordonnance
+        else:
+            raise MapistarProgrammingError(" doit préciser acte_id ou item_id")
 
-        self.user = jwt_user
-
-        self.run_actes_permissions()
+        ActesPermissions(acte, user)()
 
         if acte_id:
-            return self.obj
+            return acte
 
         elif item_id:
-            return self.item
-
-
-# return getattr(self, "item", self.obj)
+            return item
