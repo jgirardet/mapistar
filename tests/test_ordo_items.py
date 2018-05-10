@@ -3,7 +3,7 @@ import json
 
 # Third Party Libraries
 import pytest
-from tests.factory import medicamentf
+from tests.factory import medicamentf, itemf
 
 pytestmark = pytest.mark.pony
 
@@ -15,26 +15,29 @@ class TestMedicamentsViews:
         r = cli.post(app.reverse_url("medicaments:add_item"), data=json.dumps(a))
         assert r.status_code == 201
 
+    # def test_delete_item(self, ordonnance, cli, app):
+    #     print(ordonnance.id)
+    #     item = medicamentf(ordonnance=ordonnance)
+    #     ordonnance.owner = cli.user
+    #     item.flush()
+    #     r = cli.delete(app.reverse_url("medicaments:delete_item", item_id=item.id))
+    #     assert r.status_code == 200
 
-# def test_delete_item(self, ordonnance, cli, app):
-#     item = medicamentf(ordonnance=ordonnance)
-#     ordonnance.owner = cli.user
-#     item.flush()
-#     r = cli.delete(
-#         app.reverse_url(
-#             "medicaments:delete_item", acte_id=ordonnance.id, item_id=item.id
-#         )
-#     )
-#     assert r.status_code == 200
+    def test_delete_item1(self, medicament, cli, app):
+        print(medicament.ordonnance.id)
+
+        medicament.ordonnance.owner = cli.user
+        r = cli.delete(
+            app.reverse_url("medicaments:delete_item", item_id=medicament.id)
+        )
+        assert r.status_code == 200
 
 
-# def test_delete_item(self, medicament, cli, app):
-#     medicament.ordonnance.owner = cli.user
-#     r = cli.delete(
-#         app.reverse_url(
-#             "medicaments:delete_item", acte_id=ordonnance.id, item_id=item.id
-#         )
-#     )
+# def test_delete_item2(self, item, cli, app):
+#     print(item.ordonnance.id)
+
+#     item.ordonnance.owner = cli.user
+#     r = cli.delete(app.reverse_url("medicaments:delete_item", item_id=item.id))
 #     assert r.status_code == 200
 
 

@@ -45,6 +45,9 @@ class TestOrdonnanceModel:
         assert {i.id for i in ordonnance.get_ordered_items()} == {3, 2, 5, 1, 4}
 
 
+from tests.factory import ordonnancef
+
+
 class TestOrdonnanceViews:
 
     def test_add(self, patient, cli, app):
@@ -63,8 +66,12 @@ class TestOrdonnanceViews:
         assert r.status_code == 200
         assert r.json() == ordonnance.dico
 
-    def test_delete_pass(self, ordonnance, cli, app):
+    # def test_delete_pass(self, ordonnance, cli, app):
+
+    def test_delete_pass(self, cli, app):
+        ordonnance = ordonnancef()
         ordonnance.owner = cli.user
+        print(ordonnance.items.select()[:])
         r = cli.delete(app.reverse_url("ordonnances:delete", acte_id=ordonnance.id))
         assert r.status_code == 200
 

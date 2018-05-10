@@ -31,8 +31,8 @@ def ordonnance(request):
 
 
 @pytest.fixture(scope="function")
-def item(request, ordonnance):
-    return factory.itemf(ordonnance=ordonnance)
+def item(request):
+    return factory.itemf()
 
 
 @pytest.fixture(scope="function")
