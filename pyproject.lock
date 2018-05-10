@@ -228,7 +228,7 @@ platform = "*"
 name = "mimesis"
 version = "2.0.1"
 description = "Mimesis: mock data for developers."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 platform = "*"
@@ -716,7 +716,7 @@ platform = "*"
 [metadata]
 python-versions = "^3.6"
 platform = "*"
-content-hash = "6d312731e1521938cc373dbb68850f252fdda15e77de454c4da91f3f821ea12b"
+content-hash = "01c088d1b7cf5242d6c5647f9958823c1bab8d8f863aca51f3e7865fb3fd2bcb"
 
 [metadata.hashes]
 alabaster = [ "2eef172f44e8d301d25aff8068fddd65f767a3f04b5f15b0f4922f113aa1c732", "37cdcb9e9954ed60912ebc1ca12a9d12178c26637abdf124e3cde2341c257fe0",]

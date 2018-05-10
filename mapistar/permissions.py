@@ -96,7 +96,7 @@ class ActesPermissionsComponent(Component):
 
                 self.obj = get_or_404(db.Acte, acte_id)
 
-        if item_id:
+        elif item_id:
             self.item = get_or_404(db.Item, item_id)
             self.obj = self.item.ordonnance
 
@@ -104,4 +104,11 @@ class ActesPermissionsComponent(Component):
 
         self.run_actes_permissions()
 
-        return getattr(self, "item", self.obj)
+        if acte_id:
+            return self.obj
+
+        elif item_id:
+            return self.item
+
+
+# return getattr(self, "item", self.obj)
