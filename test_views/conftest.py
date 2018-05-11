@@ -9,8 +9,8 @@ from simple_settings import settings
 from mapistar.app import app as main_app
 from mapistar.app import routes, components
 
-from .factory import *  # noqa: F403, F401
-from .fixtures import *  # noqa: F403, F401
+from tests.factory import *  # noqa: F403, F401
+from tests.fixtures import *  # noqa: F403, F401
 
 
 @pytest.fixture(scope="function")

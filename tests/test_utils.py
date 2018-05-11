@@ -78,6 +78,20 @@ def test_get_or_404_pass_int_and_string(observation):
     assert a.id is not None
 
 
+
+
+def test_get_or_404_pass_int_and_string(mocker):
+     m mocker.patch("mapistar.patients.Patient", return_value=mocker.Mock(**{"dico": 1}))
+
+    Patient.side_effect = [1, 2, 3]
+    assert 1 == Patient.side_effect()
+
+    # a = get_or_404(observation.__class__, int(observation.id))
+    # assert a.id is not None
+    # a = get_or_404(observation.__class__, str(observation.id))
+    # assert a.id is not None
+
+
 def test_get_or_404_not_found(observation):
     with pytest.raises(exceptions.NotFound):
         get_or_404(observation.__class__, 999)

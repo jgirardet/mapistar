@@ -10,7 +10,7 @@ JWT = {"JWT_SECRET": "a"}
 
 
 # sqlite memory
-# DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}
+DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}
 
 # sqlite file_db
 
@@ -22,13 +22,13 @@ JWT = {"JWT_SECRET": "a"}
 # }
 
 
-url = urlparse(os.environ["MAPISTAR_DATABASE"])
-DATABASE = {
-    "provider": url.scheme,
-    "host": url.hostname,
-    "port": url.port,
-    "database": "mapistar_test",
-    "user": url.username,
-    "password": url.password,
-    "create_tables": True,
-}
+# url = urlparse(os.environ["MAPISTAR_DATABASE"])
+# DATABASE = {
+#     "provider": url.scheme,
+#     "host": url.hostname,
+#     "port": url.port,
+#     "database": "mapistar_test",
+#     "user": url.username,
+#     "password": url.password,
+#     "create_tables": True,
+# }

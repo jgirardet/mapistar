@@ -18,9 +18,17 @@ def patientd():
     }
 
 
-def patientf():
-    """ patient """
-    return db.Patient(**patientd())
+def patientf(**kwargs):
+    """ simple user """
+    if "ddn" not in kwargs:
+        kwargs["ddn"] = f.datetime.date(fmt="%Y-%m-%d")  # f.person.username()
+    if "sexe" not in kwargs:
+        kwargs["sexe"] = "m"
+    if "nom" not in kwargs:
+        kwargs["nom"] = f.person.last_name()
+    if "prenom" not in kwargs:
+        kwargs["prenom"] = f.person.name()
+    return db.Patient(**kwargs)
 
 
 def userd():

@@ -123,7 +123,7 @@ class PatientUpdateSchema(types.Type):
     email = validators.String(
         description="email", max_length=MAX_LENGTH["email"], default=""
     )
-    alive = validators.Boolean(description="vivant ?", default=True)
+    alive = validators.Boolean(description="vivant ?", default=None, allow_null=True)
 
 
 def add(patient: PatientCreateSchema) -> http.JSONResponse:

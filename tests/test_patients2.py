@@ -46,6 +46,28 @@ class TestPatientModel:
         assert patient.nom == "Fzefzefzefezf"
         assert patient.prenom == "Sdfsdfdfsdfsdf Sdfsdfsdf"
 
+    # def test_fields_with_capwords_at_create(self, mocker):
+    #     """
+    #     must be caps words :
+    #         name
+    #         firstname
+    #     """
+    #     mocker.patch.object("mapistar.patients.Patient", "before_update")
+    #     d = {"nom": "ZEFZEF", "prenom": "SDFSDF", "ddn": "1234-12-12", "sexe": "m"}
+    #     a = ponydb.Patient(**d)
+    #     a.flush()
+    #     for i in ["nom", "prenom"]:
+    #         d[i] = capwords(d[i])
+    #     assert a.nom == d["nom"]
+    #     assert a.prenom == d["prenom"]
+
+    # def test_fileds_with_capwords_at_update(self, patient, ponydb):
+    #     patient.nom = "FZEFZEFZEFEZF"
+    #     patient.prenom = "sdfsdfdfsdfsdf sdfsdfsdf"
+    #     orm.commit()
+    #     assert patient.nom == "Fzefzefzefezf"
+    #     assert patient.prenom == "Sdfsdfdfsdfsdf Sdfsdfsdf"
+
 
 class TestPatientViews:
 
