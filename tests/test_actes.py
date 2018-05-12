@@ -9,38 +9,69 @@ from pony.orm import OperationWithDeletedObjectError
 from .factory import observationf
 
 pytestmark = pytest.mark.pony
+from mapistar.actes.actes import Acte
+from mapistar.actes.views import ActesViews
 
 
 class TestActeModel:
 
-    def test_create_update_date(self, acte, ponydb, patient):
+    def test_before_insert(self, mocker):
         # assert isinstance(acte.created, datetime)
-        assert acte.modified == acte.created
-        acte.patient = patient
-        acte.flush()
-        assert acte.modified >= acte.created
+        f = mocker.MagicMock(spec=Acte, **{"created": 1, "modified": None})
 
-    def test_set_updatable(self, acte):
+        assert f.created is not f.modified
+        Acte.before_insert(f)
+        assert f.created is f.modified
+
+    def test_before_update(self, mocker):
+        f = mocker.MagicMock(spec=Acte, **{"modified": None})
+        m = mocker.patch("mapistar.actes.actes.datetime")
+        Acte.before_update(f)
+        assert m.utcnow.return_value is f.modified
+
+    def test_set_updatable(self, mocker):
+        f = mocker.MagicMock(spec=Acte, **{"created": 1, "updatable": []})
+        f.set = Acte.set
         with pytest.raises(AttributeError) as e:
-            acte.set(**{"_created": datetime.utcnow()})
+            Acte.set(f, **{"_created": datetime.utcnow()})
+
         assert str(e.value) == "_created n'est pas updatable"
-        acte.updatable = ("_created")
-        e = datetime.now()
-        acte.set(**{"created": e})
-        assert acte.to_dict()["created"] == e
+
+        f.updatable = ("created",)
+        g = mocker.patch("builtins.super")
+        h = g.return_value
+        Acte.set(f, **{"created": "AAA"})
+        mocker.stopall()
+
+        h.set.assert_called_with(created="AAA")
 
 
-# def test_date_modified(self, acte, patient):
-#     acte.patient = patient
-#     acte.flush()
+from unittest.mock import Mock
+
+acte = Mock(spec=Acte)
+acte.return_value = Mock(**{"dico": {"le": "dico"}})
+jwtuser = Mock(**{"id": 12})
+import json
+
+
+class ActeTest(ActesViews):
+    model = acte
+    schema_add = dict()
+    schema_update = dict()
 
 
 class TestViews:
 
-    def test_add(self, patient, cli, app):
-        a = {"patient": patient.id, "motif": "omk", "body": "mkmok"}
-        r = cli.post(app.reverse_url("observations:add"), data=json.dumps(a))
+    def test_add(self, mocker):
+        # m = mocker.patch.object(db, "Acte", return_value=mocker.Mock(**{"dico": 1}))
+        p = {
+            "nom": "Mokmomokok", "prenom": "Ljlijjlj", "ddn": "1234-12-12", "sexe": "m"
+        }
+
+        r = ActeTest.add()(data={"patient": 99}, user=jwtuser)
+        assert json.loads(r.content) == {"le": "dico"}
         assert r.status_code == 201
+        acte.assert_called_with(owner=12, patient=99)
 
     def test_list_acte_pass(self, patient, app, cli, ponydb):
 

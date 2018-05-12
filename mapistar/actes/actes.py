@@ -43,6 +43,9 @@ class Acte(db.Entity, DicoMixin, NameMixin):
         self.modified = datetime.utcnow()
 
     updatable = ()
+    """updatable définie les attributs pouvant être mis à jours
+    via la fonction set
+    """
 
     def set(self, **kwargs: dict):
         """
