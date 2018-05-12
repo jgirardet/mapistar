@@ -6,33 +6,68 @@ import pytest
 from apistar import exceptions
 
 pytestmark = pytest.mark.pony
+from mapistar.users import User, login
 
 
 class TestModel:
 
-    def test_create_user(self, user):
-        assert user.id
+    def test_create_user(self, mocker):
+        m = mocker.patch("mapistar.users.db", return_value="user")
+        p = mocker.patch(
+            "mapistar.users.generate_password_hash", return_value="pwdcode"
+        )
 
-    def test_repr(self, user):
-        assert repr(user) == f"[User: {user.prenom} {user.nom}]"
+        m.User = mocker.Mock(spec=User, return_value="user")
 
-    def test_check(self, user):
-        assert user.check_password("j")
+        m.create_user = User.create_user
+
+        u = m.create_user("user", "pwd", "nom", "prenom")
+
+        p.assert_called_with("pwd")
+        m.User.assert_called_with(
+            username="user", password="pwdcode", nom="nom", prenom="prenom", actif=True
+        )
+        assert u == "user"
+
+    def test_repr(self, mocker):
+        """
+        test autoput of str
+        """
+        m = mocker.Mock(**{"nom": "nom", "prenom": "prenom"})
+        m.__repr__ = User.__repr__
+        assert repr(m) == "[User: prenom nom]"
+
+    def test_check(self, mocker):
+        p = mocker.patch("mapistar.users.check_password_hash", return_value=True)
+        m = mocker.Mock(**{"password": "pwd1"})
+        a = User.check_password(m, "pwd2")
+        p.assert_called_with(m.password, "pwd2")
+
+
+from unittest.mock import MagicMock
+
+cred = MagicMock()
+cred["username"] = "a"
+cred["password"] = "b"
+
+userm = MagicMock(spec=User)
 
 
 class TestLogin:
 
-    def test_raise_auth_failed(self, cli, app, user):
-        r = cli.post(
-            app.reverse_url("users:login"),
-            data=json.dumps({"username": user.username, "password": "notthegoodone"}),
-        )
-        assert r.status_code == 403
-        r = cli.post(
-            app.reverse_url("users:login"),
-            data=json.dumps({"username": "mkmokmokmok", "password": "notthegoodone"}),
-        )
-        assert r.status_code == 403
+    def test_bad_username(self, mocker):
+        mocker.patch.object(User, "get", return_value=None)
+        with pytest.raises(exceptions.Forbidden) as exc:
+            login(cred, "jwt")
+        assert str(exc.value) == "Incorrect username or password."
+
+    def test_bad_pwd(self, mocker):
+        mocker.patch.object(User, "get", return_value=userm)
+        userm.password = "bad pwd"
+        userm.check_password.return_value = False
+        with pytest.raises(exceptions.Forbidden) as exc:
+            login(cred, "jwt")
+        assert str(exc.value) == "Incorrect username or password."
 
     def test_login_pass(self, cli, app, user):
         r = cli.post(

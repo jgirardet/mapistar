@@ -71,30 +71,26 @@ class TestImportModels:
 #     a = pd.__get__(instance, "owner")
 
 
-def test_get_or_404_pass_int_and_string(observation):
-    a = get_or_404(observation.__class__, int(observation.id))
-    assert a.id is not None
-    a = get_or_404(observation.__class__, str(observation.id))
-    assert a.id is not None
+def test_get_or_404_pass(mocker):
+
+    entity = mocker.MagicMock()
+    entity.__getitem__.return_value = 1
+    a = get_or_404(entity, 12)
+
+    entity.__getitem__.assert_called_with(12)
+    assert a == 1
 
 
+from pony.orm import ObjectNotFound
 
 
-def test_get_or_404_pass_int_and_string(mocker):
-     m mocker.patch("mapistar.patients.Patient", return_value=mocker.Mock(**{"dico": 1}))
+def test_get_or_404_not_found(mocker):
+    entity = mocker.MagicMock()
+    ett = mocker.MagicMock(**{"__name__": "irne"})
+    entity.__getitem__ = mocker.MagicMock(side_effect=ObjectNotFound(ett))
 
-    Patient.side_effect = [1, 2, 3]
-    assert 1 == Patient.side_effect()
-
-    # a = get_or_404(observation.__class__, int(observation.id))
-    # assert a.id is not None
-    # a = get_or_404(observation.__class__, str(observation.id))
-    # assert a.id is not None
-
-
-def test_get_or_404_not_found(observation):
     with pytest.raises(exceptions.NotFound):
-        get_or_404(observation.__class__, 999)
+        get_or_404(entity, 999)
 
 
 def test_dico():
