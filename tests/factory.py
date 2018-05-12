@@ -53,9 +53,9 @@ def userf(**kwargs):
     return db.User.create_user(**kwargs)
 
 
-def actef(p=None, u=None):
-    p = p if p else patientf()
-    u = u if u else userf()
+def actef(patient=None, owner=None):
+    p = patient or patientf()
+    u = owner or userf()
     return db.Acte(patient=p, owner=u)
 
 

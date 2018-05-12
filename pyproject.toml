@@ -21,7 +21,7 @@ pythonthesorimed = "*"
 apistar-jwt = "*"
 simple-settings = "*"
 apistar-ponyorm = "*"
-pendulum = {version = "*", allows-prereleases = true}
+pendulum = "^2.*"
 python-dotenv = "*"
 mimesis = "^2.0"
 

@@ -68,7 +68,6 @@ class ActesViews:
     def delete(cls) -> Callable:
 
         def delete(acte_id: int, obj: ActesPermissions) -> dict:
-            # obj = get_or_404(cls.model, acte_id)
             obj.delete()
             return {"id": acte_id, "deleted": True}
 
