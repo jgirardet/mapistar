@@ -6,19 +6,34 @@ from datetime import datetime
 import pytest
 from pony.orm import OperationWithDeletedObjectError
 
-from .factory import observationf
+from .factory import observationf, actef
 
 pytestmark = pytest.mark.pony
+from mapistar.actes.actes import Acte
 
 
 class TestActeModel:
 
-    def test_create_update_date(self, acte, ponydb, patient):
+    # def test_create_update_date(self, acte, ponydb, patient):
+    #     # assert isinstance(acte.created, datetime)
+    #     assert acte.modified == acte.created
+    #     acte.patient = patient
+    #     acte.flush()
+    #     assert acte.modified >= acte.created
+
+    def test_before_insert(self, mocker):
         # assert isinstance(acte.created, datetime)
-        assert acte.modified == acte.created
-        acte.patient = patient
-        acte.flush()
-        assert acte.modified >= acte.created
+        f = mocker.MagicMock(spec=Acte, **{"created": 1, "modified": None})
+
+        assert f.created is not f.modified
+        Acte.before_insert(f)
+        assert f.created is f.modified
+
+    def test_before_update(self, mocker):
+        f = mocker.MagicMock(spec=Acte, **{"modified": None})
+        m = mocker.patch("mapistar.actes.actes.datetime")
+        Acte.before_update(f)
+        assert m.utcnow.return_value is f.modified
 
     def test_set_updatable(self, acte):
         with pytest.raises(AttributeError) as e:
