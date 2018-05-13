@@ -9,6 +9,7 @@ from apistar_jwt.token import JWTUser
 # from mapistar.db import db
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import get_or_404
+from pony.orm import select
 
 
 class ActesViews:
@@ -46,9 +47,10 @@ class ActesViews:
     def liste(cls) -> Callable:
 
         def liste(patient_id: int) -> List:
-            return [  # pragma: nocover
+
+            return [
                 acte.dico
-                for acte in cls.model.select(lambda a: a.patient.id == patient_id)
+                for acte in select(a for a in cls.model if a.patient.id == patient_id)
             ]
 
         liste.__doc__ = f""" Liste les Actes de type : {cls.model.name}"""
