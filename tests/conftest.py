@@ -56,6 +56,21 @@ def cli_app_no_auth(napp):
     return test.TestClient(main_app)
 
 
+from unittest.mock import MagicMock
+from mapistar.actes.ordonnances import Ordonnance
+from mapistar.actes.ordo_items import Item
+
+
+@pytest.fixture(scope="function")
+def mordo():
+    return MagicMock(spec=Ordonnance)
+
+
+@pytest.fixture(scope="function")
+def mitem():
+    return MagicMock(spec=Item)
+
+
 import time
 
 test_timer = None

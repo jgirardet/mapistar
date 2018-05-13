@@ -16,11 +16,11 @@ class Item(db.Entity, DicoMixin, NameMixin):
     place = orm.Optional(int)
 
     def after_insert(self):
-        self.ordonnance.before_update()
+        self.ordonnance.before_update()  # modifief = created
         self.ordonnance.ordre_add_item(self)
 
     def before_delete(self):
-        self.ordonnance.before_update()
+        self.ordonnance.before_update()  # modified = datetime.utcnow()
         self.ordonnance.ordre_delete_item(self)
 
     def before_update(self):

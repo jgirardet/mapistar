@@ -3,84 +3,76 @@ import json
 
 # Third Party Libraries
 import pytest
-from pony.orm import OperationWithDeletedObjectError
-from tests.factory import itemf, ordonnancef
 
 pytestmark = pytest.mark.pony
+
+from mapistar.actes.ordonnances import Ordonnance
+
+from unittest.mock import MagicMock
+
+
+from mapistar.patients import Patient
+
+patientm = MagicMock(spec=Patient, **{"id": 1})
 
 
 class TestOrdonnanceModel:
 
-    def test_dico_super_is_called(self, ordonnance, ponydb):
-        for i in range(3):
-            ponydb.Item(ordonnance=ordonnance)
+    def test_dico(self, ordonnance, ponydb):
+        e = ponydb.Item(ordonnance=ordonnance)
         # a.flush()
-
         dico = ordonnance.dico
-        dico.pop("items")
-        assert isinstance(dico["created"], str), "confirme l'appel de super()"
+        it = dico.pop("items")
+        assert it == [e.dico], "confirme le custome d'item"
+        assert "created" in dico, "confirme l'appel de super()"
 
-    def test_ordre(self, ordonnance, ponydb):
-        # ajout simple
-        [itemf(ordonnance=ordonnance) for x in range(5)]
-        ordre = ordonnance.dico["ordre"]
-        assert ordre == "1-2-3-4-5"
+    def test_ordre_add(self, mordo):
+        # not ordre
+        mordo.ordre = ""
+        Ordonnance.ordre_add_item(mordo, MagicMock(**{"id": 22}))
+        assert mordo.ordre == "22"
+        # ordre >0
+        Ordonnance.ordre_add_item(mordo, MagicMock(**{"id": 44}))
+        assert mordo.ordre == "22-44"
 
-        # après delete
-        ponydb.Item[2].delete()
-        ordre = ordonnance.dico["ordre"]
-        assert ordre == "1-3-4-5"
+    def test_ordre_delete(self, mordo):
+        # many
+        mordo.ordre = "12-26-44-54"
+        Ordonnance.ordre_delete_item(mordo, MagicMock(**{"id": 26}))
+        assert mordo.ordre == "12-44-54"
+        Ordonnance.ordre_delete_item(mordo, MagicMock(**{"id": 12}))
+        assert mordo.ordre == "44-54"
+        Ordonnance.ordre_delete_item(mordo, MagicMock(**{"id": 54}))
+        assert mordo.ordre == "44"
+        # one
+        Ordonnance.ordre_delete_item(mordo, MagicMock(**{"id": 44}))
+        assert mordo.ordre == ""
 
-    def test_get_ordered_items(self, ordonnance, ponydb):
-        [itemf(ordonnance=ordonnance) for x in range(5)]
-        ordre = "3-2-5-1-4"
-        ordonnance.ordre = ordre
-        ordonnance.dico
-        assert [i.id for i in ordonnance.get_ordered_items()] == [3, 2, 5, 1, 4]
+    def test_get_ordered_items(self, mocker, mordo):
+        # no item
+        mordo.ordre = ""
+        a = Ordonnance.get_ordered_items(mordo)
+        assert a == []
+        # normal
+        mordo.ordre = "45-25-32"
+        x, y, z = [mocker.Mock(**{"id": x}, name=str(x)) for x in [25, 32, 45]]
+        mordo.items = [x, y, z]
+        a = Ordonnance.get_ordered_items(mordo)
+        assert a == [z, x, y]
+        # valueerro
+        mocker.patch("builtins.sorted", side_effect=ValueError)
+        a = Ordonnance.get_ordered_items(mordo)
+        a = [x, y, z]
+        mocker.stopall()
 
-        # flallback, bad ordre
-        ordre = "3-2-4"
-        ordonnance.ordre = ordre
-        ordonnance.dico
-        assert {i.id for i in ordonnance.get_ordered_items()} == {3, 2, 5, 1, 4}
+
+# from tests.factory import ordonnancef
 
 
-from tests.factory import ordonnancef
+# ordonancem = MagicMock(spec=Ordonnance)
+# inst = Mock(**{"dico": {"le": "dico"}})
+# ordonancem.return_value = inst
 
 
-class TestOrdonnanceViews:
-
-    def test_add(self, patient, cli, app):
-        a = {"patient": patient.id}
-        r = cli.post(app.reverse_url("ordonnances:add"), data=json.dumps(a))
-        assert r.status_code == 201
-
-    def test_list_acte_pass(self, patient, app, cli, ponydb):
-
-        ord = [ordonnancef(owner=cli.user, patient=patient) for i in range(3)]
-        r = cli.get(app.reverse_url("ordonnances:liste", patient_id=patient.id))
-        assert {x["id"] for x in r.json()} == {x.id for x in ord}
-
-    def test_one_pass(self, ordonnance, cli, app):
-        r = cli.get(app.reverse_url("ordonnances:one", acte_id=ordonnance.id))
-        assert r.status_code == 200
-        assert r.json() == ordonnance.dico
-
-    # def test_delete_pass(self, ordonnance, cli, app):
-
-    def test_delete_pass(self, cli, app):
-        ordonnance = ordonnancef()
-        ordonnance.owner = cli.user
-        print(ordonnance.items.select()[:])
-        r = cli.delete(app.reverse_url("ordonnances:delete", acte_id=ordonnance.id))
-        assert r.status_code == 200
-
-    def test_update_pass(self, cli, app, ordonnance):
-        ordonnance.owner = cli.user
-        upd = {"ordre": "1-2-3-4-5"}
-        r = cli.put(
-            app.reverse_url("ordonnances:update", acte_id=ordonnance.id),
-            data=json.dumps(upd),
-        )
-        assert r.status_code == 200
-        assert r.json()["ordre"] == "1-2-3-4-5"
+# class OrdoTest(OrdonnanceViews):
+#     model = ordonancem

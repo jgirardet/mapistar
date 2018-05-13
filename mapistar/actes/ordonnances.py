@@ -37,11 +37,16 @@ class Ordonnance(Acte):
             self.ordre += f"-{item.id}"
 
     def ordre_delete_item(self, item: "Item"):
+        item_id = str(item.id)
+        # many item
         if "-" in self.ordre:
-            lid = "-" + f"{item.id}"
-            # print(lid)
-            # print(item.id, self.ordre, self.items.select()[:])
-            self.ordre = self.ordre.replace(lid, "")
+            if self.ordre.index(str(item_id)):
+                lid = "-" + item_id
+                self.ordre = self.ordre.replace(lid, "")
+            else:
+                lid = item_id + "-"
+                self.ordre = self.ordre.replace(lid, "")
+        # one item left
         else:
             self.ordre = ""
 
