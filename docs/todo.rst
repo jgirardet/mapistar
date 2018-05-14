@@ -20,6 +20,7 @@ Todo vers 1.0
 * Actes :
     - updatable field
     - tests with acte not ordonnance if possible
+    - set mixin
 
 * Presription libre
 

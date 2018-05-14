@@ -6,10 +6,10 @@ from pony import orm
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import DicoMixin, NameMixin
+from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 
-class Acte(db.Entity, DicoMixin, NameMixin):
+class Acte(db.Entity, DicoMixin, NameMixin, SetMixin):
     """
     Base Entity pour les différents actes.
 
@@ -46,22 +46,6 @@ class Acte(db.Entity, DicoMixin, NameMixin):
     """updatable définie les attributs pouvant être mis à jours
     via la fonction set
     """
-
-    def set(self, **kwargs: dict):
-        """
-        Override default set pour vérifier si updatable
-
-        Args:
-            kwargs: field : nouvelle valeur
-
-        Raises:
-            AttributeError: si le field n'est pas dans :attr:`updatable`.
-        """
-        for item in kwargs:
-            if item not in self.updatable:
-                raise AttributeError(f"{item} n'est pas updatable")
-
-        super().set(**kwargs)
 
 
 from apistar import validators, types

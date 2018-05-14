@@ -11,9 +11,15 @@ from .factory import observationf, actef
 pytestmark = pytest.mark.pony
 from mapistar.actes.actes import Acte, db
 from mapistar.actes.views import ActesViews
+from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 
 class TestActeModel:
+
+    def test_inheritance(self):
+        assert issubclass(Acte, DicoMixin)
+        assert issubclass(Acte, SetMixin)
+        assert issubclass(Acte, NameMixin)
 
     def test_before_insert(self, mocker):
         # assert isinstance(acte.created, datetime)
@@ -28,22 +34,6 @@ class TestActeModel:
         m = mocker.patch("mapistar.actes.actes.datetime")
         Acte.before_update(f)
         assert m.utcnow.return_value is f.modified
-
-    def test_set_updatable(self, mocker):
-        f = mocker.MagicMock(spec=Acte, **{"created": 1, "updatable": []})
-        f.set = Acte.set
-        with pytest.raises(AttributeError) as e:
-            Acte.set(f, **{"_created": datetime.utcnow()})
-
-        assert str(e.value) == "_created n'est pas updatable"
-
-        f.updatable = ("created",)
-        g = mocker.patch("builtins.super")
-        h = g.return_value
-        Acte.set(f, **{"created": "AAA"})
-        mocker.stopall()
-
-        h.set.assert_called_with(created="AAA")
 
 
 from unittest.mock import Mock

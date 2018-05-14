@@ -12,6 +12,13 @@ from mapistar.actes.observations import (
 
 from mapistar.actes.actes import ActeCreateSchema
 from mapistar.actes.schemas import actes_schemas
+from mapistar.actes.ordo_items import (
+    Item,
+    ItemCreateSchema,
+    Medicament,
+    MedicamentCreateSchema,
+    MedicamentUpdateSchema,
+)
 
 
 def test_acte():
@@ -36,4 +43,17 @@ def test_ordonnance():
     assert (
         set(Ordonnance.updatable)
         == set(OrdonnanceUpdateSchema.validator.properties.keys())
+    )
+
+
+def test_item():
+    assert "ordonnance" in ItemCreateSchema.validator.required
+
+
+def test_medicament():
+    assert issubclass(MedicamentCreateSchema, ItemCreateSchema)
+    assert {"cip", "nom"}.issubset(set(MedicamentCreateSchema.validator.required))
+    assert (
+        set(Medicament.updatable)
+        == set(MedicamentUpdateSchema.validator.properties.keys())
     )

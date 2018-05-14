@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, Mock
 # Third Party Libraries
 import pytest
 from mapistar.actes.ordo_items import Item, ItemViews, Medicament
+from mapistar.utils import DicoMixin, SetMixin, NameMixin
 
 pytestmark = pytest.mark.pony
 
@@ -37,8 +38,20 @@ class TestItemViews:
         litem.delete.assert_called_once()
         assert r == {"id": 99, "deleted": True}
 
+    def test_update_item(self, mocker):
+        upd = {"modified": "123456"}
+        t = ItemTest.update()(47, upd, litem)
+
+        litem.set.assert_called_with(modified="123456")
+        assert t == litem.dico
+
 
 class TestItemModel:
+
+    def test_inheritance(self):
+        assert issubclass(Item, DicoMixin)
+        assert issubclass(Item, SetMixin)
+        assert issubclass(Item, NameMixin)
 
     def test_after_insert(self, mitem, mordo, mocker):
         mitem.ordonnance = mordo

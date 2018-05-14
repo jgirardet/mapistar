@@ -89,3 +89,22 @@ class NameMixin:
     def url_name(self) -> str:
         """url du modèle"""
         return self.__name__.lower() + "s"
+
+
+class SetMixin:
+
+    def set(self, **kwargs: dict):
+        """
+        Override default set pour vérifier si updatable
+
+        Args:
+            kwargs: field : nouvelle valeur
+
+        Raises:
+            AttributeError: si le field n'est pas dans :attr:`updatable`.
+        """
+        for item in kwargs:
+            if item not in self.updatable:
+                raise AttributeError(f"{item} n'est pas updatable")
+
+        super().set(**kwargs)

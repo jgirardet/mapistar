@@ -1,17 +1,16 @@
-# Standard Libraries
-from typing import Callable, List
-
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
 from apistar_jwt import JWTUser
-from pony import orm
-
-# mapistar
 from mapistar.base_db import db
-from mapistar.utils import DicoMixin, NameMixin
+
+# from apistar import Route, http
+from mapistar.permissions import ActesPermissions
+from mapistar.utils import DicoMixin, NameMixin, SetMixin
+from pony import orm
+from typing import Callable, List
 
 
-class Item(db.Entity, DicoMixin, NameMixin):
+class Item(db.Entity, DicoMixin, NameMixin, SetMixin):
     ordonnance = orm.Required("Ordonnance")
     place = orm.Optional(int)
 
@@ -27,6 +26,10 @@ class Item(db.Entity, DicoMixin, NameMixin):
         self.ordonnance.before_update()
 
 
+class ItemCreateSchema(types.Type):
+    ordonnance = validators.Integer()
+
+
 class Medicament(Item):
     """Medicament"""
     cip = orm.Required(str)
@@ -37,9 +40,10 @@ class Medicament(Item):
     def __repr__(self):
         return f"[Medicament: {self.nom}]"
 
+    updatable = ("posologie", "duree")
 
-class MedicamentCreateSchema(types.Type):
-    ordonnance = validators.Integer()
+
+class MedicamentCreateSchema(ItemCreateSchema):
     cip = validators.String(min_length=13)
     nom = validators.String()
     posologie = validators.String(default="")
@@ -49,26 +53,6 @@ class MedicamentCreateSchema(types.Type):
 class MedicamentUpdateSchema(types.Type):
     posologie = validators.String(default="")
     duree = validators.Integer(default="")
-
-
-# from mapistar.base_db import db
-
-# from apistar import Route, http
-from mapistar.permissions import ActesPermissions
-
-
-# def update_item(acte_id: int, new_data: MedicamentCreateSchema, obj: ActesPermissions):
-#     # obj = get_or_404(cls.model, acte_id)
-#     obj.set(**new_data)
-#     return obj.dico
-
-
-#     @classmethod
-#     def routes_supplementaires(cls):
-#         return [
-#             Route("/{ordonnance_id}/", method="POST", handler=add_item),
-#             Route("/{acte_id}/item/{item_id}/", method="DELETE", handler=delete_item),
-#         ]
 
 
 class ItemViews:
@@ -98,6 +82,17 @@ class ItemViews:
         return delete_item
 
     @classmethod
+    def update(cls) -> Callable:
+
+        def update(item_id: int, new_data: cls.schema_update, obj: ActesPermissions):
+            # obj = get_or_404(cls.model, acte_id)
+            obj.set(**new_data)
+            return obj.dico
+
+        update.__doc__ = f"""Modifie un acte de type : {cls.model.name}"""
+        return update
+
+    @classmethod
     def routes(cls) -> Include:
         """
         Returns:
@@ -110,8 +105,7 @@ class ItemViews:
                 Route("/", method="POST", handler=cls.add_item()),
                 Route("/{item_id}/", method="DELETE", handler=cls.delete_item()),
                 # Route("/{acte_id}/", method="GET", handler=cls.one()),
-                # Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
-                # Route("/{acte_id}/", method="PUT", handler=cls.update()),
+                Route("/{tem_id}/", method="PUT", handler=cls.update()),
                 # Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
             ],
         )

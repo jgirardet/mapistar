@@ -49,7 +49,7 @@ class TestOrdonnanceViews:
 
 class TestItemViews:
 
-    def test_add2(self, ordonnance, cli, app):
+    def test_add(self, ordonnance, cli, app):
         a = {"ordonnance": ordonnance.id, "cip": "1234567890123", "nom": "Un Médoc"}
         r = cli.post(app.reverse_url("medicaments:add_item"), data=json.dumps(a))
         assert r.status_code == 201

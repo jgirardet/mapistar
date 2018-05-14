@@ -8,7 +8,7 @@ from apistar import exceptions
 
 # mapistar
 from mapistar.exceptions import MapistarProgrammingError
-from mapistar.utils import DicoMixin, get_or_404, import_models
+from mapistar.utils import DicoMixin, get_or_404, import_models, SetMixin
 
 pytestmark = pytest.mark.pony
 
@@ -88,3 +88,19 @@ def test_dico():
     d.created = dt
     d.to_dict = MagicMock(return_value={"aze": "aze", "nb": 1, "created": dt})
     assert d.dico["created"] == "2018-04-22"
+
+
+def test_set_mixin(mocker):
+    a = MagicMock()
+    a.updatable = ("un", "deux", "trois")
+    g = mocker.patch("builtins.super")
+    h = g.return_value
+    SetMixin.set(a, **{"un": 1, "trois": 3})
+    mocker.stopall()
+
+    h.set.assert_called_with(un=1, trois=3)
+
+    a.updatable = ("un", "deux")
+    with pytest.raises(AttributeError) as exc:
+        SetMixin.set(a, **{"un": 1, "trois": 3})
+    assert str(exc.value) == "trois n'est pas updatable"
