@@ -106,18 +106,14 @@ class ActesPermissionsComponent(Component):
                 )
 
             else:
-                acte = get_or_404(db.Acte, acte_id)
+                acte = obj = get_or_404(db.Acte, acte_id)
 
         elif item_id:
-            item = get_or_404(db.Item, item_id)
-            acte = item.ordonnance
+            obj = get_or_404(db.Item, item_id)
+            acte = obj.ordonnance
         else:
-            raise MapistarProgrammingError(" doit préciser acte_id ou item_id")
+            raise MapistarProgrammingError("doit préciser acte_id ou item_id")
 
         ActesPermissions(acte, user)()
 
-        if acte_id:
-            return acte
-
-        elif item_id:
-            return item
+        return obj

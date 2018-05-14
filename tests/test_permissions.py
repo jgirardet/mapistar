@@ -12,9 +12,8 @@ class TestActesPermission:
 
     def test_only_owner_can_edit2(self, mocker):
 
-        a = ActesPermissions(
-            mocker.Mock(**{"acte.owner.id": 1}), mocker.Mock(**{"user.id": 2})
-        )
+        a = ActesPermissions(mocker.Mock(**{"owner.id": 1}), mocker.Mock(**{"id": 2}))
+        print(a.acte.owner.id, a.user.id)
 
         with pytest.raises(exceptions.Forbidden) as e:
             a.only_owner_can_edit()
@@ -22,6 +21,11 @@ class TestActesPermission:
             str(e.value)
             == "Un utilisateur ne peut modifier un acte créé par un autre utilisateur"
         )
+        # should pass
+        a.acte.owner.id = 2
+        print(a.acte.owner.id, a.user.id)
+        r = a.only_owner_can_edit()
+        assert r == None
 
     def test_only_editable_today(self, mocker):
         b = datetime.utcnow() - timedelta(days=1)
@@ -39,6 +43,12 @@ class TestActesPermission:
         )
         with pendulum.test(fakedatetime):
             assert not a.only_editable_today()
+
+    def test_perm_are_called(self, mocker):
+        a = mocker.Mock()
+        ActesPermissions.__call__(a)
+        a.only_owner_can_edit.assert_called_once()
+        a.only_editable_today.assert_called_once()
 
 
 AP = ActesPermissionsComponent()
@@ -76,3 +86,8 @@ class TestActesPermissionComponent:
             str(exc.value)
             == "Une requête ne peut spécifier item_id et acte_id à la fois"
         )
+
+    def test_resolve_not_acteid_or_itmeid(self):
+        with pytest.raises(MapistarProgrammingError) as exc:
+            AP.resolve(params={}, user=1)
+        assert str(exc.value) == "doit préciser acte_id ou item_id"

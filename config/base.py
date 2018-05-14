@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 actes_models = ("actes", ("observations", "ordonnances", "ordo_items"))
 
 # models = ("patients", "users", actes_models)
-models = ("patients", "users", "actes.observations", "actes.ordonnances")
+models = ("patients", "users", "actes.observations", "actes.ordonnances", actes_models)
 
 TZ = pendulum.timezone("Europe/Paris")
 

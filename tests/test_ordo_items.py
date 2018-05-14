@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock
 
 # Third Party Libraries
 import pytest
-from mapistar.actes.ordo_items import Item, ItemViews
+from mapistar.actes.ordo_items import Item, ItemViews, Medicament
 
 pytestmark = pytest.mark.pony
 
@@ -75,3 +75,10 @@ class TestItemModel:
         ordonnance.flush()
         after_delete = ordonnance.modified
         assert debut < after_insert < after_modif < after_delete
+
+
+class TestMedicamentModel:
+
+    def test_repr(self, mitem):
+        mitem.nom = "Bla bla"
+        assert Medicament.__repr__(mitem) == "[Medicament: Bla bla]"

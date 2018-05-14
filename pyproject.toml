@@ -33,6 +33,7 @@ pytest-cov = "*"
 pytest-pythonpath = "*"
 pytest-env = "*"
 pytest-ponyorm = "*"
+pytest-mock = "^1.10"
 mimesis = "*"
 
 # linting
@@ -46,4 +47,3 @@ sphinx-rtd-theme = "*"
 sphinx-autobuild = "*"
 sphinxcontrib-napoleon = "*"
 sphinx-autodoc-typehints = "*"
-pytest-mock = "^1.10"

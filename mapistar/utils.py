@@ -33,56 +33,6 @@ def import_models(module_liste: list):
             )
 
 
-class PendulumDateTime:
-    """
-    Helper Descriptor for datetime
-
-    Utile pour utiliser les datetime non aware et les utliser en aware.
-
-    Example::
-
-        class Test:
-            _created = orm.Required(datetime)
-            created = PendulumDateTime(
-
-    Les 2 fields ne doivent différer que par le "_".
-
-    le field "_" ne doit pas être accédé directement.
-
-    Returns:
-        Pour le get c'est un objet :class:`pendulum.DateTime` en UTC.
-    """
-
-    def __set_name__(self, owner, name):
-        self.field = "_" + name
-
-    def __get__(self, instance, owner) -> pendulum.DateTime:
-        """
-        Convertit naif datetime  en aware.
-        On ajoute le in_tz('UTC') pour s'assurer que l'objet ne reste pas unaware
-        """
-        dd = getattr(instance, self.field)
-        if isinstance(dd, datetime):
-            return pendulum.instance(dd).in_tz("UTC")
-
-        elif isinstance(dd, date):
-            return pendulum.date(dd.year, dd.month, dd.day)
-
-        else:
-            raise TypeError("instance date/datetime requis")
-
-    def __set__(self, instance, value):
-        """
-        Convertit aware en naif. Tout est sauvé en UTC
-        """
-        if isinstance(value, pendulum.DateTime):
-            setattr(instance, self.field, value.in_tz("UTC").naive())
-        elif isinstance(value, pendulum.Date):
-            setattr(instance, self.field, value)
-        else:
-            raise TypeError("instance pendulum Date/Datetime requis")
-
-
 def get_or_404(model: orm.core.Entity, id: [str, int]):
     """
     Classique get or raisse http404

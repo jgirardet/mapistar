@@ -38,6 +38,9 @@ Todo vers 1.0
     - entry point
     - git pre commit
 
+* integration test
+    - fake DB
+
 * Documentation:
     - patient +
     - utils +

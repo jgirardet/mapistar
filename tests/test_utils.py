@@ -24,6 +24,31 @@ class TestImportModels:
             == "Déclaration de module sous la forme str ou tuple('base', ('module1','modele2'))"
         )
 
+    def test_insinstance_str(self, mocker):
+        call = mocker.call
+        models = ("actes", "observations", "ordonnances", "ordo_items")
+        r = mocker.patch("importlib.import_module")
+        import_models(models)
+        calls = [
+            call("mapistar.actes"),
+            call("mapistar.observations"),
+            call("mapistar.ordonnances"),
+            call("mapistar.ordo_items"),
+        ]
+        r.assert_has_calls(calls)
+
+    def test_insinstance_tuple(self, mocker):
+        call = mocker.call
+        models = [("actes", ("observations", "ordonnances", "ordo_items"))]
+        r = mocker.patch("importlib.import_module")
+        import_models(models)
+        calls = [
+            call("mapistar.actes.observations"),
+            call("mapistar.actes.ordonnances"),
+            call("mapistar.actes.ordo_items"),
+        ]
+        r.assert_has_calls(calls)
+
 
 def test_get_or_404_pass(mocker):
 

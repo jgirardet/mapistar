@@ -35,7 +35,7 @@ class Medicament(Item):
     duree = orm.Optional(int, default=0)
 
     def __repr__(self):
-        return f"[{self.nom}]"
+        return f"[Medicament: {self.nom}]"
 
 
 class MedicamentCreateSchema(types.Type):

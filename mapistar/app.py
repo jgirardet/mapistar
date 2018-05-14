@@ -38,7 +38,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz"
 http://localhost:8080/create/
 """
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     # app.serve(ho starun_wsgi(app)
     options = {"use_debugger": True, "use_reloader": True}
     app.serve("127.0.0.1", 5000, **options)
