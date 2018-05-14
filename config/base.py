@@ -10,10 +10,11 @@ from dotenv import load_dotenv
 actes_models = ("actes", ("observations", "ordonnances", "ordo_items"))
 
 # models = ("patients", "users", actes_models)
-models = ("patients", "users", "actes.observations", "actes.ordonnances", actes_models)
+MODELS = ("patients", "users", actes_models)
 
 TZ = pendulum.timezone("Europe/Paris")
 
+JWT_DURATION = 0
 
 env_path = Path(".").parent / ".env"
 load_dotenv(env_path)

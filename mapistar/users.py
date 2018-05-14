@@ -5,11 +5,15 @@ from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
+from simple_settings import settings
 
 # mapistar
 from mapistar.base_db import db
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
+
+if not settings.JWT_DURATION:
+    raise exceptions.ConfigurationError("La durée des JWT doit être précisée")
 
 
 class User(db.Entity):
@@ -106,7 +110,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
         "id": user.id,
         "username": user.username,
         "iat": pendulum.now(),
-        "exp": pendulum.now() + pendulum.Duration(seconds=5),
+        "exp": pendulum.now() + pendulum.Duration(seconds=1000),
     }
     token = jwt.encode(payload)
     if token is None:

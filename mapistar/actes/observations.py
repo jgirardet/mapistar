@@ -2,7 +2,7 @@
 from apistar import types, validators
 from pony import orm
 
-from .actes import Acte
+from .actes import Acte, ActeCreateSchema
 
 
 class Observation(Acte):
@@ -26,8 +26,7 @@ class Observation(Acte):
         return f"Observation: {self.motif} par {self.owner}"
 
 
-class ObservationCreateSchema(types.Type):
-    patient = validators.Integer()
+class ObservationCreateSchema(ActeCreateSchema):
     motif = validators.String()
     body = validators.String(default="")
 

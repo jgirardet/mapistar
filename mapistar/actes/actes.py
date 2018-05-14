@@ -62,3 +62,10 @@ class Acte(db.Entity, DicoMixin, NameMixin):
                 raise AttributeError(f"{item} n'est pas updatable")
 
         super().set(**kwargs)
+
+
+from apistar import validators, types
+
+
+class ActeCreateSchema(types.Type):
+    patient = validators.Integer()

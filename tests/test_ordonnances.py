@@ -6,7 +6,11 @@ import pytest
 
 pytestmark = pytest.mark.pony
 
-from mapistar.actes.ordonnances import Ordonnance
+from mapistar.actes.ordonnances import (
+    Ordonnance,
+    OrdonnanceCreateSchema,
+    OrdonnanceUpdateSchema,
+)
 
 from unittest.mock import MagicMock
 

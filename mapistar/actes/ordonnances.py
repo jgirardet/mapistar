@@ -63,8 +63,11 @@ class Ordonnance(Acte):
             return list(self.items)
 
 
-class OrdonnanceCreateSchema(types.Type):
-    patient = validators.Integer()
+from mapistar.actes.actes import ActeCreateSchema
+
+
+class OrdonnanceCreateSchema(ActeCreateSchema):
+    pass
 
 
 class OrdonnanceUpdateSchema(types.Type):

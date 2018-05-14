@@ -8,6 +8,7 @@ print("Testing Config")
 
 JWT = {"JWT_SECRET": "a"}
 
+JWT_DURATION = 10
 
 # sqlite memory
 DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}
