@@ -68,7 +68,7 @@ class ItemViews:
             item = cls.model(**data)
             return http.JSONResponse(item.dico, status_code=201)
 
-        add_item.__doc__ = f"""Ajoute un nouvel Item de type : {cls.model.name}"""
+        add_item.__doc__ = f"""Ajoute un nouvel Item de type  {cls.model.name}"""
         return add_item
 
     @classmethod
@@ -78,19 +78,21 @@ class ItemViews:
             obj.delete()
             return {"id": item_id, "deleted": True}
 
-        delete_item.__doc__ = f"""Ajoute un nouvel Item de type : {cls.model.name}"""
+        delete_item.__doc__ = f"""Ajoute un nouvel Item de type {cls.model.name}"""
         return delete_item
 
     @classmethod
-    def update(cls) -> Callable:
+    def update_item(cls) -> Callable:
 
-        def update(item_id: int, new_data: cls.schema_update, obj: ActesPermissions):
+        def update_item(
+            item_id: int, new_data: cls.schema_update, obj: ActesPermissions
+        ):
             # obj = get_or_404(cls.model, acte_id)
             obj.set(**new_data)
             return obj.dico
 
-        update.__doc__ = f"""Modifie un acte de type : {cls.model.name}"""
-        return update
+        update_item.__doc__ = f"""Modifie un Item de type {cls.model.name}"""
+        return update_item
 
     @classmethod
     def routes(cls) -> Include:
@@ -105,7 +107,7 @@ class ItemViews:
                 Route("/", method="POST", handler=cls.add_item()),
                 Route("/{item_id}/", method="DELETE", handler=cls.delete_item()),
                 # Route("/{acte_id}/", method="GET", handler=cls.one()),
-                Route("/{tem_id}/", method="PUT", handler=cls.update()),
+                Route("/{item_id}/", method="PUT", handler=cls.update_item()),
                 # Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
             ],
         )
@@ -115,78 +117,3 @@ class MedicamentViews(ItemViews):
     model = Medicament
     schema_add = MedicamentCreateSchema
     schema_update = MedicamentUpdateSchema
-
-
-# def add(patient: PatientCreateSchema) -> http.JSONResponse:
-#     """
-#     Ajouter un nouveau patient
-
-#     Args:
-#         patient: données du nouveau patient
-#     """
-#     a = db.Patient(**patient)
-#     return http.JSONResponse(a.dico, status_code=201)
-
-
-# def liste() -> List[dict]:
-#     """ List patients
-
-#     Returns:
-#         Liste de tous les patients
-#     """
-#     return [x.dico for x in db.Patient.select()]
-
-
-# def get(id: int) -> dict:
-#     """ Get patient details
-
-#     Args:
-#         id: id du patient
-
-#     Returns:
-#         Le patient
-#     Raises:
-#         NotFound si non trouvé.
-#     """
-#     return get_or_404(db.Patient, id).dico
-
-
-# def delete(id: int) -> dict:
-#     """
-#     delete un patient
-
-#     Args:
-#         id: id du patient
-#     Returns:
-#         msg "delete success"
-#     Raises:
-#         NotFound si non trouvé
-#     """
-#     pat = get_or_404(db.Patient, id)
-#     pat.delete()
-#     return {"msg": "delete success"}
-
-
-# def update(new_data: PatientUpdateSchema, id: int) -> http.JSONResponse:
-#     """modify patients
-
-#     Args:
-#         new_data: Rien n'est requis.
-#         id: patient id.
-#     """
-#     to_update = get_or_404(db.Patient, id)
-#     to_update.set(**{k: v for k, v in new_data.items() if v})
-#     return http.JSONResponse(to_update.dico, status_code=201)
-
-
-# routes_patients = Include(
-#     url="/patients",
-#     name="patients",
-#     routes=[
-#         Route(url="/", method="POST", handler=add),
-#         Route(url="/", method="GET", handler=liste),
-#         Route(url="/{id}/", method="PUT", handler=update),
-#         Route(url="/{id}/", method="DELETE", handler=delete),
-#         Route(url="/{id}/", method="GET", handler=get),
-#     ],
-# )

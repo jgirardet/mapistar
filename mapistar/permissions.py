@@ -32,6 +32,8 @@ class IsAuthenticated:
 # ActesPermissions = type("ActesPermissions", (), {})
 # ActesPermissions = TypeVar("ActesPermissions")
 # """Type ActePermissions"""
+
+
 class ActesPermissions:
     """
     Class regroupant les permissions et leur éxecutions

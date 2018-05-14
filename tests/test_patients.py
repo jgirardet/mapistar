@@ -67,12 +67,12 @@ class TestPatientViews:
         mocker.patch(
             "mapistar.patients.get_or_404", return_value=mocker.Mock(**{"dico": 1})
         )
-        r = patients.get(id=1)
+        r = patients.one(patient_id=1)
         assert r == 1
 
     def test_cli_del_patient(self, mocker):
         m = mocker.patch("mapistar.patients.get_or_404")
-        r = patients.delete(id=1)
+        r = patients.delete(patient_id=1)
 
         m.return_value.delete.assert_called_once()
         assert r == {"msg": "delete success"}
@@ -91,7 +91,7 @@ class TestPatientViews:
         p = PatientUpdateSchema(
             **{"prenom": "omkmok", "ddn": "1237-03-03", "rue": "mokmokmok"}
         )
-        r = patients.update(new_data=p, id=1)
+        r = patients.update(new_data=p, patient_id=1)
 
         m.assert_called_with(db.Patient, 1)
         u.set.assert_called_once_with(

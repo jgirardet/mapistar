@@ -39,7 +39,7 @@ class ActesViews:
             obj = cls.model(owner=user.id, **data)
             return http.JSONResponse(obj.dico, status_code=201)
 
-        add.__doc__ = f"""Ajoute un nouvel Acte de type : {cls.model.name}"""
+        add.__doc__ = f"""Ajoute un nouvel Acte de type {cls.model.name}"""
 
         return add
 
@@ -53,7 +53,7 @@ class ActesViews:
             ]
             # fmt: on
 
-        liste.__doc__ = f""" Liste les Actes de type : {cls.model.name}"""
+        liste.__doc__ = f""" Liste les Actes de type {cls.model.name}"""
         return liste
 
     @classmethod
@@ -63,7 +63,7 @@ class ActesViews:
             obj = get_or_404(cls.model, acte_id)
             return obj.dico
 
-        one.__doc__ = f"""Accède à un Acte de type : {cls.model.name}"""
+        one.__doc__ = f"""Accède à un Acte de type {cls.model.name}"""
         return one
 
     @classmethod
@@ -73,7 +73,7 @@ class ActesViews:
             obj.delete()
             return {"id": acte_id, "deleted": True}
 
-        delete.__doc__ = f"""Efface un Acte de type : {cls.model.name}"""
+        delete.__doc__ = f"""Efface un Acte de type {cls.model.name}"""
         return delete
 
     @classmethod
@@ -84,7 +84,7 @@ class ActesViews:
             obj.set(**new_data)
             return obj.dico
 
-        update.__doc__ = f"""Modifie un acte de type : {cls.model.name}"""
+        update.__doc__ = f"""Modifie un acte de type {cls.model.name}"""
         return update
 
     @classmethod

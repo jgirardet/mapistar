@@ -40,7 +40,7 @@ class TestItemViews:
 
     def test_update_item(self, mocker):
         upd = {"modified": "123456"}
-        t = ItemTest.update()(47, upd, litem)
+        t = ItemTest.update_item()(47, upd, litem)
 
         litem.set.assert_called_with(modified="123456")
         assert t == litem.dico
