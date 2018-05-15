@@ -8,6 +8,8 @@ Todo vers 1.0
 
     - add_item est sans permission
     - requete non invalid si field en trop
+    - dans get_ordered_items refaie ordre si echec ligne 65
+    - settings.duration n'a pas a etre dns user
 
 * Patient:
     - revoir les données accessoires
@@ -40,6 +42,8 @@ Todo vers 1.0
 
 * integration test
     - fake DB
+
+* logging
 
 * Documentation:
     - patient +

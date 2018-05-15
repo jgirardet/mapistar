@@ -12,7 +12,7 @@ from mapistar.base_db import db
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
-if not settings.JWT_DURATION:
+if not settings.JWT_DURATION:  # pragma: no cover
     raise exceptions.ConfigurationError("La durée des JWT doit être précisée")
 
 

@@ -10,8 +10,6 @@ from apistar import exceptions
 from mapistar.exceptions import MapistarProgrammingError
 from mapistar.utils import DicoMixin, get_or_404, import_models, SetMixin
 
-pytestmark = pytest.mark.pony
-
 
 class TestImportModels:
 

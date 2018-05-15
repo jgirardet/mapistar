@@ -23,5 +23,8 @@ def generate_db():
     flush()
     many(3, ordonnancef, patient=1, owner=1)  # 13-14-15
     many(3, ordonnancef, patient=1, owner=2)  # 16-17-18
+    many(3, ordonnancef, patient=2, owner=1)  # 19-20-21
     flush()
-    many(3, medicamentf, ordonnance=17)
+    many(3, medicamentf, ordonnance=17)  # 1-2-3
+    many(3, medicamentf, ordonnance=18)  # 4-5-6
+    many(3, medicamentf, ordonnance=19)  # 7-8-9

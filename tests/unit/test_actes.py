@@ -1,17 +1,15 @@
 # Standard Libraries
 import json
-from datetime import datetime
+from unittest.mock import Mock
 
 # Third Party Libraries
 import pytest
-from pony.orm import OperationWithDeletedObjectError
 
-from .factory import observationf, actef
-
-pytestmark = pytest.mark.pony
-from mapistar.actes.actes import Acte, db
+# pytestmark = pytest.mark.pony
+from mapistar.actes.actes import Acte
 from mapistar.actes.views import ActesViews
 from mapistar.utils import DicoMixin, NameMixin, SetMixin
+from tests.factory import actef
 
 
 class TestActeModel:
@@ -36,13 +34,10 @@ class TestActeModel:
         assert m.utcnow.return_value is f.modified
 
 
-from unittest.mock import Mock
-
 acte = Mock(spec=Acte)
 mock_dico = Mock(**{"dico": {"le": "dico"}})
 acte.return_value = mock_dico
 jwtuser = Mock(**{"id": 12})
-import json
 
 
 class ActeTest(ActesViews):
@@ -63,6 +58,7 @@ class TestViews:
         assert r.status_code == 201
         acte.assert_called_with(owner=12, patient=99)
 
+    @pytest.mark.pony
     def test_list_acte_pass(self, patient, user):
         obs = [actef(owner=user.id, patient=patient.id) for i in range(3)]
         # ponydb.flush()

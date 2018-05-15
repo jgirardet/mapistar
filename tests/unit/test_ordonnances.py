@@ -4,7 +4,7 @@ import json
 # Third Party Libraries
 import pytest
 
-pytestmark = pytest.mark.pony
+# pytestmark = pytest.mark.pony
 
 from mapistar.actes.ordonnances import (
     Ordonnance,
@@ -22,6 +22,7 @@ patientm = MagicMock(spec=Patient, **{"id": 1})
 
 class TestOrdonnanceModel:
 
+    @pytest.mark.pony
     def test_dico(self, ordonnance, ponydb):
         e = ponydb.Item(ordonnance=ordonnance)
         # a.flush()
@@ -68,15 +69,3 @@ class TestOrdonnanceModel:
         a = Ordonnance.get_ordered_items(mordo)
         a = [x, y, z]
         mocker.stopall()
-
-
-# from tests.factory import ordonnancef
-
-
-# ordonancem = MagicMock(spec=Ordonnance)
-# inst = Mock(**{"dico": {"le": "dico"}})
-# ordonancem.return_value = inst
-
-
-# class OrdoTest(OrdonnanceViews):
-#     model = ordonancem

@@ -13,8 +13,26 @@ from tests.factory import patientf
 attrs = ("name", "firstname")
 
 
-@pytest.mark.pony
 class TestPatientModel:
+
+    def test_capswords(self, mocker):
+        a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
+        Patient._capwords(a)
+        assert a.prenom == "Prenom"
+        assert a.nom == "Nom"
+
+    def test_before_insert(self, mocker):
+        a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
+        Patient.before_insert(a)
+
+        a._capwords.assert_called_once()
+        assert a.alive == True
+
+    def test_before_update(self, mocker):
+        a = mocker.Mock()
+        Patient.before_update(a)
+
+        a._capwords.assert_called_once()
 
     def test_repr(self, mocker):
         """
@@ -24,27 +42,6 @@ class TestPatientModel:
         m.__repr__ = Patient.__repr__
 
         assert repr(m) == "[Patient: prenom nom]"
-
-    def test_fields_with_capwords_at_create(self, ponydb):
-        """
-        must be caps words :
-            name
-            firstname
-        """
-        d = {"nom": "ZEFZEF", "prenom": "SDFSDF", "ddn": "1234-12-12", "sexe": "m"}
-        a = ponydb.Patient(**d)
-        a.flush()
-        for i in ["nom", "prenom"]:
-            d[i] = capwords(d[i])
-        assert a.nom == d["nom"]
-        assert a.prenom == d["prenom"]
-
-    def test_fileds_with_capwords_at_update(self, patient):
-        patient.nom = "FZEFZEFZEFEZF"
-        patient.prenom = "sdfsdfdfsdfsdf sdfsdfsdf"
-        patient.flush()
-        assert patient.nom == "Fzefzefzefezf"
-        assert patient.prenom == "Sdfsdfdfsdfsdf Sdfsdfsdf"
 
 
 class TestPatientViews:

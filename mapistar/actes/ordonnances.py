@@ -40,9 +40,11 @@ class Ordonnance(Acte):
         item_id = str(item.id)
         # many item
         if "-" in self.ordre:
+            # not first item
             if self.ordre.index(str(item_id)):
                 lid = "-" + item_id
                 self.ordre = self.ordre.replace(lid, "")
+                # first item
             else:
                 lid = item_id + "-"
                 self.ordre = self.ordre.replace(lid, "")

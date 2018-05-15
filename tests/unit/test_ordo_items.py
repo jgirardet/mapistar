@@ -7,7 +7,6 @@ import pytest
 from mapistar.actes.ordo_items import Item, ItemViews, Medicament
 from mapistar.utils import DicoMixin, SetMixin, NameMixin
 
-pytestmark = pytest.mark.pony
 
 jwtuser = Mock(**{"id": 15})
 
@@ -76,6 +75,7 @@ class TestItemModel:
 
         mordo.before_update.assert_called()
 
+    @pytest.mark.pony
     def test_item_update_ordonnnace(self, ordonnance, ponydb):
         debut = ordonnance.modified
         i = ponydb.Item(ordonnance=ordonnance)

@@ -37,7 +37,7 @@ class Medicament(Item):
     posologie = orm.Optional(str)
     duree = orm.Optional(int, default=0)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"[Medicament: {self.nom}]"
 
     updatable = ("posologie", "duree")

@@ -5,7 +5,6 @@ import json
 import pytest
 from apistar import exceptions
 
-pytestmark = pytest.mark.pony
 from mapistar.users import User, login
 
 
