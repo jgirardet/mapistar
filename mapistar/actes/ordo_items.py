@@ -8,6 +8,7 @@ from mapistar.permissions import ActesPermissions
 from mapistar.utils import DicoMixin, NameMixin, SetMixin
 from pony import orm
 from typing import Callable, List
+from mapistar.exceptions import MapistarBadRequest
 
 
 class Item(db.Entity, DicoMixin, NameMixin, SetMixin):
@@ -66,7 +67,11 @@ class ItemViews:
 
         def add_item(data: cls.schema_add, obj: ActesPermissions):
             # obj.medicaments.create(**data)
-            item = cls.model(ordonnance=obj, **data)
+            try:
+                item = cls.model(ordonnance=obj, **data)
+            except TypeError as exc:
+                raise MapistarBadRequest("acte_id doit correspondre à une ordonnance")
+
             return http.JSONResponse(item.dico, status_code=201)
 
         add_item.__doc__ = f"""Ajoute un nouvel Item de type  {cls.model.name}"""

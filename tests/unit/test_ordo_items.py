@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, Mock
 import pytest
 from mapistar.actes.ordo_items import Item, ItemViews, Medicament
 from mapistar.utils import DicoMixin, SetMixin, NameMixin
-
+from mapistar.exceptions import MapistarBadRequest
 
 jwtuser = Mock(**{"id": 15})
 
@@ -23,13 +23,22 @@ class ItemTest(ItemViews):
 
 class TestItemViews:
 
-    def test_add_item(self, mocker, mordo):
+    def test_add_item(self, mocker, mordo, mitem):
+        ItemTest.model = mitem
         r = ItemTest.add_item()(
             data={"cip": "1234567890123", "nom": "Un Médoc"}, obj=mordo
         )
         assert json.loads(r.content) == {"le": "dico"}
         assert r.status_code == 201
-        litem.assert_called_with(ordonnance=mordo, cip="1234567890123", nom="Un Médoc")
+        mitem.assert_called_with(ordonnance=mordo, cip="1234567890123", nom="Un Médoc")
+
+        # obj not ordo
+        mitem.side_effect = TypeError
+        with pytest.raises(MapistarBadRequest) as exc:
+            ItemTest.add_item()(
+                data={"cip": "1234567890123", "nom": "Un Médoc"}, obj=mordo
+            )
+        assert str(exc.value) == "acte_id doit correspondre à une ordonnance"
 
     def test_delete_item(self, mocker, mitem):
         r = ItemTest.delete_item()(99, mitem)

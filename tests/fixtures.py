@@ -9,13 +9,18 @@ from tests import factory
 
 
 @pytest.fixture(scope="function")
+def ent():
+    return MagicMock(**{"dico": {"le": "dico"}})
+
+
+@pytest.fixture(scope="function")
 def mordo():
     return MagicMock(spec=Ordonnance)
 
 
 @pytest.fixture(scope="function")
-def mitem():
-    return MagicMock(spec=Item)
+def mitem(ent):
+    return MagicMock(spec=Item, return_value=ent)
 
 
 @pytest.fixture(scope="function")

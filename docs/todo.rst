@@ -9,7 +9,6 @@ Todo vers 1.0
     - requete non invalid si field en trop
     - dans get_ordered_items refaie ordre si echec ligne 65
     - settings.duration n'a pas a etre dns user
-    - acte permissions sould check acte is ordo and not observation
 
 * Patient:
     - revoir les données accessoires

@@ -173,6 +173,9 @@ def test_ordonnance(clij, clik):
 
     # test 404
     r = clik.get(app.reverse_url("ordonnances:one", acte_id=13))
+
+    # test delete 404
+    r = clik.delete(app.reverse_url("ordonnances:delete", acte_id=13))
     assert r.status_code == 404
 
     # test update bad owner
@@ -206,8 +209,15 @@ def test_ordonnance(clij, clik):
     assert r.status_code == 200
     assert [i["id"] for i in r.json()["items"]] == [3, 1, 2]
 
-    # test new item
+    # test new item obj not ordo
     new = {"cip": "1234567890123", "nom": "Un Médoc"}
+    r = clij.post(
+        app.reverse_url("medicaments:add_item", acte_id=1), data=json.dumps(new)
+    )
+    assert r.status_code == 400
+    assert r.json() == "acte_id doit correspondre à une ordonnance"
+
+    # test new item
     r = clik.post(
         app.reverse_url("medicaments:add_item", acte_id=17), data=json.dumps(new)
     )

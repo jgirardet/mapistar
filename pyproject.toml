@@ -39,7 +39,7 @@ mimesis = "*"
 # linting
 flake8 = "*"
 isort = "*"
-black = {version = "*", allows-prereleases = true}
+# black = {version = "*", allows-prereleases = true}
 
 # doc
 sphinx = "*"
