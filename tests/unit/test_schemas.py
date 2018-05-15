@@ -46,10 +46,6 @@ def test_ordonnance():
     )
 
 
-def test_item():
-    assert "ordonnance" in ItemCreateSchema.validator.required
-
-
 def test_medicament():
     assert issubclass(MedicamentCreateSchema, ItemCreateSchema)
     assert {"cip", "nom"}.issubset(set(MedicamentCreateSchema.validator.required))

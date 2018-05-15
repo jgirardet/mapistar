@@ -23,26 +23,26 @@ class ItemTest(ItemViews):
 
 class TestItemViews:
 
-    def test_add_item(self, mocker):
+    def test_add_item(self, mocker, mordo):
         r = ItemTest.add_item()(
-            data={"ordonnance": 2, "cip": "1234567890123", "nom": "Un Médoc"}
+            data={"cip": "1234567890123", "nom": "Un Médoc"}, obj=mordo
         )
         assert json.loads(r.content) == {"le": "dico"}
         assert r.status_code == 201
-        litem.assert_called_with(ordonnance=2, cip="1234567890123", nom="Un Médoc")
+        litem.assert_called_with(ordonnance=mordo, cip="1234567890123", nom="Un Médoc")
 
-    def test_delete_item(self, mocker):
-        r = ItemTest.delete_item()(99, litem)
+    def test_delete_item(self, mocker, mitem):
+        r = ItemTest.delete_item()(99, mitem)
 
-        litem.delete.assert_called_once()
+        mitem.delete.assert_called_once()
         assert r == {"id": 99, "deleted": True}
 
-    def test_update_item(self, mocker):
+    def test_update_item(self, mocker, mitem):
         upd = {"modified": "123456"}
-        t = ItemTest.update_item()(47, upd, litem)
+        t = ItemTest.update_item()(47, upd, mitem)
 
-        litem.set.assert_called_with(modified="123456")
-        assert t == litem.dico
+        mitem.set.assert_called_with(modified="123456")
+        assert t == mitem.dico
 
 
 class TestItemModel:

@@ -207,12 +207,15 @@ def test_ordonnance(clij, clik):
     assert [i["id"] for i in r.json()["items"]] == [3, 1, 2]
 
     # test new item
-    new = {"ordonnance": 17, "cip": "1234567890123", "nom": "Un Médoc"}
-    r = clik.post(app.reverse_url("medicaments:add_item"), data=json.dumps(new))
+    new = {"cip": "1234567890123", "nom": "Un Médoc"}
+    r = clik.post(
+        app.reverse_url("medicaments:add_item", acte_id=17), data=json.dumps(new)
+    )
     assert r.status_code == 201
-    tmp = r.json()["id"]
+    assert r.json()["ordonnance"] == 17
 
     # test delete item bad user
+    tmp = r.json()["id"]
     r = clij.delete(app.reverse_url("medicaments:delete_item", item_id=tmp))
     assert r.status_code == 403
 

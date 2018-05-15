@@ -27,7 +27,7 @@ class Item(db.Entity, DicoMixin, NameMixin, SetMixin):
 
 
 class ItemCreateSchema(types.Type):
-    ordonnance = validators.Integer()
+    """base class"""
 
 
 class Medicament(Item):
@@ -64,8 +64,9 @@ class ItemViews:
     @classmethod
     def add_item(cls) -> Callable:
 
-        def add_item(data: cls.schema_add):
-            item = cls.model(**data)
+        def add_item(data: cls.schema_add, obj: ActesPermissions):
+            # obj.medicaments.create(**data)
+            item = cls.model(ordonnance=obj, **data)
             return http.JSONResponse(item.dico, status_code=201)
 
         add_item.__doc__ = f"""Ajoute un nouvel Item de type  {cls.model.name}"""
@@ -104,7 +105,7 @@ class ItemViews:
             url=f"/{cls.model.url_name}",
             name=cls.model.url_name,
             routes=[
-                Route("/", method="POST", handler=cls.add_item()),
+                Route("/add/{acte_id}", method="POST", handler=cls.add_item()),
                 Route("/{item_id}/", method="DELETE", handler=cls.delete_item()),
                 # Route("/{acte_id}/", method="GET", handler=cls.one()),
                 Route("/{item_id}/", method="PUT", handler=cls.update_item()),
