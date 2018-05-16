@@ -5,17 +5,19 @@
 import os
 from urllib.parse import urlparse
 
+# Third Party Libraries
+from simple_settings import settings
+
 # mapistar
-from mapistar import settings
 # from mapistar.base_db import db
 from mapistar.base_db import db
 from mapistar.utils import import_models
 
 # import Entities
-import_models(settings.models)
+import_models(settings.MODELS)
 
 
-url = urlparse(os.environ["MAPISTAR_PONY_DB"])
+url = urlparse(os.environ["MAPISTAR_DATABASE"])
 
 
 db_params = dict(

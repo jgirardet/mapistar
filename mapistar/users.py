@@ -106,7 +106,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
         "id": user.id,
         "username": user.username,
         "iat": pendulum.now(),
-        "exp": pendulum.now() + pendulum.Duration(seconds=5),
+        "exp": pendulum.now() + pendulum.Duration(seconds=1000),
     }
     token = jwt.encode(payload)
     if token is None:

@@ -24,7 +24,7 @@ import sys
 # ----Django settings
 # import config.settings
 # sys.path.insert(0, "../ma")
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(".."))
 os.environ["SIMPLE_SETTINGS"] = "config.local"
 # -- General configuration ------------------------------------------------
 
@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
+    "sphinx.ext.coverage",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

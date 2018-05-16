@@ -1,16 +1,11 @@
-# Standard Libraries
 from typing import Callable, List
 
-# Third Party Libraries
 from apistar import Include, Route, http
 from apistar_jwt.token import JWTUser
+from pony.orm import select
 
-# mapistar
-from mapistar.db import db
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import get_or_404
-
-from .schemas import actes_schemas
 
 
 class ActesViews:
@@ -22,81 +17,93 @@ class ActesViews:
 
     Args:
         model: modèle pony, hérité de :class:`BaseActe`
+        schema_add: schema utilisé pour la création d'un acte
+        schema_updat: schema utilisé pour la mise à jour d'un acte
 
     Returns:
         Une liste d'URL
     """
 
-    def __init__(self, model: db.Entity):
-        # model needed as key for schemas and parameter  for permissions
-        self.model = model
-        self.schemas = actes_schemas[model]
+    model = None
+    schema_add = None
+    schema_update = None
 
-    def add(self) -> Callable:
+    @classmethod
+    def add(cls) -> Callable:
 
-        def add(data: self.schemas.adder, user: JWTUser) -> http.JSONResponse:
-            obj = self.model(owner=user.id, **data)
+        def add(data: cls.schema_add, user: JWTUser) -> http.JSONResponse:
+            obj = cls.model(owner=user.id, **data)
             return http.JSONResponse(obj.dico, status_code=201)
 
-        add.__doc__ = f"""Ajoute un nouvel Acte de type : {self.model.name}"""
+        add.__doc__ = f"""Ajoute un nouvel Acte de type {cls.model.name}"""
+
         return add
 
-    def liste(self) -> Callable:
+    @classmethod
+    def liste(cls) -> Callable:
 
         def liste(patient_id: int) -> List:
-            return [  # pragma: nocover
-                acte.dico
-                for acte in self.model.select(lambda a: a.patient.id == patient_id)
+            # fmt: off
+            return [
+                acte.dico for acte in select(a for a in cls.model if a.patient.id == patient_id)
             ]
+            # fmt: on
 
-        liste.__doc__ = f""" Liste les Actes de type : {self.model.name}"""
+        liste.__doc__ = f""" Liste les Actes de type {cls.model.name}"""
         return liste
 
-    def one(self) -> Callable:
+    @classmethod
+    def one(cls) -> Callable:
 
         def one(acte_id: int) -> dict:
-            obj = get_or_404(self.model, acte_id)
+            obj = get_or_404(cls.model, acte_id)
             return obj.dico
 
-        one.__doc__ = f"""Accède à un Acte de type : {self.model.name}"""
+        one.__doc__ = f"""Accède à un Acte de type {cls.model.name}"""
         return one
 
-    def delete(self) -> Callable:
+    @classmethod
+    def delete(cls) -> Callable:
 
         def delete(acte_id: int, obj: ActesPermissions) -> dict:
-            # obj = get_or_404(self.model, acte_id)
             obj.delete()
             return {"id": acte_id, "deleted": True}
 
-        delete.__doc__ = f"""Efface un Acte de type : {self.model.name}"""
+        delete.__doc__ = f"""Efface un Acte de type {cls.model.name}"""
         return delete
 
-    def update(self) -> Callable:
+    @classmethod
+    def update(cls) -> Callable:
 
-        def update(acte_id: int, new_data: self.schemas.updater, obj: ActesPermissions):
-            # obj = get_or_404(self.model, acte_id)
+        def update(acte_id: int, new_data: cls.schema_update, obj: ActesPermissions):
+            # obj = get_or_404(cls.model, acte_id)
             obj.set(**new_data)
             return obj.dico
 
-        update.__doc__ = f"""Modifie un acte de type : {self.model.name}"""
+        update.__doc__ = f"""Modifie un acte de type {cls.model.name}"""
         return update
 
-    def __call__(self) -> Include:
+    @classmethod
+    def routes_supplementaires(cls):
+        return []
+
+    @classmethod
+    def do_routes(cls) -> Include:
         """
         Returns:
-            Les routes pour chaque action
+            Include: Les routes pour chaque action
         """
+
+        bases_routes = [
+            Route("/", method="POST", handler=cls.add()),
+            Route("/{acte_id}/", method="GET", handler=cls.one()),
+            Route("/{acte_id}/", method="DELETE", handler=cls.delete()),
+            Route("/{acte_id}/", method="PUT", handler=cls.update()),
+            Route("/patient/{patient_id}/", method="GET", handler=cls.liste()),
+        ]
+
+        routes = [*bases_routes, *cls.routes_supplementaires()]
+
         return Include(
-            url=f"/{self.model.url_name}",
-            name=self.model.url_name,
-            routes=[
-                Route("/", method="POST", handler=self.add()),
-                Route("/{acte_id}/", method="GET", handler=self.one()),
-                Route("/{acte_id}/", method="DELETE", handler=self.delete()),
-                Route("/{acte_id}/", method="PUT", handler=self.update()),
-                Route("/patient/{patient_id}/", method="GET", handler=self.liste()),
-            ],
+            url=f"/{cls.model.url_name}", name=cls.model.url_name, routes=routes
         )
-
-
-routes_observations = ActesViews(db.Observation)()

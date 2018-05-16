@@ -5,12 +5,13 @@ Todo vers 1.0
 ===============
 
 * Bug:
-    - permission is today wrong
 
+    - requete non invalid si field en trop
 
 * Patient:
     - revoir les données accessoires
     - schema email
+    - permission effacer patient
 
 * User :
     - type : médecin, secrétaire ...
@@ -18,7 +19,6 @@ Todo vers 1.0
     - Change Password/create password views
 
 * Actes :
-    - updatable field
 
 * Presription libre
 
@@ -36,6 +36,11 @@ Todo vers 1.0
 
     - entry point
     - git pre commit
+
+* integration test
+    - fake DB
+
+* logging
 
 * Documentation:
     - patient +

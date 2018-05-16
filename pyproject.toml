@@ -21,8 +21,9 @@ pythonthesorimed = "*"
 apistar-jwt = "*"
 simple-settings = "*"
 apistar-ponyorm = "*"
-pendulum = {version = "*", allows-prereleases = true}
-
+pendulum = "^2.*"
+python-dotenv = "*"
+mimesis = "^2.0"
 
 [tool.poetry.dev-dependencies]
 # testing
@@ -31,6 +32,7 @@ pytest-cov = "*"
 pytest-pythonpath = "*"
 pytest-env = "*"
 pytest-ponyorm = "*"
+pytest-mock = "^1.10"
 mimesis = "*"
 
 # linting

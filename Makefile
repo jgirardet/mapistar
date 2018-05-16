@@ -9,6 +9,7 @@ install:
 	poetry install
 
 devtools:
+	pip install --upgrade pip
 	pip install ipython pdbpp
 
 dev: devtools install
@@ -19,7 +20,7 @@ isort:
 	isort -y
 
 black:
-	black -q $(MODULE)
+	black -q $(MODULE) config tests
 
 flake8:
 	flake8
@@ -28,7 +29,7 @@ test:
 	poetry run pytest
 
 pdb:
-	poetry run pytest pdb
+	poetry run pytest --pdb
 
 test-coverage:
 	poetry run py.test  --cov $(MODULE) --cov-report term-missing --cov-report html
@@ -41,6 +42,10 @@ push:
 
 doc:
 	poetry run make -C docs html
+
+doc-cov:
+	poetry run make -C docs coverage
+	cat docs/_build/coverage/python.txt
 
 doc-auto:
 	poetry run sphinx-autobuild docs docs/_build

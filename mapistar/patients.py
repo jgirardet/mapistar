@@ -123,7 +123,7 @@ class PatientUpdateSchema(types.Type):
     email = validators.String(
         description="email", max_length=MAX_LENGTH["email"], default=""
     )
-    alive = validators.Boolean(description="vivant ?", default=True)
+    alive = validators.Boolean(description="vivant ?", default=None, allow_null=True)
 
 
 def add(patient: PatientCreateSchema) -> http.JSONResponse:
@@ -146,7 +146,7 @@ def liste() -> List[dict]:
     return [x.dico for x in db.Patient.select()]
 
 
-def get(id: int) -> dict:
+def one(patient_id: int) -> dict:
     """ Get patient details
 
     Args:
@@ -157,10 +157,10 @@ def get(id: int) -> dict:
     Raises:
         NotFound si non trouvé.
     """
-    return get_or_404(db.Patient, id).dico
+    return get_or_404(db.Patient, patient_id).dico
 
 
-def delete(id: int) -> dict:
+def delete(patient_id: int) -> dict:
     """
     delete un patient
 
@@ -171,19 +171,19 @@ def delete(id: int) -> dict:
     Raises:
         NotFound si non trouvé
     """
-    pat = get_or_404(db.Patient, id)
+    pat = get_or_404(db.Patient, patient_id)
     pat.delete()
     return {"msg": "delete success"}
 
 
-def update(new_data: PatientUpdateSchema, id: int) -> http.JSONResponse:
+def update(new_data: PatientUpdateSchema, patient_id: int) -> http.JSONResponse:
     """modify patients
 
     Args:
         new_data: Rien n'est requis.
         id: patient id.
     """
-    to_update = get_or_404(db.Patient, id)
+    to_update = get_or_404(db.Patient, patient_id)
     to_update.set(**{k: v for k, v in new_data.items() if v})
     return http.JSONResponse(to_update.dico, status_code=201)
 
@@ -194,9 +194,9 @@ routes_patients = Include(
     routes=[
         Route(url="/", method="POST", handler=add),
         Route(url="/", method="GET", handler=liste),
-        Route(url="/{id}/", method="PUT", handler=update),
-        Route(url="/{id}/", method="DELETE", handler=delete),
-        Route(url="/{id}/", method="GET", handler=get),
+        Route(url="/{patient_id}/", method="PUT", handler=update),
+        Route(url="/{patient_id}/", method="DELETE", handler=delete),
+        Route(url="/{patient_id}/", method="GET", handler=one),
     ],
 )
 #
