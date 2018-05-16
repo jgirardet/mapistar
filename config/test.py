@@ -1,8 +1,10 @@
 # Standard Libraries
 import os  # noqa: F401
-from urllib.parse import urlparse
 
 from .base import *  # noqa: F401,F403
+
+# from urllib.parse import urlparse
+
 
 print("Testing Config")
 

@@ -28,7 +28,7 @@ class TestActesPermission:
         a.acte.owner.id = 2
         print(a.acte.owner.id, a.user.id)
         r = a.only_owner_can_edit()
-        assert r == None
+        assert not r
 
     def test_only_editable_today(self, mocker):
         b = datetime.utcnow() - timedelta(days=1)

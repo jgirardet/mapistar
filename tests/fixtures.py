@@ -1,18 +1,9 @@
-# Third Party Libraries
-# Standard Libraries
-# Standard Libraries
-# Standard Libraries
-# Standard Libraries
-# Standard Libraries
 # Standard Libraries
 import json
-# from . import factory
 from unittest.mock import MagicMock
 
+# Third Party Libraries
 import pytest
-# @pytest.fixture(scope="function")
-# def medicament(request):
-#     return factory.medicamentf()
 from apistar.test import TestClient
 from tests import factory
 
@@ -66,8 +57,6 @@ def ordonnance(request):
 # @pytest.fixture(scope="function")
 # def item(request):
 #     return factory.itemf()
-
-
 
 
 @pytest.fixture(scope="module")

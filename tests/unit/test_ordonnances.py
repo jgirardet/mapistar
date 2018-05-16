@@ -74,8 +74,8 @@ class TestOrdonnanceModel:
         # valueerro
         mordo.ordre = "1-22-4"
         mordo.items = MagicMock()
-        l = mocker.patch("builtins.list")
+        ll = mocker.patch("builtins.list")
         a = Ordonnance.get_ordered_items(mordo)
         mocker.stopall()
 
-        l.assert_called_with(mordo.items)
+        ll.assert_called_with(mordo.items)

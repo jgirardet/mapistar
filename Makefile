@@ -20,7 +20,7 @@ isort:
 	isort -y
 
 black:
-	black -q $(MODULE) config
+	black -q $(MODULE) config tests
 
 flake8:
 	flake8

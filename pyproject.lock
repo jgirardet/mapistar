@@ -17,12 +17,12 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-pyyaml = "*"
+click = "*"
 jinja2 = "*"
+requests = "*"
+pyyaml = "*"
 werkzeug = "*"
 whitenoise = "*"
-requests = "*"
-click = "*"
 [[package]]
 name = "apistar-jwt"
 version = "0.5.0"
@@ -65,17 +65,6 @@ optional = false
 python-versions = "*"
 platform = "*"
 
-[[package]]
-name = "autoflake"
-version = "1.2"
-description = "Removes unused imports and unused variables"
-category = "dev"
-optional = false
-python-versions = "*"
-platform = "*"
-
-[package.dependencies]
-pyflakes = ">= 1.1.0.0"
 [[package]]
 name = "babel"
 version = "2.5.3"
@@ -297,9 +286,9 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "*"
 
 [package.dependencies]
-python-dateutil = ">= 2.6.0.0, < 3.0.0.0"
-pytzdata = ">= 2018.3.0.0"
 typing = ">= 3.6.0.0, < 4.0.0.0"
+pytzdata = ">= 2018.3.0.0"
+python-dateutil = ">= 2.6.0.0, < 3.0.0.0"
 [[package]]
 name = "pluggy"
 version = "0.6.0"
@@ -717,7 +706,7 @@ platform = "*"
 [metadata]
 python-versions = "^3.6"
 platform = "*"
-content-hash = "c94b23692a4348afadce567f602a09589c3ee1fa8f33cb24139d8eae2cf079fb"
+content-hash = "0b2d73a873d4c5ea7ae819718e89da076fb102d0ab2ee6cb2e9db2fff0015751"
 
 [metadata.hashes]
 alabaster = [ "2eef172f44e8d301d25aff8068fddd65f767a3f04b5f15b0f4922f113aa1c732", "37cdcb9e9954ed60912ebc1ca12a9d12178c26637abdf124e3cde2341c257fe0",]
@@ -726,7 +715,6 @@ apistar-jwt = [ "109e5f666b2c57417d698426c7cc31ac4eab540b0860d61f3478d9262cc3f3a
 apistar-ponyorm = [ "486c4eea47199849be69eefdcd3e5602986d8d2a0a4b9ffcc8ef3ab2fe3d2cab",]
 argh = [ "a9b3aaa1904eeb78e32394cd46c6f37ac0fb4af6dc488daa58971bdc7d7fcaf3", "e9535b8c84dc9571a48999094fda7f33e63c3f1b74f3e5f3ac0105a58405bb65",]
 attrs = [ "4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265", "e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b",]
-autoflake = [ "c103e63466f11db3617167a2c68ff6a0cda35b940222920631c6eeec6b67e807",]
 babel = [ "ad209a68d7162c4cff4b29cdebe3dec4cef75492df501b0049a9433c96ce6f80", "8ce4cb6fdd4393edd323227cba3a077bceb2a6ce5201c902c65e730046f41f14",]
 certifi = [ "9fa520c1bacfb634fa7af20a76bcbd3d5fb390481724c597da32c719a7dca4b0", "13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7",]
 chardet = [ "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691", "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae",]

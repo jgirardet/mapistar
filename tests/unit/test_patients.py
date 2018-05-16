@@ -1,7 +1,5 @@
 # Standard Libraries
 
-# Third Party Libraries
-
 # mapistar
 from mapistar import patients
 from mapistar.patients import Patient, PatientCreateSchema, PatientUpdateSchema, db
@@ -22,7 +20,7 @@ class TestPatientModel:
         Patient.before_insert(a)
 
         a._capwords.assert_called_once()
-        assert a.alive == True
+        assert a.alive is True
 
     def test_before_update(self, mocker):
         a = mocker.Mock()
@@ -43,7 +41,7 @@ class TestPatientModel:
 class TestPatientViews:
 
     def test_add(self, mocker):
-        m = mocker.patch.object(db, "Patient", return_value=mocker.Mock(**{"dico": 1}))
+        mocker.patch.object(db, "Patient", return_value=mocker.Mock(**{"dico": 1}))
         p = PatientCreateSchema(
             **{
                 "nom": "Mokmomokok",

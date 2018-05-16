@@ -44,7 +44,6 @@ class TestModel:
         p.assert_called_with(m.password, "pwd2")
 
 
-
 cred = MagicMock()
 cred["username"] = "a"
 cred["password"] = "b"

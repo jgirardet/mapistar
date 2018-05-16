@@ -1,11 +1,8 @@
-# Third Party Libraries
 from apistar import App
 from apistar_jwt.token import JWT
 from apistar_ponyorm import PonyDBSession
 from simple_settings import settings
 
-# mapistar
-# from mapistar.actes.views import routes_medicaments, routes_ordonnances
 from mapistar.actes.routes import (
     routes_medicaments,
     routes_observations,

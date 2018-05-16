@@ -1,13 +1,10 @@
-# Standard Libraries
 from datetime import date, datetime
 from unittest.mock import MagicMock
 
-# Third Party Libraries
 import pytest
 from apistar import exceptions
 from pony.orm import ObjectNotFound
 
-# mapistar
 from mapistar.exceptions import MapistarProgrammingError
 from mapistar.utils import DicoMixin, SetMixin, check_config, get_or_404, import_models
 
