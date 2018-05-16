@@ -1,12 +1,11 @@
 # Standard Libraries
-import json
 from unittest.mock import MagicMock, call
 
 # Third Party Libraries
 import pytest
 
 # mapistar
-from mapistar.actes.ordonnances import Ordonnance, OrdonnanceCreateSchema, OrdonnanceUpdateSchema
+from mapistar.actes.ordonnances import Ordonnance
 from mapistar.patients import Patient
 
 # pytestmark = pytest.mark.pony

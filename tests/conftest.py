@@ -7,11 +7,8 @@
 # Standard Libraries
 import time
 
-import jwt
-import pendulum
 import pytest
 from apistar import App, test
-from simple_settings import settings
 from tests.factory import *  # noqa: F403, F401
 from tests.fixtures import *  # noqa: F403, F401
 

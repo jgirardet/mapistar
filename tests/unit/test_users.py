@@ -1,5 +1,4 @@
 # Standard Libraries
-import json
 from unittest.mock import MagicMock
 
 # Third Party Libraries
@@ -41,7 +40,7 @@ class TestModel:
     def test_check(self, mocker):
         p = mocker.patch("mapistar.users.check_password_hash", return_value=True)
         m = mocker.Mock(**{"password": "pwd1"})
-        a = User.check_password(m, "pwd2")
+        User.check_password(m, "pwd2")
         p.assert_called_with(m.password, "pwd2")
 
 

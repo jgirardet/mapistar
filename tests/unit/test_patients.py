@@ -1,11 +1,6 @@
 # Standard Libraries
-import json
-from string import capwords
 
 # Third Party Libraries
-import pytest
-from pony import orm
-from tests.factory import patientf
 
 # mapistar
 from mapistar import patients

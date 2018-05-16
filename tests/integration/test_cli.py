@@ -1,12 +1,11 @@
 # Standard Libraries
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 # Third Party Libraries
 import pytest
 from apistar.test import TestClient
 from pony import orm
-from tests.factory import observationf, userf
 
 # mapistar
 from mapistar.app import app
