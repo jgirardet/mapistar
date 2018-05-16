@@ -1,5 +1,4 @@
 # Standard Libraries
-from typing import TypeVar
 
 # Third Party Libraries
 import pendulum

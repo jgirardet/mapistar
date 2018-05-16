@@ -3,7 +3,6 @@ import importlib
 from datetime import date, datetime
 
 # Third Party Libraries
-import pendulum
 from apistar.exceptions import NotFound
 from descriptors import classproperty
 from pony import orm

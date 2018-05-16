@@ -9,7 +9,7 @@ from pony.orm import ObjectNotFound
 
 # mapistar
 from mapistar.exceptions import MapistarProgrammingError
-from mapistar.utils import DicoMixin, SetMixin, get_or_404, import_models, check_config
+from mapistar.utils import DicoMixin, SetMixin, check_config, get_or_404, import_models
 
 
 class TestCheckConfg:

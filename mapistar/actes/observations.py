@@ -38,8 +38,6 @@ class ObservationUpdateSchema(types.Type):
     body = validators.String(default="")
 
 
-
-
 class ObservationViews(ActesViews):
     model = Observation
     schema_add = ObservationCreateSchema

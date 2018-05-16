@@ -6,9 +6,7 @@ from unittest.mock import MagicMock, call
 import pytest
 
 # mapistar
-from mapistar.actes.ordonnances import (
-    Ordonnance, OrdonnanceCreateSchema, OrdonnanceUpdateSchema
-)
+from mapistar.actes.ordonnances import Ordonnance, OrdonnanceCreateSchema, OrdonnanceUpdateSchema
 from mapistar.patients import Patient
 
 # pytestmark = pytest.mark.pony

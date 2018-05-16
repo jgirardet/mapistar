@@ -5,6 +5,7 @@
 # mapistar
 # mapistar
 # mapistar
+# mapistar
 from mapistar.theso import fuzzy
 
 

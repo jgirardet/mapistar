@@ -49,7 +49,5 @@ class Acte(db.Entity, DicoMixin, NameMixin, SetMixin):
     """
 
 
-
-
 class ActeCreateSchema(types.Type):
     patient = validators.Integer()

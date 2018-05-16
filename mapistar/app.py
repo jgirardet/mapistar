@@ -7,9 +7,10 @@ from simple_settings import settings
 # mapistar
 # from mapistar.actes.views import routes_medicaments, routes_ordonnances
 from mapistar.actes.routes import (
-    routes_medicaments, routes_observations, routes_ordonnances
+    routes_medicaments,
+    routes_observations,
+    routes_ordonnances,
 )
-from mapistar.db import db
 from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
