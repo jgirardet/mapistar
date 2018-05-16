@@ -43,6 +43,10 @@ push:
 doc:
 	poetry run make -C docs html
 
+doc-cov:
+	poetry run make -C docs coverage
+	cat docs/_build/coverage/python.txt
+
 doc-auto:
 	poetry run sphinx-autobuild docs docs/_build
 	

@@ -21,7 +21,7 @@ users
 actes
 =======
 
-.. automodule:: mapistar.actes.models
+.. automodule:: mapistar.actes.actes
 	:members:
 	:show-inheritance:
 
@@ -34,7 +34,11 @@ actes
 ordonnances
 ============
 
-.. automodule:: mapistar.ordonnances
+.. automodule:: mapistar.actes.ordonnances
+	:members:
+	:show-inheritance:
+
+.. automodule:: mapistar.actes.ordo_items
 	:members:
 	:show-inheritance:
 

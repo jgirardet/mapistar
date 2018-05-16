@@ -28,6 +28,9 @@ class Ordonnance(Acte):
 
     @property
     def dico(self):
+        """
+        dico addapté aux ordonnances
+        """
         _dico = super().dico
         _dico["items"] = [x.dico for x in self.get_ordered_items()]
         return _dico
