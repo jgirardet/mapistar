@@ -2,10 +2,12 @@
 from apistar import types, validators
 from pony import orm
 
+# mapistar
+from mapistar.actes.actes import ActeCreateSchema
+
 from .actes import Acte
 from .ordo_items import Item
-
-from .ordo_items import MedicamentCreateSchema, MedicamentUpdateSchema
+from .views import ActesViews
 
 
 class Ordonnance(Acte):
@@ -44,7 +46,7 @@ class Ordonnance(Acte):
             if self.ordre.index(str(item_id)):
                 lid = "-" + item_id
                 self.ordre = self.ordre.replace(lid, "")
-                # first item
+            # first item
             else:
                 lid = item_id + "-"
                 self.ordre = self.ordre.replace(lid, "")
@@ -62,10 +64,8 @@ class Ordonnance(Acte):
 
         except ValueError:
             # fallback item pas dans ordre ou inversement
+            [self.ordre_add_item(i) for i in self.items.select()]
             return list(self.items)
-
-
-from mapistar.actes.actes import ActeCreateSchema
 
 
 class OrdonnanceCreateSchema(ActeCreateSchema):
@@ -74,9 +74,6 @@ class OrdonnanceCreateSchema(ActeCreateSchema):
 
 class OrdonnanceUpdateSchema(types.Type):
     ordre = validators.String(default="")
-
-
-from .views import ActesViews
 
 
 class OrdonnanceViews(ActesViews):

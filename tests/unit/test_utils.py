@@ -5,10 +5,20 @@ from unittest.mock import MagicMock
 # Third Party Libraries
 import pytest
 from apistar import exceptions
+from pony.orm import ObjectNotFound
 
 # mapistar
 from mapistar.exceptions import MapistarProgrammingError
-from mapistar.utils import DicoMixin, get_or_404, import_models, SetMixin
+from mapistar.utils import DicoMixin, SetMixin, get_or_404, import_models, check_config
+
+
+class TestCheckConfg:
+
+    def test_jwt_duration(self, mocker):
+        s = mocker.MagicMock(**{"JWT_DURATION": None})
+        with pytest.raises(MapistarProgrammingError) as exc:
+            check_config(s)
+        assert str(exc.value) == "La durée des JWT doit être précisée"
 
 
 class TestImportModels:
@@ -56,9 +66,6 @@ def test_get_or_404_pass(mocker):
 
     entity.__getitem__.assert_called_with(12)
     assert a == 1
-
-
-from pony.orm import ObjectNotFound
 
 
 def test_get_or_404_not_found(mocker):

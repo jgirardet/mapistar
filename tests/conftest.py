@@ -1,17 +1,22 @@
 # Third Party Libraries
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+import time
+
 import jwt
 import pendulum
 import pytest
-from apistar import test, App
+from apistar import App, test
 from simple_settings import settings
-
-# mapistar
-from mapistar.app import app as main_app
-from mapistar.app import routes, components
-
 from tests.factory import *  # noqa: F403, F401
 from tests.fixtures import *  # noqa: F403, F401
 
+# mapistar
+from mapistar.app import app as main_app
+from mapistar.app import components, routes
 
 # @pytest.fixture(scope="function")
 # def cli(user):
@@ -75,7 +80,6 @@ def cli_app_no_auth(napp):
 #     db.drop_all_tables(with_all_data=True)
 
 
-import time
 
 test_timer = None
 

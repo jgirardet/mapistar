@@ -5,10 +5,11 @@ from string import capwords
 # Third Party Libraries
 import pytest
 from pony import orm
-from mapistar import patients
-
-from mapistar.patients import db, Patient, PatientCreateSchema, PatientUpdateSchema
 from tests.factory import patientf
+
+# mapistar
+from mapistar import patients
+from mapistar.patients import Patient, PatientCreateSchema, PatientUpdateSchema, db
 
 attrs = ("name", "firstname")
 

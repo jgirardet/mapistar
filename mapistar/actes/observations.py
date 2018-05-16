@@ -3,6 +3,7 @@ from apistar import types, validators
 from pony import orm
 
 from .actes import Acte, ActeCreateSchema
+from .views import ActesViews
 
 
 class Observation(Acte):
@@ -37,7 +38,6 @@ class ObservationUpdateSchema(types.Type):
     body = validators.String(default="")
 
 
-from .views import ActesViews
 
 
 class ObservationViews(ActesViews):

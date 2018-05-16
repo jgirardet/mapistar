@@ -1,21 +1,18 @@
 # Standard Libraries
 import json
+from unittest.mock import MagicMock, call
 
 # Third Party Libraries
 import pytest
 
+# mapistar
+from mapistar.actes.ordonnances import (
+    Ordonnance, OrdonnanceCreateSchema, OrdonnanceUpdateSchema
+)
+from mapistar.patients import Patient
+
 # pytestmark = pytest.mark.pony
 
-from mapistar.actes.ordonnances import (
-    Ordonnance,
-    OrdonnanceCreateSchema,
-    OrdonnanceUpdateSchema,
-)
-
-from unittest.mock import MagicMock
-
-
-from mapistar.patients import Patient
 
 patientm = MagicMock(spec=Patient, **{"id": 1})
 
@@ -63,9 +60,25 @@ class TestOrdonnanceModel:
         x, y, z = [mocker.Mock(**{"id": x}, name=str(x)) for x in [25, 32, 45]]
         mordo.items = [x, y, z]
         a = Ordonnance.get_ordered_items(mordo)
+
         assert a == [z, x, y]
+
         # valueerro
+        mordo.ordre = "1-22-4"
+        mordo.items = MagicMock()
+        mordo.items.select.return_value = [x, y, z]
         mocker.patch("builtins.sorted", side_effect=ValueError)
         a = Ordonnance.get_ordered_items(mordo)
-        a = [x, y, z]
         mocker.stopall()
+
+        mordo.ordre_add_item.call_args_list == [call(x), call(y), call(z)]
+        assert a == []  # only check return list
+
+        # valueerro
+        mordo.ordre = "1-22-4"
+        mordo.items = MagicMock()
+        l = mocker.patch("builtins.list")
+        a = Ordonnance.get_ordered_items(mordo)
+        mocker.stopall()
+
+        l.assert_called_with(mordo.items)

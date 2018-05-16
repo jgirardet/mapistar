@@ -1,10 +1,12 @@
 # Standard Libraries
 import json
+from unittest.mock import MagicMock
 
 # Third Party Libraries
 import pytest
 from apistar import exceptions
 
+# mapistar
 from mapistar.users import User, login
 
 
@@ -43,7 +45,6 @@ class TestModel:
         p.assert_called_with(m.password, "pwd2")
 
 
-from unittest.mock import MagicMock
 
 cred = MagicMock()
 cred["username"] = "a"

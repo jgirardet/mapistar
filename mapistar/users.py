@@ -5,15 +5,11 @@ from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
-from simple_settings import settings
 
 # mapistar
 from mapistar.base_db import db
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
-
-if not settings.JWT_DURATION:  # pragma: no cover
-    raise exceptions.ConfigurationError("La durée des JWT doit être précisée")
 
 
 class User(db.Entity):

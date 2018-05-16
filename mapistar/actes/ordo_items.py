@@ -1,14 +1,16 @@
+from typing import Callable
+
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
-from apistar_jwt import JWTUser
+from pony import orm
+
+# mapistar
 from mapistar.base_db import db
+from mapistar.exceptions import MapistarBadRequest
 
 # from apistar import Route, http
 from mapistar.permissions import ActesPermissions
 from mapistar.utils import DicoMixin, NameMixin, SetMixin
-from pony import orm
-from typing import Callable, List
-from mapistar.exceptions import MapistarBadRequest
 
 
 class Item(db.Entity, DicoMixin, NameMixin, SetMixin):

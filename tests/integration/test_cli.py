@@ -1,14 +1,16 @@
-import pytest
+# Standard Libraries
 import json
-from pony import orm
-from tests.factory import userf, observationf
-from mapistar.app import app
-from apistar.test import TestClient
-
-# pytestmark = pytest.mark.pony(reset_db=False)
-
+from datetime import datetime, timedelta
 
 # Third Party Libraries
+import pytest
+from apistar.test import TestClient
+from pony import orm
+from tests.factory import observationf, userf
+
+# mapistar
+from mapistar.app import app
+
 from .runner import generate_db
 
 
@@ -18,6 +20,7 @@ def gen_db(ponydb):
     ponydb.create_tables()
     generate_db()
     yield
+
     ponydb.drop_all_tables(with_all_data=True)
     ponydb.create_tables()  # do not interfer with pytest-ponyorm
 
@@ -271,10 +274,7 @@ def test_ordonnance(clij, clik):
     assert r.status_code == 200
     r = clij.get(app.reverse_url("ordonnances:one", acte_id=19))
     assert r.status_code == 200
-    assert {x["id"] for x in r.json()["items"]} == {7, 8, 9}
-
-
-from datetime import datetime, timedelta
+    assert [x["id"] for x in r.json()["items"]] == [7, 8, 9]
 
 
 def test_permissions(clij, clik, ponydb):

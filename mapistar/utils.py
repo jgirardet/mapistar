@@ -12,6 +12,13 @@ from pony import orm
 from mapistar.exceptions import MapistarProgrammingError
 
 
+def check_config(settings):
+
+    # checl jwt_duration
+    if not settings.JWT_DURATION:  # pragma: no cover
+        raise MapistarProgrammingError("La durée des JWT doit être précisée")
+
+
 def import_models(module_liste: list):
     """
     Import tous les modules contenant des Entity ponyorm

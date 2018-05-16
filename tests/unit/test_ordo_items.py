@@ -4,9 +4,11 @@ from unittest.mock import MagicMock, Mock
 
 # Third Party Libraries
 import pytest
+
+# mapistar
 from mapistar.actes.ordo_items import Item, ItemViews, Medicament
-from mapistar.utils import DicoMixin, SetMixin, NameMixin
 from mapistar.exceptions import MapistarBadRequest
+from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 jwtuser = Mock(**{"id": 15})
 

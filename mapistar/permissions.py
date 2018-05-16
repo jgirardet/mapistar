@@ -10,8 +10,8 @@ from simple_settings import settings
 # mapistar
 # from mapistar.db import db
 from mapistar.base_db import db
-from mapistar.utils import get_or_404
 from mapistar.exceptions import MapistarProgrammingError
+from mapistar.utils import get_or_404
 
 
 class IsAuthenticated:

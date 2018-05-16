@@ -1,24 +1,11 @@
-from mapistar.actes.ordonnances import (
-    OrdonnanceCreateSchema,
-    OrdonnanceUpdateSchema,
-    Ordonnance,
-)
-
-from mapistar.actes.observations import (
-    ObservationCreateSchema,
-    ObservationUpdateSchema,
-    Observation,
-)
-
+# mapistar
 from mapistar.actes.actes import ActeCreateSchema
+from mapistar.actes.observations import (Observation, ObservationCreateSchema,
+                                         ObservationUpdateSchema)
+from mapistar.actes.ordo_items import (Item, ItemCreateSchema, Medicament, MedicamentCreateSchema,
+                                       MedicamentUpdateSchema)
+from mapistar.actes.ordonnances import Ordonnance, OrdonnanceCreateSchema, OrdonnanceUpdateSchema
 from mapistar.actes.schemas import actes_schemas
-from mapistar.actes.ordo_items import (
-    Item,
-    ItemCreateSchema,
-    Medicament,
-    MedicamentCreateSchema,
-    MedicamentUpdateSchema,
-)
 
 
 def test_acte():

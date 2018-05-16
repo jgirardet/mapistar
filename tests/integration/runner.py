@@ -1,6 +1,6 @@
-from tests.factory import patientf, userf, observationf, ordonnancef, medicamentf
-
+# Third Party Libraries
 from pony.orm import db_session, flush
+from tests.factory import medicamentf, observationf, ordonnancef, patientf, userf
 
 
 def many(nombre, factory, **kwargs):

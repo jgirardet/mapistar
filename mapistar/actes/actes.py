@@ -2,6 +2,7 @@
 from datetime import datetime
 
 # Third Party Libraries
+from apistar import types, validators
 from pony import orm
 
 # mapistar
@@ -48,7 +49,6 @@ class Acte(db.Entity, DicoMixin, NameMixin, SetMixin):
     """
 
 
-from apistar import validators, types
 
 
 class ActeCreateSchema(types.Type):

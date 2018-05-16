@@ -1,11 +1,24 @@
 # Third Party Libraries
-import pytest
-
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+# Standard Libraries
+import json
 # from . import factory
 from unittest.mock import MagicMock
-from mapistar.actes.ordonnances import Ordonnance
-from mapistar.actes.ordo_items import Item
+
+import pytest
+# @pytest.fixture(scope="function")
+# def medicament(request):
+#     return factory.medicamentf()
+from apistar.test import TestClient
 from tests import factory
+
+# mapistar
+from mapistar.actes.ordo_items import Item
+from mapistar.actes.ordonnances import Ordonnance
+from mapistar.app import app
 
 
 @pytest.fixture(scope="function")
@@ -54,12 +67,6 @@ def ordonnance(request):
 #     return factory.itemf()
 
 
-# @pytest.fixture(scope="function")
-# def medicament(request):
-#     return factory.medicamentf()
-from apistar.test import TestClient
-from mapistar.app import app
-import json
 
 
 @pytest.fixture(scope="module")
