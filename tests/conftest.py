@@ -33,12 +33,12 @@ def cli_app_no_auth(napp):
 test_timer = None
 
 
-def pytest_runtest_setup(item):
-    global test_timer
-    test_timer = time.time()
+# def pytest_runtest_setup(item):
+#     global test_timer
+#     test_timer = time.time()
 
 
-def pytest_runtest_teardown(item, nextitem):
-    global test_timer
-    c = time.time() - test_timer
-    print(item.name, int(c * 1000), " ms")
+# def pytest_runtest_teardown(item, nextitem):
+#     global test_timer
+#     c = time.time() - test_timer
+#     print(item.name, int(c * 1000), " ms")

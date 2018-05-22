@@ -77,6 +77,17 @@ platform = "*"
 [package.dependencies]
 pytz = ">= 0.0.0.0a0"
 [[package]]
+name = "better-exceptions"
+version = "0.2.1"
+description = "Pretty and helpful exceptions, automatically"
+category = "dev"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[package.dependencies]
+colorama = "*"
+[[package]]
 name = "black"
 version = "18.5b0"
 description = "The uncompromising code formatter."
@@ -715,7 +726,7 @@ platform = "*"
 [metadata]
 python-versions = "^3.6"
 platform = "*"
-content-hash = "7d6a4a60f058fe5feeacb1aa76b392386dab0893de51044f8270806b0219515d"
+content-hash = "c2d44df7962c2798710e13e4216471985f9d65369a9a0118acf473470a5a2eb7"
 
 [metadata.hashes]
 alabaster = [ "2eef172f44e8d301d25aff8068fddd65f767a3f04b5f15b0f4922f113aa1c732", "37cdcb9e9954ed60912ebc1ca12a9d12178c26637abdf124e3cde2341c257fe0",]
@@ -725,6 +736,7 @@ apistar-ponyorm = [ "486c4eea47199849be69eefdcd3e5602986d8d2a0a4b9ffcc8ef3ab2fe3
 argh = [ "a9b3aaa1904eeb78e32394cd46c6f37ac0fb4af6dc488daa58971bdc7d7fcaf3", "e9535b8c84dc9571a48999094fda7f33e63c3f1b74f3e5f3ac0105a58405bb65",]
 attrs = [ "4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265", "e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b",]
 babel = [ "ad209a68d7162c4cff4b29cdebe3dec4cef75492df501b0049a9433c96ce6f80", "8ce4cb6fdd4393edd323227cba3a077bceb2a6ce5201c902c65e730046f41f14",]
+better-exceptions = [ "0a73efef96b48f867ea980227ac3b00d36a92754e6d316ad2ee472f136014580",]
 black = [ "5fec0f25486046b9edb97961c946412ced96021247dd1a60ecd9f0567b68b030", "4fec2566f9fbbd4a58de50a168cbe3ab952713530410d227e82e4c65d1fad946",]
 certifi = [ "9fa520c1bacfb634fa7af20a76bcbd3d5fb390481724c597da32c719a7dca4b0", "13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7",]
 chardet = [ "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691", "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae",]

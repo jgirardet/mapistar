@@ -32,6 +32,7 @@ class User(db.Entity):
     prenom = orm.Required(str)
     actes = orm.Set("Acte")
     actif = orm.Required(bool, default=True)
+    statut = orm.Required(str, py_check=lambda x: x in STATUT)
 
     def __repr__(self):
         """
@@ -53,7 +54,13 @@ class User(db.Entity):
 
     @classmethod
     def create_user(
-        cls, username: str, password: str, nom: str, prenom: str, actif: bool = True
+        cls,
+        username: str,
+        password: str,
+        nom: str,
+        prenom: str,
+        statut: str,
+        actif: bool = True,
     ) -> "User":
         """ Ajoute un utilisateur
 
@@ -69,7 +76,12 @@ class User(db.Entity):
         """
         pwd = generate_password_hash(password)
         user = db.User(
-            username=username, password=pwd, nom=nom, prenom=prenom, actif=actif
+            username=username,
+            password=pwd,
+            nom=nom,
+            prenom=prenom,
+            statut=statut,
+            actif=actif,
         )
         return user
 

@@ -6,6 +6,7 @@ from typing import List
 # Third Party Libraries
 from apistar import Include, Route, http, types, validators
 from pony.orm import Optional, Required, Set
+from apistar_jwt import JWTUser
 
 # mapistar
 from mapistar.base_db import db

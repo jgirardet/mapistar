@@ -50,6 +50,8 @@ def userf(**kwargs):
         kwargs["nom"] = f.person.last_name()
     if "prenom" not in kwargs:
         kwargs["prenom"] = f.person.name()
+    if "statut" not in kwargs:
+        kwargs["statut"] = "docteur"
     return db.User.create_user(**kwargs)
 
 

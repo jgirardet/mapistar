@@ -21,11 +21,16 @@ class TestModel:
 
         m.create_user = User.create_user
 
-        u = m.create_user("user", "pwd", "nom", "prenom")
+        u = m.create_user("user", "pwd", "nom", "prenom", "docteur")
 
         p.assert_called_with("pwd")
         m.User.assert_called_with(
-            username="user", password="pwdcode", nom="nom", prenom="prenom", actif=True
+            username="user",
+            password="pwdcode",
+            nom="nom",
+            prenom="prenom",
+            statut="docteur",
+            actif=True,
         )
         assert u == "user"
 
