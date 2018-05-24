@@ -79,7 +79,12 @@ def test_patients(clij, clik):
     pat2 = clij.get(app.reverse_url("patients:one", patient_id=5)).json()
     assert pat2 == pat
 
-    # test delete
+    # test delete fail bad Permission
+    resp = clik.delete(app.reverse_url("patients:delete", patient_id=5)).json()
+    assert resp == "Action non autorisée pour l'utilisateur k"
+
+    # test delete fail bad Permission
+
     resp = clij.delete(app.reverse_url("patients:delete", patient_id=5)).json()
     assert resp == {"msg": "delete success"}
 
@@ -94,22 +99,19 @@ def test_patients(clij, clik):
     r = clij.put(
         app.reverse_url("patients:update", patient_id=2), data=json.dumps(update)
     ).json()
-    assert (
-        r
-        == {
-            "id": 2,
-            "nom": patient2["nom"],
-            "prenom": "Omkmok",
-            "ddn": "1237-03-03",
-            "sexe": patient2["sexe"],
-            "rue": "mokmokmok",
-            "cp": None,
-            "ville": "",
-            "tel": "",
-            "email": "",
-            "alive": True,
-        }
-    )
+    assert r == {
+        "id": 2,
+        "nom": patient2["nom"],
+        "prenom": "Omkmok",
+        "ddn": "1237-03-03",
+        "sexe": patient2["sexe"],
+        "rue": "mokmokmok",
+        "cp": None,
+        "ville": "",
+        "tel": "",
+        "email": "",
+        "alive": True,
+    }
 
 
 def test_observation(clij, clik):

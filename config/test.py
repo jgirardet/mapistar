@@ -1,7 +1,7 @@
 # Standard Libraries
 import os  # noqa: F401
-from .base import *  # noqa: F401,F403
 
+from .base import *  # noqa: F401,F403
 
 print("Testing Config")
 

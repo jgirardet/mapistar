@@ -11,7 +11,7 @@ def many(nombre, factory, **kwargs):
 @db_session
 def generate_db():
     j = userf(username="j")
-    k = userf(username="k")
+    userf(username="k")
     flush()
     j.permissions.del_patient = True
     flush()

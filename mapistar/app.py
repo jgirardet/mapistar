@@ -8,6 +8,7 @@ from mapistar.actes.routes import (
     routes_observations,
     routes_ordonnances,
 )
+from mapistar.components import UserComponent
 from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
@@ -24,7 +25,7 @@ routes = [
     routes_theso,
     routes_users,
 ]
-components = [JWT(settings.JWT), ActesPermissionsComponent()]
+components = [JWT(settings.JWT), ActesPermissionsComponent(), UserComponent()]
 
 
 app = App(

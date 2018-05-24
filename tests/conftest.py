@@ -1,4 +1,3 @@
-import time
 
 import pytest
 from apistar import App, test
@@ -30,7 +29,8 @@ def cli_app_no_auth(napp):
     return test.TestClient(main_app)
 
 
-test_timer = None
+# test_timer = None
+# import time
 
 
 # def pytest_runtest_setup(item):
