@@ -4,7 +4,7 @@ from string import capwords
 from typing import List
 
 # Third Party Libraries
-from apistar import Include, Route, http, types, validators
+from apistar import Include, Route, http, types, validators, exceptions
 from pony.orm import Optional, Required, Set
 from apistar_jwt import JWTUser
 
@@ -161,7 +161,7 @@ def one(patient_id: int) -> dict:
     return get_or_404(db.Patient, patient_id).dico
 
 
-def delete(patient_id: int) -> dict:
+def delete(patient_id: int, user: JWTUser) -> dict:
     """
     delete un patient
 
@@ -172,9 +172,15 @@ def delete(patient_id: int) -> dict:
     Raises:
         NotFound si non trouvé
     """
+    user = get_or_404(db.User, user.id)
     pat = get_or_404(db.Patient, patient_id)
-    pat.delete()
-    return {"msg": "delete success"}
+    if user.permissions.del_patient:
+        pat.delete()
+        return {"msg": "delete success"}
+    else:
+        raise exceptions.Forbidden(
+            "Action non autorisée pour l'utilisateur {user.username}"
+        )
 
 
 def update(new_data: PatientUpdateSchema, patient_id: int) -> http.JSONResponse:

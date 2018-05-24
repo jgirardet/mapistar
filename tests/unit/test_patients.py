@@ -3,6 +3,8 @@
 # mapistar
 from mapistar import patients
 from mapistar.patients import Patient, PatientCreateSchema, PatientUpdateSchema, db
+from apistar import exceptions
+import pytest
 
 attrs = ("name", "firstname")
 
@@ -62,11 +64,19 @@ class TestPatientViews:
         assert r == 1
 
     def test_cli_del_patient(self, mocker):
-        m = mocker.patch("mapistar.patients.get_or_404")
-        r = patients.delete(patient_id=1)
+    m = mocker.patch("mapistar.patients.get_or_404")
 
-        m.return_value.delete.assert_called_once()
-        assert r == {"msg": "delete success"}
+    # user unallowed
+    u = mocker.MagicMock(**{"permissions.del_patient": False})
+    m.permissions.del_patient = None
+    with pytest.raises(exceptions.Forbidden) as exc:
+        r = patients.delete(patient_id=1, user=u)
+    assert str(exc.value).startswith("Action non autorisée pour l'utilisateur")
+
+    u.permissions.del_patient = True
+    r = patients.delete(patient_id=1, user=u)
+    m.return_value.delete.assert_called_once()
+    assert r == {"msg": "delete success"}
 
     def test_cli_list_patient(self, mocker):
         m = mocker.Mock(**{"dico": 1})

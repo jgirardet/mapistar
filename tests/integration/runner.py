@@ -10,9 +10,12 @@ def many(nombre, factory, **kwargs):
 
 @db_session
 def generate_db():
-    userf(username="j")
-    userf(username="k")
+    j = userf(username="j")
+    k = userf(username="k")
     flush()
+    j.permissions.del_patient = True
+    flush()
+
     many(8, patientf)
     flush()
     many(3, observationf, patient=1, owner=1)

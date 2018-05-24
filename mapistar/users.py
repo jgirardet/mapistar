@@ -12,6 +12,11 @@ from mapistar.base_db import db
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
 
+class UserPermissions(db.Entity):
+    user = orm.Required("User")
+    del_patient = orm.Required(bool, default=False)
+
+
 class User(db.Entity):
     """
     Entity Utilisateur
@@ -33,6 +38,7 @@ class User(db.Entity):
     actes = orm.Set("Acte")
     actif = orm.Required(bool, default=True)
     statut = orm.Required(str, py_check=lambda x: x in STATUT)
+    permissions = orm.Optional(UserPermissions)
 
     def __repr__(self):
         """
@@ -51,6 +57,9 @@ class User(db.Entity):
         """
 
         return check_password_hash(self.password, password)
+
+    def before_insert(self):
+        UserPermissions(user=self)
 
     @classmethod
     def create_user(
@@ -83,6 +92,7 @@ class User(db.Entity):
             statut=statut,
             actif=actif,
         )
+        # user.permissions = UserPermissions(user=user)
         return user
 
 
