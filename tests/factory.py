@@ -1,14 +1,9 @@
-# Standard Libraries
-import random
-
 # Third Party Libraries
 from mimesis import Generic
 
 # mapistar
-# import faker
 from mapistar.db import db
 
-# f = faker.Faker('fr_FR')
 f = Generic("fr")
 
 
@@ -23,9 +18,17 @@ def patientd():
     }
 
 
-def patientf():
-    """ patient """
-    return db.Patient(**patientd())
+def patientf(**kwargs):
+    """ simple user """
+    if "ddn" not in kwargs:
+        kwargs["ddn"] = f.datetime.date(fmt="%Y-%m-%d")  # f.person.username()
+    if "sexe" not in kwargs:
+        kwargs["sexe"] = "m"
+    if "nom" not in kwargs:
+        kwargs["nom"] = f.person.last_name()
+    if "prenom" not in kwargs:
+        kwargs["prenom"] = f.person.name()
+    return db.Patient(**kwargs)
 
 
 def userd():
@@ -37,14 +40,24 @@ def userd():
     }
 
 
-def userf():
+def userf(**kwargs):
     """ simple user """
-    return db.User.create_user(**userd())
+    if "username" not in kwargs:
+        kwargs["username"] = f.person.username()
+    if "password" not in kwargs:
+        kwargs["password"] = "j"
+    if "nom" not in kwargs:
+        kwargs["nom"] = f.person.last_name()
+    if "prenom" not in kwargs:
+        kwargs["prenom"] = f.person.name()
+    if "statut" not in kwargs:
+        kwargs["statut"] = "docteur"
+    return db.User.create_user(**kwargs)
 
 
-def actef(p=None, u=None):
-    p = p if p else patientf()
-    u = u if u else userf()
+def actef(patient=None, owner=None):
+    p = patient or patientf()
+    u = owner or userf()
     return db.Acte(patient=p, owner=u)
 
 

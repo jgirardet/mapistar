@@ -12,6 +12,11 @@ from mapistar.base_db import db
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
 
+class UserPermissions(db.Entity):
+    user = orm.Required("User")
+    del_patient = orm.Required(bool, default=False)
+
+
 class User(db.Entity):
     """
     Entity Utilisateur
@@ -32,6 +37,8 @@ class User(db.Entity):
     prenom = orm.Required(str)
     actes = orm.Set("Acte")
     actif = orm.Required(bool, default=True)
+    statut = orm.Required(str, py_check=lambda x: x in STATUT)
+    permissions = orm.Optional(UserPermissions)
 
     def __repr__(self):
         """
@@ -51,9 +58,18 @@ class User(db.Entity):
 
         return check_password_hash(self.password, password)
 
+    def before_insert(self):
+        UserPermissions(user=self)
+
     @classmethod
     def create_user(
-        cls, username: str, password: str, nom: str, prenom: str, actif: bool = True
+        cls,
+        username: str,
+        password: str,
+        nom: str,
+        prenom: str,
+        statut: str,
+        actif: bool = True,
     ) -> "User":
         """ Ajoute un utilisateur
 
@@ -69,8 +85,14 @@ class User(db.Entity):
         """
         pwd = generate_password_hash(password)
         user = db.User(
-            username=username, password=pwd, nom=nom, prenom=prenom, actif=actif
+            username=username,
+            password=pwd,
+            nom=nom,
+            prenom=prenom,
+            statut=statut,
+            actif=actif,
         )
+        # user.permissions = UserPermissions(user=user)
         return user
 
 
@@ -106,7 +128,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
         "id": user.id,
         "username": user.username,
         "iat": pendulum.now(),
-        "exp": pendulum.now() + pendulum.Duration(seconds=5),
+        "exp": pendulum.now() + pendulum.Duration(seconds=1000),
     }
     token = jwt.encode(payload)
     if token is None:

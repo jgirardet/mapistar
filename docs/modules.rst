@@ -1,11 +1,12 @@
 Référence de l'API
 ********************
 
+
 patients
-========
+=========
 
 .. automodule:: mapistar.patients
-    :members:
+	:members:
 	:show-inheritance:
 
 
@@ -20,7 +21,7 @@ users
 actes
 =======
 
-.. automodule:: mapistar.actes.models
+.. automodule:: mapistar.actes.actes
 	:members:
 	:show-inheritance:
 
@@ -29,6 +30,17 @@ actes
 	:undoc-members:
 	:special-members: __call__
 
+
+ordonnances
+============
+
+.. automodule:: mapistar.actes.ordonnances
+	:members:
+	:show-inheritance:
+
+.. automodule:: mapistar.actes.ordo_items
+	:members:
+	:show-inheritance:
 
 permissions
 ===========

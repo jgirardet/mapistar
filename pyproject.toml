@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "mapistar"
+version = "0.3.0"
+description = "Third-party for apistar using pony orm"
+authors = ["Jimmy Girardet <ijkl@netc.fr>"]
+license = "GPL-3.0+"
+readme = "README.rst"
+homepage = "https://github.com/jgirardet/mapistar"
+repository = "https://github.com/jgirardet/mapistar"
+keywords = ['apistar', 'pony', "medical"]
+
+
+[tool.poetry.dependencies]
+python = "^3.6"
+pony = "*"
+psycopg2-binary = "*"
+# pony = {git = "https://github.com/ponyorm/pony.git", branch = "orm-migrations"}
+apistar = "*"
+dickens = "*"
+pythonthesorimed = "*"
+apistar-jwt = "*"
+simple-settings = "*"
+apistar-ponyorm = "*"
+pendulum = "^2.*"
+python-dotenv = "*"
+mimesis = "^2.0"
+
+[tool.poetry.dev-dependencies]
+# testing
+pytest = "*"
+pytest-cov = "*"
+pytest-pythonpath = "*"
+pytest-env = "*"
+pytest-ponyorm = "*"
+pytest-mock = "^1.10"
+mimesis = "*"
+
+# linting
+flake8 = "*"
+isort = "*"
+black = {version = "*", allows-prereleases = true}
+
+# doc
+sphinx = "*"
+sphinx-rtd-theme = "*"
+sphinx-autobuild = "*"
+sphinxcontrib-napoleon = "*"
+sphinx-autodoc-typehints = "*"
+better-exceptions = "^0.2.1"

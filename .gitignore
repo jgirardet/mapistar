@@ -148,6 +148,3 @@ GitHub.sublime-settings
 
 doc/_build/ 
 .timeit.json
-ChangeLog
-AUTHORS
-Pipfile.lock

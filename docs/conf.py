@@ -23,7 +23,9 @@ import sys
 
 # ----Django settings
 # import config.settings
-sys.path.insert(0, "../mapistar")
+# sys.path.insert(0, "../ma")
+sys.path.insert(0, os.path.abspath(".."))
+os.environ["SIMPLE_SETTINGS"] = "config.local"
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -40,7 +42,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
-    "sphinxcontrib.swaggerdoc",
+    "sphinx.ext.coverage",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

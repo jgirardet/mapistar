@@ -4,38 +4,45 @@ Todo
 Todo vers 1.0
 ===============
 
+* Bug:
+
+    - requete non invalid si field en trop
+
 * Patient:
     - revoir les données accessoires
     - schema email
+    - permission effacer patient
 
 * User :
-
     - type : médecin, secrétaire ...
     - Etat civil
     - Change Password/create password views
-    - updatable field
 
 * Actes :
-    - Presription libre
-    - ordonnances
 
-        + medicaments base (sans controle)
-        + monographie
+* Presription libre
+
+* ordonnances
+    - medicaments base (sans controle)
+    - monographie
 
 * Laboratoires
   
 * Courriers reçu
   
-* Divers :
-
-	- settings :  chargement/gestion/env
+* Divers:
 	- doc: 100%
 	- deploiement
+
     - entry point
     - git pre commit
 
-* Documentation:
+* integration test
+    - fake DB
 
+* logging
+
+* Documentation:
     - patient +
     - utils +
     - users +
