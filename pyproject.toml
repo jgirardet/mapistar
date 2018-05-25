@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mapistar"
-version = "0.3.0"
+version = "0.4.1"
 description = "WebDoctor Api"
 authors = ["Jimmy Girardet <ijkl@netc.fr>"]
 license = "GPL-3.0+"
