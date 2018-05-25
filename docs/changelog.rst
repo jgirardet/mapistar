@@ -6,6 +6,28 @@ ChangeLog
 
 En cours voir :doc:`todo` pour plus d'info.
 
+0.3.0
+------
+
+
+* fonctions
+  
+    - l'ordre des ordonnances est conservé
+    - JWT_DURATION dans settings
+    - Module Ordonnance/item
+    - ajout UserPermissions
+   
+* programation
+    
+    - drop pipenv pour poetry
+    - class based views pour acteviews
+    - Item Permissions gérés par ActePermissionComponent
+    - séparation ActePermissionComponent/ActePermission
+    - speed up test : mock et cli_test.py
+    - ajout SetMixin
+    - ajout MapistarHttpException
+
+
 0.2.0
 ------
 
@@ -15,7 +37,7 @@ En cours voir :doc:`todo` pour plus d'info.
     - ajout User
     - ajout login et permissions
 
-* Programmation
+* Programation
 
     - drop django pour PonyORM
     - drop faker pour mimesis

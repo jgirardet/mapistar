@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mapistar"
 version = "0.3.0"
-description = "Third-party for apistar using pony orm"
+description = "WebDoctor Api"
 authors = ["Jimmy Girardet <ijkl@netc.fr>"]
 license = "GPL-3.0+"
 readme = "README.rst"
@@ -12,38 +12,36 @@ keywords = ['apistar', 'pony', "medical"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pony = "*"
-psycopg2-binary = "*"
-# pony = {git = "https://github.com/ponyorm/pony.git", branch = "orm-migrations"}
-apistar = "*"
-dickens = "*"
-pythonthesorimed = "*"
-apistar-jwt = "*"
-simple-settings = "*"
-apistar-ponyorm = "*"
-pendulum = "^2.*"
-python-dotenv = "*"
-mimesis = "^2.0"
+pony = "^0.7.3"
+psycopg2-binary = "^2.7"
+apistar = "^0.5.26"
+apistar-jwt = "^0.5.0"
+dickens = "^1.0"
+pythonthesorimed = "^0.3.0"
+simple-settings = "^0.13.0"
+apistar-ponyorm = "^0.2.12"
+pendulum = "^2.0"
+python-dotenv = "^0.8.2"
+
 
 [tool.poetry.dev-dependencies]
 # testing
-pytest = "*"
-pytest-cov = "*"
-pytest-pythonpath = "*"
-pytest-env = "*"
-pytest-ponyorm = "*"
+pytest = "^3.6"
+pytest-cov = "^2.5"
+pytest-pythonpath = "^0.7.2"
+pytest-env = "^0.6.2"
+pytest-ponyorm = "^0.3.2"
 pytest-mock = "^1.10"
-mimesis = "*"
+mimesis = "^2.0"
 
 # linting
-flake8 = "*"
-isort = "*"
+flake8 = "^3.5"
+isort = "^4.3"
 black = {version = "*", allows-prereleases = true}
 
 # doc
-sphinx = "*"
-sphinx-rtd-theme = "*"
-sphinx-autobuild = "*"
-sphinxcontrib-napoleon = "*"
-sphinx-autodoc-typehints = "*"
-better-exceptions = "^0.2.1"
+sphinx = "^1.7"
+sphinx-rtd-theme = "^0.3.1"
+sphinx-autobuild = "^0.7.1"
+sphinxcontrib-napoleon = "^0.6.1"
+sphinx-autodoc-typehints = "^1.3"
