@@ -1,6 +1,8 @@
 .PHONY: build
 
 MODULE:=mapistar
+export VERSION = `cat pyproject.toml | grep ^version | sed "s/version = //" | sed "s/\"//g"`
+# export MY_VAR = foo
 
 all: dev style doc test test-coverage
 
@@ -50,6 +52,14 @@ doc-cov:
 doc-auto:
 	poetry run sphinx-autobuild docs docs/_build
 	
+
+deploy:
+	poetry publish
+	@-git tag -a $(VERSION) -m 'version $(VERSION)'
+	@echo tag $(VERSION) added \!
+	@echo pushing ...
+	@-git push --tags
+
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 
