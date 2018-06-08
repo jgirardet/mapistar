@@ -6,6 +6,29 @@ ChangeLog
 
 En cours voir :doc:`todo` pour plus d'info.
 
+0.5.0
+-----
+
+* fonctions
+
+    - change_password
+
+0.4.1
+------
+
+* fonction
+
+    - ajout des permissions utilisateur
+    - permission effacer patient
+
+* programation
+
+    - ajout check_config
+    - fallback pour ordonnances si ordre faux
+    - exception MapistarBadRequest
+    - item ne peuvent être ajouté qu'à une ordonnance
+    - remove pendulum
+
 0.3.0
 ------
 
