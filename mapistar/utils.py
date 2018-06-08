@@ -56,7 +56,6 @@ def get_or_404(model: orm.core.Entity, id: [str, int]):
 
 
 class DicoMixin:
-
     @property
     def dico(self) -> dict:
         """
@@ -85,7 +84,6 @@ class DicoMixin:
 
 
 class NameMixin:
-
     @classproperty
     def name(self) -> str:
         """nom du modèle"""
@@ -98,7 +96,6 @@ class NameMixin:
 
 
 class SetMixin:
-
     def set(self, **kwargs: dict):
         """
         Override default set pour vérifier si updatable

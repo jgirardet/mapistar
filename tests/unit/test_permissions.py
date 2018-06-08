@@ -12,7 +12,6 @@ from mapistar.permissions import ActesPermissions, ActesPermissionsComponent
 
 
 class TestActesPermission:
-
     def test_only_owner_can_edit2(self, mocker):
 
         a = ActesPermissions(mocker.Mock(**{"owner.id": 1}), mocker.Mock(**{"id": 2}))
@@ -58,7 +57,6 @@ AP = ActesPermissionsComponent()
 
 
 class TestActesPermissionComponent:
-
     @pytest.mark.parametrize("genre", ["acte_id", "item_id"])
     def test_ActesPermissions_called(self, mocker, genre):
         mocker.patch("mapistar.permissions.get_or_404")

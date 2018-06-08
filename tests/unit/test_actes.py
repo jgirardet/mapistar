@@ -14,7 +14,6 @@ from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 
 class TestActeModel:
-
     def test_inheritance(self):
         assert issubclass(Acte, DicoMixin)
         assert issubclass(Acte, SetMixin)
@@ -52,7 +51,6 @@ class ActeModele(ActesViews):
 
 
 class TestViews:
-
     def test_add(self, mocker):
         r = ActeTest.add()(data={"patient": 99}, user=jwtuser)
         assert json.loads(r.content) == {"le": "dico"}

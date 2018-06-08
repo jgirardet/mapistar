@@ -30,7 +30,6 @@ class ActesViews:
 
     @classmethod
     def add(cls) -> Callable:
-
         def add(data: cls.schema_add, user: JWTUser) -> http.JSONResponse:
             obj = cls.model(owner=user.id, **data)
             return http.JSONResponse(obj.dico, status_code=201)
@@ -41,7 +40,6 @@ class ActesViews:
 
     @classmethod
     def liste(cls) -> Callable:
-
         def liste(patient_id: int) -> List:
             # fmt: off
             return [
@@ -54,7 +52,6 @@ class ActesViews:
 
     @classmethod
     def one(cls) -> Callable:
-
         def one(acte_id: int) -> dict:
             obj = get_or_404(cls.model, acte_id)
             return obj.dico
@@ -64,7 +61,6 @@ class ActesViews:
 
     @classmethod
     def delete(cls) -> Callable:
-
         def delete(acte_id: int, obj: ActesPermissions) -> dict:
             obj.delete()
             return {"id": acte_id, "deleted": True}
@@ -74,7 +70,6 @@ class ActesViews:
 
     @classmethod
     def update(cls) -> Callable:
-
         def update(acte_id: int, new_data: cls.schema_update, obj: ActesPermissions):
             # obj = get_or_404(cls.model, acte_id)
             obj.set(**new_data)
