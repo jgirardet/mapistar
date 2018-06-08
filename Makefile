@@ -54,7 +54,7 @@ doc-auto:
 	
 
 deploy:
-	poetry publish
+	poetry publish --build
 	@-git tag -a $(VERSION) -m 'version $(VERSION)'
 	@echo tag $(VERSION) added \!
 	@echo pushing ...

@@ -8,9 +8,10 @@ from apistar import exceptions
 # mapistar
 from mapistar.users import User, login
 
+from werkzeug.security import check_password_hash
+
 
 class TestModel:
-
     def test_create_user(self, mocker):
         m = mocker.patch("mapistar.users.db", return_value="user")
         p = mocker.patch(
@@ -48,6 +49,21 @@ class TestModel:
         User.check_password(m, "pwd2")
         p.assert_called_with(m.password, "pwd2")
 
+    def test_change_password(self, mocker):
+        userm = MagicMock(spec=User)
+
+        userm.check_password.return_value = False
+        with pytest.raises(exceptions.Forbidden) as exc:
+            User.change_password(userm, "old", "new1", "new2")
+
+        userm.check_password.return_value = True
+        with pytest.raises(exceptions.Forbidden) as exc:
+            User.change_password(userm, "old", "new1", "new2")
+        assert str(exc.value) == "Les mots de passes ne correspondent pas"
+
+        User.change_password(userm, "old", "new1", "new1")
+        assert check_password_hash(userm.pwd, "new1")
+
 
 cred = MagicMock()
 cred["username"] = "a"
@@ -57,7 +73,6 @@ userm = MagicMock(spec=User)
 
 
 class TestLogin:
-
     def test_bad_username(self, mocker):
         mocker.patch.object(User, "get", return_value=None)
         with pytest.raises(exceptions.Forbidden) as exc:
