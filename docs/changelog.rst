@@ -11,7 +11,12 @@ En cours voir :doc:`todo` pour plus d'info.
 
 * fonctions
 
-    - change_password
+    - add change_password and get_new_password
+    - add divers à ordoitems
+
+* programation
+
+    - urlname de namemixin ne rajoutes pas 2 s à la suite
 
 0.4.1
 ------

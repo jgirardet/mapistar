@@ -92,7 +92,11 @@ class NameMixin:
     @classproperty
     def url_name(self) -> str:
         """url du modèle"""
-        return self.__name__.lower() + "s"
+        return (
+            self.__name__.lower()
+            if self.__name__[-1] in ["s", "x"]
+            else self.__name__.lower() + "s"
+        )
 
 
 class SetMixin:

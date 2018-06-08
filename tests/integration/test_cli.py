@@ -277,6 +277,18 @@ def test_ordonnance(clij, clik):
     assert r.status_code == 200
     assert [x["id"] for x in r.json()["items"]] == [7, 8, 9]
 
+    ################
+    # test preciptions Libres
+    ##################
+
+    # test new item
+    r = clij.post(
+        app.reverse_url("divers:add_item", acte_id=20),
+        data=json.dumps({"texte": "aaaa"}),
+    )
+    assert r.status_code == 201
+    assert r.json()["ordonnance"] == 20
+
 
 def test_permissions(clij, clik, ponydb):
 
