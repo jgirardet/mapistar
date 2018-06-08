@@ -16,7 +16,6 @@ Todo vers 1.0
 * User :
     - type : médecin, secrétaire ...
     - Etat civil
-    - Change Password/create password views
 
 * Actes :
 
