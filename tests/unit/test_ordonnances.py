@@ -15,7 +15,6 @@ patientm = MagicMock(spec=Patient, **{"id": 1})
 
 
 class TestOrdonnanceModel:
-
     @pytest.mark.pony
     def test_dico(self, ordonnance, ponydb):
         e = ponydb.Item(ordonnance=ordonnance)

@@ -10,7 +10,6 @@ from mapistar.utils import DicoMixin, SetMixin, check_config, get_or_404, import
 
 
 class TestCheckConfg:
-
     def test_jwt_duration(self, mocker):
         s = mocker.MagicMock(**{"JWT_DURATION": None})
         with pytest.raises(MapistarProgrammingError) as exc:
@@ -19,7 +18,6 @@ class TestCheckConfg:
 
 
 class TestImportModels:
-
     def test_arg_format(self):
         a = ([],)
         with pytest.raises(MapistarProgrammingError) as exc:

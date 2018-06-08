@@ -31,6 +31,7 @@ class ItemCreateSchema(types.Type):
 
 class Medicament(Item):
     """Medicament"""
+
     cip = orm.Required(str)
     nom = orm.Required(str)
     posologie = orm.Optional(str)
@@ -62,7 +63,6 @@ class ItemViews:
 
     @classmethod
     def add_item(cls) -> Callable:
-
         def add_item(data: cls.schema_add, obj: ActesPermissions):
             # obj.medicaments.create(**data)
             try:
@@ -77,7 +77,6 @@ class ItemViews:
 
     @classmethod
     def delete_item(cls) -> Callable:
-
         def delete_item(item_id: int, obj: ActesPermissions):
             obj.delete()
             return {"id": item_id, "deleted": True}
@@ -87,7 +86,6 @@ class ItemViews:
 
     @classmethod
     def update_item(cls) -> Callable:
-
         def update_item(
             item_id: int, new_data: cls.schema_update, obj: ActesPermissions
         ):

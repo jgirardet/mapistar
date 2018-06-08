@@ -24,7 +24,6 @@ class ItemTest(ItemViews):
 
 
 class TestItemViews:
-
     def test_add_item(self, mocker, mordo, mitem):
         ItemTest.model = mitem
         r = ItemTest.add_item()(
@@ -57,7 +56,6 @@ class TestItemViews:
 
 
 class TestItemModel:
-
     def test_inheritance(self):
         assert issubclass(Item, DicoMixin)
         assert issubclass(Item, SetMixin)
@@ -102,7 +100,6 @@ class TestItemModel:
 
 
 class TestMedicamentModel:
-
     def test_repr(self, mitem):
         mitem.nom = "Bla bla"
         assert Medicament.__repr__(mitem) == "[Medicament: Bla bla]"

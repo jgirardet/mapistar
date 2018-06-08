@@ -21,6 +21,7 @@ class Ordonnance(Acte):
     updatables:
         ordre
     """
+
     items = orm.Set(Item)
     ordre = orm.Optional(str, default="")
 

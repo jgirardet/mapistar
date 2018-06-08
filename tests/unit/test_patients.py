@@ -9,7 +9,6 @@ attrs = ("name", "firstname")
 
 
 class TestPatientModel:
-
     def test_capswords(self, mocker):
         a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
         Patient._capwords(a)
@@ -40,7 +39,6 @@ class TestPatientModel:
 
 
 class TestPatientViews:
-
     def test_add(self, mocker):
         mocker.patch.object(db, "Patient", return_value=mocker.Mock(**{"dico": 1}))
         p = PatientCreateSchema(

@@ -24,6 +24,7 @@ class Acte(db.Entity, DicoMixin, NameMixin, SetMixin):
 
 
     """
+
     patient = orm.Required("Patient")
     owner = orm.Required("User")
     created = orm.Required(datetime, default=datetime.utcnow)
