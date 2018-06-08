@@ -30,3 +30,4 @@ def generate_db():
     many(3, medicamentf, ordonnance=17)  # 1-2-3
     many(3, medicamentf, ordonnance=18)  # 4-5-6
     many(3, medicamentf, ordonnance=19)  # 7-8-9
+    flush()

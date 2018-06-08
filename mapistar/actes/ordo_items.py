@@ -29,32 +29,6 @@ class ItemCreateSchema(types.Type):
     """base class"""
 
 
-class Medicament(Item):
-    """Medicament"""
-
-    cip = orm.Required(str)
-    nom = orm.Required(str)
-    posologie = orm.Optional(str)
-    duree = orm.Optional(int, default=0)
-
-    def __repr__(self):  # pragma: no cover
-        return f"[Medicament: {self.nom}]"
-
-    updatable = ("posologie", "duree")
-
-
-class MedicamentCreateSchema(ItemCreateSchema):
-    cip = validators.String(min_length=13)
-    nom = validators.String()
-    posologie = validators.String(default="")
-    duree = validators.Integer(default=None, allow_null=True)
-
-
-class MedicamentUpdateSchema(types.Type):
-    posologie = validators.String(default="")
-    duree = validators.Integer(default="")
-
-
 class ItemViews:
 
     model = None
@@ -115,7 +89,54 @@ class ItemViews:
         )
 
 
+class Medicament(Item):
+    """Medicament"""
+
+    cip = orm.Required(str)
+    nom = orm.Required(str)
+    posologie = orm.Optional(str)
+    duree = orm.Optional(int, default=0)
+
+    def __repr__(self):  # pragma: no cover
+        return f"[Medicament: {self.nom}]"
+
+    updatable = ("posologie", "duree")
+
+
+class MedicamentCreateSchema(ItemCreateSchema):
+    cip = validators.String(min_length=13)
+    nom = validators.String()
+    posologie = validators.String(default="")
+    duree = validators.Integer(default=None, allow_null=True)
+
+
+class MedicamentUpdateSchema(types.Type):
+    posologie = validators.String(default="")
+    duree = validators.Integer(default="")
+
+
 class MedicamentViews(ItemViews):
     model = Medicament
     schema_add = MedicamentCreateSchema
     schema_update = MedicamentUpdateSchema
+
+
+class Divers(Item):
+    """Presciption Libre"""
+
+    texte = orm.Required(str)
+
+    def __repr__(self):  # pragma: no cover
+        return f"[Presciption libre: {self.texte[:10]}]"
+
+    updatable = "texte"
+
+
+class DiversCreateSchema(ItemCreateSchema):
+    texte = validators.String()
+
+
+class DiversViews(ItemViews):
+    model = Divers
+    schema_add = DiversCreateSchema
+    schema_update = DiversCreateSchema

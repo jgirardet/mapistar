@@ -1,17 +1,23 @@
 Todo
 ****
 
+
+
 Todo vers 1.0
 ===============
+
+* à terminer 
+
+    - test de divers
 
 * Bug:
 
     - requete non invalid si field en trop
+    - place dans item inutil
 
 * Patient:
     - revoir les données accessoires
     - schema email
-    - permission effacer patient
 
 * User :
     - type : médecin, secrétaire ...

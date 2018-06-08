@@ -6,7 +6,14 @@ from apistar import exceptions
 from pony.orm import ObjectNotFound
 
 from mapistar.exceptions import MapistarProgrammingError
-from mapistar.utils import DicoMixin, SetMixin, check_config, get_or_404, import_models
+from mapistar.utils import (
+    DicoMixin,
+    SetMixin,
+    check_config,
+    get_or_404,
+    import_models,
+    NameMixin,
+)
 
 
 class TestCheckConfg:
@@ -104,3 +111,21 @@ def test_set_mixin(mocker):
     with pytest.raises(AttributeError) as exc:
         SetMixin.set(a, **{"un": 1, "trois": 3})
     assert str(exc.value) == "trois n'est pas updatable"
+
+
+def test_name_mixin(mocker):
+    m = NameMixin
+    m.__name__ = "Hello"
+    assert m.__name__ == "Hello"
+    assert m.name == "Hello"
+    assert m.url_name == "hellos"
+
+    m.__name__ = "Hellos"
+    assert m.name == "Hellos"
+    assert m.url_name == "hellos"
+    m.__name__ = "Hellox"
+    assert m.name == "Hellox"
+    assert m.url_name == "hellox"
+    # assert NameMixin.name(m) == "NameMixin"
+    # assert m.url_name == "namemixins"
+    # assert type(m.__name__) == "1"
