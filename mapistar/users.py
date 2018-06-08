@@ -7,6 +7,7 @@ from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
 from apistar_jwt import JWTUser
 from mapistar.utils import get_or_404
+import random
 
 # mapistar
 from mapistar.base_db import db
@@ -105,6 +106,18 @@ class User(db.Entity):
 
         self.pwd = generate_password_hash(new1)
 
+    def get_new_password(self):
+        alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        pw_length = 10
+        mypw = ""
+
+        for i in range(pw_length):
+            next_index = random.randrange(len(alphabet))
+            mypw = mypw + alphabet[next_index]
+
+        self.password = mypw
+        return mypw
+
 
 class LoginSchema(types.Type):
     username = validators.String(max_length=100)
@@ -162,12 +175,18 @@ def change_password(pwd: ChangePaswordSchema, user: JWTUser) -> dict:
     return {"msg": "password changed"}
 
 
+def get_new_password(user: JWTUser) -> dict:
+    user = get_or_404(User, user.id)
+    return {"password": user.get_new_password()}
+
+
 routes_users = Include(
     url="/users",
     name="users",
     routes=[
         Route(url="/login/", method="POST", handler=login, name="login"),
         Route(url="/change_password/", method="POST", handler=change_password),
+        Route(url="/get_new_password/", method="GET", handler=get_new_password),
         # Route(url="/{id}/", method="PUT", handler=update),
         # # Route(url="/patients/", method="DELETE", handler=delete),
         # Route(url="/{id}/", method="DELETE", handler=delete),

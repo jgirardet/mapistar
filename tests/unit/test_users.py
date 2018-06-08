@@ -64,6 +64,14 @@ class TestModel:
         User.change_password(userm, "old", "new1", "new1")
         assert check_password_hash(userm.pwd, "new1")
 
+    def test_new_password(self, mocker):
+        m = MagicMock(spec=User)
+        a = User.get_new_password(m)
+        assert len(a) == 10
+        alph = set("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        assert set(a) <= alph
+        assert m.password == a
+
 
 cred = MagicMock()
 cred["username"] = "a"

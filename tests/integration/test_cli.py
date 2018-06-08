@@ -293,3 +293,7 @@ def test_users(clij):
     datak = {"old": "j", "new1": "new", "new2": "new"}
     r = clij.post(app.reverse_url("users:change_password"), data=json.dumps(datak))
     assert r.json()["msg"] == "password changed"
+
+    # get get_new_password
+    r = clij.get(app.reverse_url("users:get_new_password"))
+    assert r.json().get("password", None)
