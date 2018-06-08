@@ -286,3 +286,10 @@ def test_permissions(clij, clik, ponydb):
         a.created = a.created - timedelta(days=1)
     r = clik.delete(app.reverse_url("ordonnances:delete", acte_id=16))
     assert r.json() == "Un acte ne peut être modifié en dehors du jours même"
+
+
+def test_users(clij):
+    # change password
+    datak = {"old": "j", "new1": "new", "new2": "new"}
+    r = clij.post(app.reverse_url("users:change_password"), data=json.dumps(datak))
+    assert r.json()["msg"] == "password changed"

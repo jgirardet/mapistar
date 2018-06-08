@@ -5,6 +5,8 @@ from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
+from apistar_jwt import JWTUser
+from mapistar.utils import get_or_404
 
 # mapistar
 from mapistar.base_db import db
@@ -92,8 +94,16 @@ class User(db.Entity):
             statut=statut,
             actif=actif,
         )
-        # user.permissions = UserPermissions(user=user)
         return user
+
+    def change_password(self, old, new1, new2):
+        if not self.check_password(old):
+            raise exceptions.Forbidden("L'ancien mot de passe de correspond pas")
+
+        if new1 != new2:
+            raise exceptions.Forbidden("Les mots de passes ne correspondent pas")
+
+        self.pwd = generate_password_hash(new1)
 
 
 class LoginSchema(types.Type):
@@ -137,12 +147,27 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
     return token
 
 
+class ChangePaswordSchema(types.Type):
+    old = validators.String()
+    new1 = validators.String(max_length=100)
+    new2 = validators.String(max_length=100)
+
+
+def change_password(pwd: ChangePaswordSchema, user: JWTUser) -> dict:
+    """
+    Update users password
+    """
+    user = get_or_404(User, user.id)
+    user.change_password(**pwd)
+    return {"msg": "password changed"}
+
+
 routes_users = Include(
     url="/users",
     name="users",
     routes=[
         Route(url="/login/", method="POST", handler=login, name="login"),
-        # Route(url="/", method="GET", handler=liste),
+        Route(url="/change_password/", method="POST", handler=change_password),
         # Route(url="/{id}/", method="PUT", handler=update),
         # # Route(url="/patients/", method="DELETE", handler=delete),
         # Route(url="/{id}/", method="DELETE", handler=delete),

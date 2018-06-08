@@ -10,6 +10,5 @@ UserC = TypeVar("UserC")
 
 
 class UserComponent(Component):
-
     def resolve(self, user: JWTUser) -> UserC:
         return get_or_404(User, user.id)
