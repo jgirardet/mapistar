@@ -16,16 +16,15 @@ class TestPatientModel:
         assert a.nom == "Nom"
 
     def test_before_insert(self, mocker):
-        a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
+        a = mocker.MagicMock(spec=Patient, **{"prenom": "prenom", "nom": "nom"})
         Patient.before_insert(a)
 
         a._capwords.assert_called_once()
         assert a.alive is True
 
     def test_before_update(self, mocker):
-        a = mocker.Mock()
+        a = mocker.MagicMock(spec=Patient)
         Patient.before_update(a)
-
         a._capwords.assert_called_once()
 
     def test_repr(self, mocker):

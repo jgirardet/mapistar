@@ -1,6 +1,8 @@
 # Standard Libraries
 import importlib
 from datetime import date, datetime
+from string import capwords
+
 
 # Third Party Libraries
 from apistar.exceptions import NotFound
@@ -116,3 +118,25 @@ class SetMixin:
                 raise AttributeError(f"{item} n'est pas updatable")
 
         super().set(**kwargs)
+
+
+class CapWordsMixin:
+    def _capwords(self):
+        """
+        Majusculise la première lettre
+        """
+
+        self.nom = capwords(self.nom)
+        self.prenom = capwords(self.prenom)
+
+    def before_insert(self):
+        """
+        * Nom et Prenom sont Majsuculisés
+        """
+        self._capwords()
+
+    def before_update(self):
+        """
+        * Nom et Prénom sont Majsuculisés
+        """
+        self._capwords()

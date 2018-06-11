@@ -7,8 +7,8 @@ Todo vers 1.0
 ===============
 
 * à terminer 
-
-    - annuaire
+    -  corriger les test fail de befiore insert
+    -  tester séparément test utils
     - Avis
 
 

@@ -1,6 +1,5 @@
 # Standard Libraries
 from datetime import date
-from string import capwords
 from typing import List
 
 # Third Party Libraries
@@ -12,7 +11,7 @@ from mapistar.base_db import db
 from mapistar.users import User
 
 # from mapistar.db import db
-from .utils import DicoMixin, get_or_404
+from .utils import DicoMixin, get_or_404, CapWordsMixin
 
 MAX_LENGTH = {
     "nom": 100,
@@ -30,7 +29,7 @@ SEXE = ["f", "m"]
 MAX = {"cp": 10000000}
 
 
-class Patient(db.Entity, DicoMixin):
+class Patient(db.Entity, DicoMixin, CapWordsMixin):
     """
     Entity Patient
 
@@ -67,27 +66,13 @@ class Patient(db.Entity, DicoMixin):
         """
         return f"[Patient: {self.prenom} {self.nom}]"
 
-    def _capwords(self):
-        """
-        Majusculise la première lettre
-        """
-
-        self.nom = capwords(self.nom)
-        self.prenom = capwords(self.prenom)
-
-    def before_insert(self):
-        """
-        * La patient est spécifié vivant.
-        * Nom et Prenom sont Majsuculisés
-        """
-        self.alive = True
-        self._capwords()
-
-    def before_update(self):
-        """
-        * Nom et Prénom sont Majsuculisés
-        """
-        self._capwords()
+    # def before_insert(self):
+    #     """
+    #     * La patient est spécifié vivant.
+    #     * Nom et Prenom sont Majsuculisés
+    #     """
+    #     CapWordsMixin.before_insert(self)
+    #     self.alive = True
 
 
 """
