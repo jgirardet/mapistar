@@ -1,8 +1,9 @@
 # Third Party Libraries
 import random
+from typing import Union
 
 import pendulum
-from apistar import Include, Route, exceptions, types, validators, Component, http
+from apistar import Component, Include, Route, exceptions, http, types, validators
 from apistar_jwt import JWTUser
 from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT
@@ -11,10 +12,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import get_or_404, DicoMixin
 from mapistar.exceptions import MapistarForbidden
-
-from typing import Union
+from mapistar.utils import DicoMixin, get_or_404
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 

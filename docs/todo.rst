@@ -7,9 +7,6 @@ Todo vers 1.0
 ===============
 
 * à terminer 
-* user create user view
-* createadmin user
-*check permissions actif
 
 * Bug:
 
@@ -23,6 +20,8 @@ Todo vers 1.0
 * User :
     - type : médecin, secrétaire ...
     - Etat civil
+
+* script initial, migrations
 
 
 * ordonnances

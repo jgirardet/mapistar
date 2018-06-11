@@ -13,10 +13,10 @@ def many(nombre, factory, **kwargs):
 def generate_db():
     j = userf(username="j")
     userf(username="k")
-    l = userf(username="l")
+    ll = userf(username="l")
     flush()
     j.permissions.del_patient = True
-    l.is_admin = True
+    ll.is_admin = True
     flush()
 
     many(8, patientf)

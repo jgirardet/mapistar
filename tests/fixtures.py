@@ -6,11 +6,10 @@ from unittest.mock import MagicMock
 import pytest
 from apistar.test import TestClient
 
-# mapistar
-from mapistar.users import User
 from mapistar.actes.ordo_items import Item
 from mapistar.actes.ordonnances import Ordonnance
 from mapistar.app import app
+from mapistar.users import User
 from tests import factory
 
 

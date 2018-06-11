@@ -2,8 +2,7 @@
 import pytest
 from apistar import App, test
 
-from mapistar.app import app as main_app
-from mapistar.app import components, routes
+from mapistar.app import app as main_app, components, routes
 from tests.factory import *  # noqa: F403, F401
 from tests.fixtures import *  # noqa: F403, F401
 
