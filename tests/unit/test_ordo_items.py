@@ -49,10 +49,11 @@ class TestItemViews:
 
     def test_update_item(self, mocker, mitem):
         upd = {"modified": "123456"}
+        mitem.dico = {"json": "response"}
         t = ItemTest.update_item()(47, upd, mitem)
 
         mitem.set.assert_called_with(modified="123456")
-        assert t == mitem.dico
+        assert t.content == b'{"json":"response"}'
 
 
 class TestItemModel:

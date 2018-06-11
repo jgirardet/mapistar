@@ -91,7 +91,8 @@ class NameMixin:
 
     @classproperty
     def url_name(self) -> str:
-        """url du modèle"""
+        """url du modèle
+        add s ou x sauf si déjà s ou x """
         return (
             self.__name__.lower()
             if self.__name__[-1] in ["s", "x"]

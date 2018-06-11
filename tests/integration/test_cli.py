@@ -249,7 +249,7 @@ def test_ordonnance(clij, clik):
     r = clik.put(
         app.reverse_url("medicaments:update_item", item_id=3), data=json.dumps(upd)
     )
-    assert r.status_code == 200
+    assert r.status_code == 201
     assert r.json()["duree"] == 32
 
     # test item delete  first
@@ -281,13 +281,23 @@ def test_ordonnance(clij, clik):
     # test preciptions Libres
     ##################
 
-    # test new item
+    # test new divers
     r = clij.post(
         app.reverse_url("divers:add_item", acte_id=20),
         data=json.dumps({"texte": "aaaa"}),
     )
     assert r.status_code == 201
     assert r.json()["ordonnance"] == 20
+    new_divers = r.json()["id"]
+
+    # test update divers
+    r = clij.put(
+        app.reverse_url("divers:update_item", item_id=new_divers),
+        data=json.dumps({"texte": "zerzer"}),
+    )
+    assert r.status_code == 201
+
+    # assert r.json()["ordonnance"] ==
 
 
 def test_permissions(clij, clik, ponydb):

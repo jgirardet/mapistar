@@ -62,10 +62,10 @@ class ItemViews:
     def update_item(cls) -> Callable:
         def update_item(
             item_id: int, new_data: cls.schema_update, obj: ActesPermissions
-        ):
+        ) -> http.JSONResponse:
             # obj = get_or_404(cls.model, acte_id)
             obj.set(**new_data)
-            return obj.dico
+            return http.JSONResponse(obj.dico, status_code=201)
 
         update_item.__doc__ = f"""Modifie un Item de type {cls.model.name}"""
         return update_item
