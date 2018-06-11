@@ -5,12 +5,13 @@ from unittest.mock import MagicMock
 # Third Party Libraries
 import pytest
 from apistar.test import TestClient
-from tests import factory
 
 # mapistar
+from mapistar.users import User
 from mapistar.actes.ordo_items import Item
 from mapistar.actes.ordonnances import Ordonnance
 from mapistar.app import app
+from tests import factory
 
 
 @pytest.fixture(scope="function")
@@ -26,6 +27,11 @@ def mordo():
 @pytest.fixture(scope="function")
 def mitem(ent):
     return MagicMock(spec=Item, return_value=ent)
+
+
+@pytest.fixture(scope="function")
+def muser(request):
+    return MagicMock(spec=User)
 
 
 @pytest.fixture(scope="function")
@@ -78,6 +84,19 @@ def clik():
     r = cli.post(
         app.reverse_url("users:login"),
         data=json.dumps({"username": "k", "password": "j"}),
+    )
+    token = r.content.decode()
+    cli.headers.update({"Authorization": f"Bearer {token}"})
+    return cli
+
+
+@pytest.fixture(scope="module")
+def clil():
+    "admin fixture"
+    cli = TestClient(app)
+    r = cli.post(
+        app.reverse_url("users:login"),
+        data=json.dumps({"username": "l", "password": "j"}),
     )
     token = r.content.decode()
     cli.headers.update({"Authorization": f"Bearer {token}"})

@@ -1,16 +1,20 @@
 # Third Party Libraries
+import random
+
 import pendulum
-from apistar import Include, Route, exceptions, types, validators
+from apistar import Include, Route, exceptions, types, validators, Component, http
+from apistar_jwt import JWTUser
 from apistar_jwt.decorators import anonymous_allowed
 from apistar_jwt.token import JWT
 from pony import orm
 from werkzeug.security import check_password_hash, generate_password_hash
-from apistar_jwt import JWTUser
-from mapistar.utils import get_or_404
-import random
 
 # mapistar
 from mapistar.base_db import db
+from mapistar.utils import get_or_404, DicoMixin
+from mapistar.exceptions import MapistarForbidden
+
+from typing import Union
 
 STATUT = ["docteur", "secrétaire", "interne", "remplaçant"]
 
@@ -20,7 +24,7 @@ class UserPermissions(db.Entity):
     del_patient = orm.Required(bool, default=False)
 
 
-class User(db.Entity):
+class User(db.Entity, DicoMixin):
     """
     Entity Utilisateur
 
@@ -39,15 +43,23 @@ class User(db.Entity):
     nom = orm.Required(str)
     prenom = orm.Required(str)
     actes = orm.Set("Acte")
-    actif = orm.Required(bool, default=True)
+    actif = orm.Required(bool, default=False)
     statut = orm.Required(str, py_check=lambda x: x in STATUT)
     permissions = orm.Optional(UserPermissions)
+    is_admin = orm.Required(bool, default=False)
 
     def __repr__(self):
         """
         nice printing Firstname Name
         """
         return f"[User: {self.prenom} {self.nom}]"
+
+    @property
+    def dico(self):
+        """dico with password hidden"""
+        dico = super().dico
+        dico["password"] = "xxxxxxxxxx"
+        return dico
 
     def check_password(self, password: str) -> bool:
         """ Compare un mot de passe donné au mot de passe enregistré.
@@ -73,6 +85,7 @@ class User(db.Entity):
         prenom: str,
         statut: str,
         actif: bool = True,
+        is_admin: bool = False,
     ) -> "User":
         """ Ajoute un utilisateur
 
@@ -94,6 +107,7 @@ class User(db.Entity):
             prenom=prenom,
             statut=statut,
             actif=actif,
+            is_admin=is_admin,
         )
         return user
 
@@ -119,6 +133,11 @@ class User(db.Entity):
         return mypw
 
 
+class UserComponent(Component):
+    def resolve(self, user: JWTUser) -> User:
+        return get_or_404(User, user.id)
+
+
 class LoginSchema(types.Type):
     username = validators.String(max_length=100)
     password = validators.String(max_length=100)
@@ -139,7 +158,7 @@ def login(credentials: LoginSchema, jwt: JWT) -> str:
         token
     """
 
-    user = User.get(username=credentials["username"])
+    user = db.User.get(username=credentials["username"])
 
     if not user or not user.check_password(credentials["password"]):
         raise exceptions.Forbidden("Incorrect username or password.")
@@ -180,6 +199,27 @@ def get_new_password(user: JWTUser) -> dict:
     return {"password": user.get_new_password()}
 
 
+class NewUserSchema(types.Type):
+    username = validators.String()
+    password = validators.String()
+    nom = validators.String()
+    prenom = validators.String()
+    statut = validators.String(enum=STATUT)
+    actif = validators.Boolean(default=False)
+
+
+def create_user(
+    data: NewUserSchema, user: User
+) -> Union[http.JSONResponse, http.HTMLResponse]:
+    """ajouter un nouvel utilisateur"""
+
+    if user.is_admin:
+        user = db.User.create_user(**data)
+        return http.JSONResponse(user.dico, status_code=201)
+    else:
+        raise MapistarForbidden("Seul un admin peut ajouter un utilisateur")
+
+
 routes_users = Include(
     url="/users",
     name="users",
@@ -190,9 +230,10 @@ routes_users = Include(
         # Route(url="/{id}/", method="PUT", handler=update),
         # # Route(url="/patients/", method="DELETE", handler=delete),
         # Route(url="/{id}/", method="DELETE", handler=delete),
-        # Route(url="/{id}/", method="GET", handler=get),
+        Route(url="/create_user/", method="POST", handler=create_user),
     ],
 )
+
 """
 # MEDECIN = "medecin"
 # SECRETAIRE = "secretaire"

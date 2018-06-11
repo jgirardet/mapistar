@@ -1,4 +1,5 @@
 from pony.orm import db_session, flush
+
 from tests.factory import medicamentf, observationf, ordonnancef, patientf, userf
 
 
@@ -12,8 +13,10 @@ def many(nombre, factory, **kwargs):
 def generate_db():
     j = userf(username="j")
     userf(username="k")
+    l = userf(username="l")
     flush()
     j.permissions.del_patient = True
+    l.is_admin = True
     flush()
 
     many(8, patientf)

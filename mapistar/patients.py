@@ -9,7 +9,7 @@ from pony.orm import Optional, Required, Set
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.components import UserC
+from mapistar.users import User
 
 # from mapistar.db import db
 from .utils import DicoMixin, get_or_404
@@ -161,7 +161,7 @@ def one(patient_id: int) -> dict:
     return get_or_404(db.Patient, patient_id).dico
 
 
-def delete(patient_id: int, user: UserC) -> dict:
+def delete(patient_id: int, user: User) -> dict:
     """
     delete un patient
 
@@ -173,7 +173,7 @@ def delete(patient_id: int, user: UserC) -> dict:
         NotFound si non trouvé
     """
     pat = get_or_404(db.Patient, patient_id)
-    if user.permissions.del_patient:
+    if user.is_admin or user.permissions.del_patient:
         pat.delete()
         return {"msg": "delete success"}
     else:

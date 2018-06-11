@@ -7,7 +7,9 @@ Todo vers 1.0
 ===============
 
 * à terminer 
-
+* user create user view
+* createadmin user
+*check permissions actif
 
 * Bug:
 

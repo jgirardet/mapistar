@@ -26,3 +26,9 @@ class MapistarBadRequest(MapistarException, exceptions.BadRequest):
     Raised en cas de mauvaise configuration du code.
     Equivalent d'un assert
     """
+
+
+class MapistarForbidden(MapistarException, exceptions.Forbidden):
+    """
+    Utilisateur non authorisée
+    """

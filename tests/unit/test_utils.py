@@ -8,11 +8,11 @@ from pony.orm import ObjectNotFound
 from mapistar.exceptions import MapistarProgrammingError
 from mapistar.utils import (
     DicoMixin,
+    NameMixin,
     SetMixin,
     check_config,
     get_or_404,
     import_models,
-    NameMixin,
 )
 
 

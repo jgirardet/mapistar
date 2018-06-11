@@ -4,11 +4,10 @@ from unittest.mock import MagicMock
 # Third Party Libraries
 import pytest
 from apistar import exceptions
+from werkzeug.security import check_password_hash
 
 # mapistar
 from mapistar.users import User, login
-
-from werkzeug.security import check_password_hash
 
 
 class TestModel:
@@ -32,6 +31,7 @@ class TestModel:
             prenom="prenom",
             statut="docteur",
             actif=True,
+            is_admin=False,
         )
         assert u == "user"
 
@@ -71,6 +71,10 @@ class TestModel:
         alph = set("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         assert set(a) <= alph
         assert m.password == a
+
+    def test_dico(self, muser):
+        muser.to_dict.return_value = {"username": "hehe", "password": "haha"}
+        assert User.dico.fget(muser) == {"username": "hehe", "password": "xxxxxxxxxx"}
 
 
 cred = MagicMock()
