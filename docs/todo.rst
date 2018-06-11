@@ -8,7 +8,6 @@ Todo vers 1.0
 
 * à terminer 
 
-    - test de divers
 
 * Bug:
 
@@ -23,12 +22,8 @@ Todo vers 1.0
     - type : médecin, secrétaire ...
     - Etat civil
 
-* Actes :
-
-* Presription libre
 
 * ordonnances
-    - medicaments base (sans controle)
     - monographie
 
 * Laboratoires
@@ -41,9 +36,6 @@ Todo vers 1.0
 
     - entry point
     - git pre commit
-
-* integration test
-    - fake DB
 
 * logging
 

@@ -296,8 +296,12 @@ def test_ordonnance(clij, clik):
         data=json.dumps({"texte": "zerzer"}),
     )
     assert r.status_code == 201
+    assert r.json()["texte"] == "zerzer"
 
-    # assert r.json()["ordonnance"] ==
+    # test _del divers
+    r = clij.delete(app.reverse_url("divers:delete_item", item_id=new_divers))
+    assert r.status_code == 200
+    assert r.json() == {"id": new_divers, "deleted": True}
 
 
 def test_permissions(clij, clik, ponydb):
