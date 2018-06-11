@@ -8,6 +8,10 @@ Todo vers 1.0
 
 * à terminer 
 
+    - annuaire
+    - Avis
+
+
 * Bug:
 
     - requete non invalid si field en trop
