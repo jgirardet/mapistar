@@ -314,7 +314,7 @@ def test_permissions(clij, clik, ponydb):
     assert r.json() == "Un acte ne peut être modifié en dehors du jours même"
 
 
-def test_users(clij):
+def test_users(clij, clil):
     # change password
     datak = {"old": "j", "new1": "new", "new2": "new"}
     r = clij.post(app.reverse_url("users:change_password"), data=json.dumps(datak))
@@ -323,3 +323,28 @@ def test_users(clij):
     # get get_new_password
     r = clij.get(app.reverse_url("users:get_new_password"))
     assert r.json().get("password", None)
+
+    # create user not admin
+    datak = {
+        "username": "aa",
+        "password": "j",
+        "nom": "ihoj",
+        "prenom": "lij",
+        "statut": "docteur",
+        "actif": True,
+    }
+    r = clij.post(app.reverse_url("users:create_user"), data=json.dumps(datak))
+    assert r.json() == "Seul un admin peut ajouter un utilisateur"
+    assert r.status_code == 403
+
+    # create user admin
+    datak = {
+        "username": "aa",
+        "password": "j",
+        "nom": "ihoj",
+        "prenom": "lij",
+        "statut": "docteur",
+        "actif": True,
+    }
+    r = clil.post(app.reverse_url("users:create_user"), data=json.dumps(datak))
+    assert r.status_code == 201

@@ -8,7 +8,6 @@ Todo vers 1.0
 
 * à terminer 
 
-
 * Bug:
 
     - requete non invalid si field en trop
@@ -21,6 +20,8 @@ Todo vers 1.0
 * User :
     - type : médecin, secrétaire ...
     - Etat civil
+
+* script initial, migrations
 
 
 * ordonnances

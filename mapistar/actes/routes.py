@@ -1,5 +1,5 @@
 from .observations import ObservationViews
-from .ordo_items import MedicamentViews, DiversViews
+from .ordo_items import DiversViews, MedicamentViews
 from .ordonnances import OrdonnanceViews
 
 routes_observations = ObservationViews.do_routes()
