@@ -16,6 +16,7 @@ from mapistar.theso import routes_theso
 from mapistar.users import UserComponent, routes_users
 from mapistar.utils import check_config
 
+
 check_config(settings)
 
 routes = [
@@ -29,13 +30,13 @@ routes = [
 ]
 components = [JWT(settings.JWT), ActesPermissionsComponent(), UserComponent()]
 
-
 app = App(
     routes=routes,
     components=components,
     event_hooks=[PonyDBSession(), IsAuthenticated()],
     schema_url="/schemas/",
 )
+
 """
 curl -H "Content-Type: application/json" -X POST -d '{"nom":"xyz","prenom":"xyz", "ddn":"1234-12-12"}'
 http://localhost:8080/create/
