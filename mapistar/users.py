@@ -26,7 +26,7 @@ class UserPermissions(db.Entity):
     del_patient = orm.Required(bool, default=False)
 
 
-class User(db.Entity, DicoMixin):
+class User(DicoMixin, db.Entity):
     """
     Entity Utilisateur
 

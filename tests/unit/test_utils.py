@@ -13,6 +13,7 @@ from mapistar.utils import (
     get_or_404,
     import_models,
     SetMixin,
+    CapWordsMixin,
 )
 
 
@@ -129,3 +130,23 @@ def test_name_mixin(mocker):
     # assert NameMixin.name(m) == "NameMixin"
     # assert m.url_name == "namemixins"
     # assert type(m.__name__) == "1"
+
+
+def test_capwordsmixine(mocker):
+    c = CapWordsMixin
+
+    # _capwords
+    a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
+    c._capwords(a)
+    assert a.prenom == "Prenom"
+    assert a.nom == "Nom"
+
+    # before insert
+    e = MagicMock()
+    c.before_insert(e)
+    e._capwords.assert_called_once()
+
+    # before insert
+    e = MagicMock()
+    c.before_update(e)
+    e._capwords.assert_called_once()

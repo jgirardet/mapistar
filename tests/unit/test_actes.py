@@ -33,6 +33,12 @@ class TestActeModel:
         Acte.before_update(f)
         assert m.utcnow.return_value is f.modified
 
+    def test_set_mixin_called(self, mocker):
+        f = mocker.MagicMock(spec=Acte, **{"updatable": ["rien"]})
+        with pytest.raises(AttributeError) as exc:
+            Acte.set(f, **{"omk": "mok"})
+        assert str(exc.value) == "omk n'est pas updatable"
+
 
 acte = Mock(spec=Acte)
 mock_dico = Mock(**{"dico": {"le": "dico"}})

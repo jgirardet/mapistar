@@ -85,6 +85,12 @@ class TestItemModel:
 
         mordo.before_update.assert_called()
 
+    def test_set_mixin_called(self, mocker):
+        f = mocker.MagicMock(spec=Item, **{"updatable": ["rien"]})
+        with pytest.raises(AttributeError) as exc:
+            Item.set(f, **{"omk": "mok"})
+        assert str(exc.value) == "omk n'est pas updatable"
+
     @pytest.mark.pony
     def test_item_update_ordonnnace(self, ordonnance, ponydb):
         debut = ordonnance.modified

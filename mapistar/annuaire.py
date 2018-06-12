@@ -15,7 +15,7 @@ MAX_LENGTH = {
 MAX = {"cp": 10000000}
 
 
-class Praticien(db.Entity, DicoMixin):
+class Praticien(DicoMixin, db.Entity):
     """
     Entity Praticien
 

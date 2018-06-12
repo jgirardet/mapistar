@@ -9,12 +9,6 @@ attrs = ("name", "firstname")
 
 
 class TestPatientModel:
-    def test_capswords(self, mocker):
-        a = mocker.Mock(**{"prenom": "prenom", "nom": "nom"})
-        Patient._capwords(a)
-        assert a.prenom == "Prenom"
-        assert a.nom == "Nom"
-
     def test_before_insert(self, mocker):
         a = mocker.MagicMock(spec=Patient, **{"prenom": "prenom", "nom": "nom"})
         Patient.before_insert(a)

@@ -29,7 +29,7 @@ SEXE = ["f", "m"]
 MAX = {"cp": 10000000}
 
 
-class Patient(db.Entity, DicoMixin, CapWordsMixin):
+class Patient(CapWordsMixin, DicoMixin, db.Entity):
     """
     Entity Patient
 
@@ -66,13 +66,13 @@ class Patient(db.Entity, DicoMixin, CapWordsMixin):
         """
         return f"[Patient: {self.prenom} {self.nom}]"
 
-    # def before_insert(self):
-    #     """
-    #     * La patient est spécifié vivant.
-    #     * Nom et Prenom sont Majsuculisés
-    #     """
-    #     CapWordsMixin.before_insert(self)
-    #     self.alive = True
+    def before_insert(self):
+        """
+        * La patient est spécifié vivant.
+        * Nom et Prenom sont Majsuculisés
+        """
+        CapWordsMixin.before_insert(self)
+        self.alive = True
 
 
 """

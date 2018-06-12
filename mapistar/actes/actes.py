@@ -10,7 +10,7 @@ from mapistar.base_db import db
 from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 
-class Acte(db.Entity, DicoMixin, NameMixin, SetMixin):
+class Acte(DicoMixin, NameMixin, SetMixin, db.Entity):
     """
     Base Entity pour les différents actes.
 
