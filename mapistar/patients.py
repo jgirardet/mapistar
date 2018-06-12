@@ -71,7 +71,7 @@ class Patient(CapWordsMixin, DicoMixin, db.Entity):
         * La patient est spécifié vivant.
         * Nom et Prenom sont Majsuculisés
         """
-        CapWordsMixin.before_insert(self)
+        super().before_insert()
         self.alive = True
 
 

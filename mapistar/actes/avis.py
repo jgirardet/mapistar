@@ -8,6 +8,8 @@ from mapistar.actes.actes import ActeCreateSchema
 from .actes import Acte
 from .views import ActesViews
 
+from mapistar.annuaire import Praticien
+
 
 class Avis(Acte):
     """
@@ -17,3 +19,5 @@ class Avis(Acte):
 
     Attributes:
     """
+
+    praticien = orm.Optional(Praticien)

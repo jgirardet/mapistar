@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 
 # modules where to import pony  models
 
-actes_models = ("actes", ("observations", "ordonnances", "ordo_items"))
+actes_models = ("actes", ("observations", "ordonnances", "ordo_items", "avis"))
 
 # models = ("patients", "users", actes_models)
-MODELS = ("patients", "users", actes_models, "theso")
+MODELS = ("patients", "users", actes_models, "theso", "annuaire")
 
 TZ = pendulum.timezone("Europe/Paris")
 
