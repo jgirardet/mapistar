@@ -91,19 +91,25 @@ class TestItemModel:
             Item.set(f, **{"omk": "mok"})
         assert str(exc.value) == "omk n'est pas updatable"
 
-    @pytest.mark.pony
-    def test_item_update_ordonnnace(self, ordonnance, ponydb):
-        debut = ordonnance.modified
-        i = ponydb.Item(ordonnance=ordonnance)
-        i.flush()
-        after_insert = ordonnance.modified
-        i.place = 2
-        i.flush()
-        after_modif = ordonnance.modified
-        i.delete()
-        ordonnance.flush()
-        after_delete = ordonnance.modified
-        assert debut < after_insert < after_modif < after_delete
+    # @pytest.mark.pony
+    # def test_item_update_ordonnnace(self, ordonnance, ponydb):
+    #     debut = ordonnance.modified
+    #     i = ponydb.Item(ordonnance=ordonnance)
+    #     i.flush()
+    #     after_insert = ordonnance.modified
+    #     i.place = 2
+    #     i.flush()
+    #     after_modif = ordonnance.modified
+    #     i.delete()
+    #     ordonnance.flush()
+    #     after_delete = ordonnance.modified
+    #     assert debut < after_insert < after_modif < after_delete
+
+    def test_update_ordonnace(self, mocker, mitem):
+        Item.after_insert(mitem)
+        Item.before_delete(mitem)
+        Item.before_update(mitem)
+        assert mitem.ordonnance.before_update.call_count == 3
 
 
 class TestMedicamentModel:

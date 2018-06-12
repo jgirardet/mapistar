@@ -2,9 +2,14 @@ Todo vers 1.0
 ===============
 
 * à terminer 
-    □ corriger les test fail de befiore insert
+    √ corriger les test fail de befiore insert
     √ tester séparément test utils
     □ Avis
+    □ Annuaire
+        □ chanps
+        □ serializer
+        □ view
+
 
 * Bug:
 

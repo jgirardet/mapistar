@@ -11,7 +11,7 @@ from mapistar.utils import DicoMixin, NameMixin, SetMixin
 
 class Item(DicoMixin, NameMixin, SetMixin, db.Entity):
     ordonnance = orm.Required("Ordonnance")
-    place = orm.Optional(int)
+    # place = orm.Optional(int)
 
     def after_insert(self):
         self.ordonnance.before_update()  # modifief = created
