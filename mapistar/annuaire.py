@@ -35,15 +35,19 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
 
     """
 
-    nom = Required(str, MAX_LENGTH["nom"])
-    prenom = Required(str, MAX_LENGTH["prenom"])
-    rpps = Optional(int)
+    civilite = Optional(str)
+    nom = Optional(str, MAX_LENGTH["nom"])
+    prenom = Optional(str, MAX_LENGTH["prenom"])
+    rpps = Optional(str)
     rue = Optional(str, MAX_LENGTH["rue"])
-    cp = Optional(int, max=MAX["cp"])
+    cp = Optional(str)
     ville = Optional(str, MAX_LENGTH["ville"])
     tel = Optional(str, MAX_LENGTH["tel"])
     portable = Optional(str, MAX_LENGTH["tel"])
     email = Optional(str, MAX_LENGTH["email"])
+    mssante = Optional(str, MAX_LENGTH["email"])
+    profession = Optional(str)
+    specialite = Optional(str)
 
     avis = Set("Avis")
 
@@ -52,6 +56,31 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
         nice printing Firstname Name
         """
         return f"[Praticien: {self.prenom} {self.nom}]"
+
+    @classmethod
+    def from_annuaire(cls, data):
+        """
+        Creer une entrée annuaire à partire de annuaire sante
+        """
+        correspondance = {
+            "civilite": 4,
+            "nom": 5,
+            "prenom": 6,
+            "rpps": 1,
+            "rue": 28,
+            "cp": 31,
+            "ville": 1,
+            "tel": 36,
+            "portable": 37,
+            "email": 39,
+            "mssante": 40,
+            "profession": 8,
+            "specialite": 12,
+        }
+
+        checked = {k: data[v] for k, v in correspondance.items()}
+
+        return Praticien(**checked)
 
 
 # class PraticienCreateSchema(types.Type):
@@ -132,3 +161,48 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
 # 45 Libellé Département (structure)
 # 46 Ancien identifiant de la structure
 # 47 Autorité d'enregistrement
+
+"""
+cat18 tout poplation
+0 Type d'identifiant PP
+1 Identifiant PP
+2 Identification nationale PP
+3 Code civilité exercice
+4 Libellé civilité exercice
+5 Nom d'exercice
+6 Prénom d'exercice
+7 Code profession
+8 Libellé profession
+9 Code catégorie professionnelle
+10 Libellé catégorie professionnelle
+11 Code savoir-faire
+12 Libellé savoir-faire
+13 Code type savoir-faire
+14 Libellé type savoir-faire
+15 Numéro SIRET site
+16 Numéro SIREN site
+17 Numéro FINESS site
+18 Numéro FINESS établissement juridique
+19 Raison sociale site
+20 Enseigne commerciale site
+21 Identifiant structure
+22 Complément destinataire (coord. structure)
+23 Complément point géographique (coord. structure)
+24 Numéro Voie (coord. structure)
+25 Indice répétition voie (coord. structure)
+26 Code type de voie (coord. structure)
+27 Libellé type de voie (coord. structure)
+28 Libellé Voie (coord. structure)
+29 Mention distribution (coord. structure)
+30 Bureau cedex (coord. structure)
+31 Code postal (coord. structure)
+32 Code commune (coord. structure)
+33 Libellé commune (coord. structure)
+34 Code pays (coord. structure)
+35 Libellé pays (coord. structure)
+36 Téléphone (coord. structure)
+37 Téléphone 2 (coord. structure)
+38 Télécopie (coord. structure)
+39 Adresse e-mail (coord. structure)
+40 Adresse BAL MSSanté
+"""
