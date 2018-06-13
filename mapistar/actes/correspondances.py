@@ -11,7 +11,7 @@ from .views import ActesViews
 from mapistar.annuaire import Praticien
 
 
-class Avis(Acte):
+class Correspondance(Acte):
     """
     Entity Avis
 
@@ -21,3 +21,7 @@ class Avis(Acte):
     """
 
     praticien = orm.Optional(Praticien)
+
+
+class Avis(Correspondance):
+    body = orm.String()

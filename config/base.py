@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 
 # modules where to import pony  models
 
-actes_models = ("actes", ("observations", "ordonnances", "ordo_items", "avis"))
+actes_models = (
+    "actes",
+    ("observations", "ordonnances", "ordo_items", "correspondances"),
+)
 
 # models = ("patients", "users", actes_models)
 MODELS = ("patients", "users", actes_models, "theso", "annuaire")
