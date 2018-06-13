@@ -49,7 +49,7 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
     profession = Optional(str)
     specialite = Optional(str)
 
-    avis = Set("Avis")
+    avis = Set("Correspondance")
 
     def __repr__(self):
         """
@@ -61,15 +61,16 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
     def from_annuaire(cls, data):
         """
         Creer une entrée annuaire à partire de annuaire sante
+        cat18 tout poplation
+
         """
         correspondance = {
             "civilite": 4,
             "nom": 5,
             "prenom": 6,
             "rpps": 1,
-            "rue": 28,
             "cp": 31,
-            "ville": 1,
+            "ville": 33,
             "tel": 36,
             "portable": 37,
             "email": 39,
@@ -79,6 +80,9 @@ class Praticien(CapWordsMixin, DicoMixin, db.Entity):
         }
 
         checked = {k: data[v] for k, v in correspondance.items()}
+
+        # ajoute_type_rue
+        checked["rue"] = " ".join((data[27], data[28]))
 
         return Praticien(**checked)
 

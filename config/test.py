@@ -3,11 +3,14 @@ import os  # noqa: F401
 
 from .base import *  # noqa: F401,F403
 
+
 print("Testing Config")
 
 JWT = {"JWT_SECRET": "a"}
 
 JWT_DURATION = 10
+
+STATIC_DIR  = "/tmp/mapistar/"
 
 # sqlite memory
 DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}

@@ -13,11 +13,13 @@ actes_models = (
 )
 
 # models = ("patients", "users", actes_models)
-MODELS = ("patients", "users", actes_models, "theso", "annuaire")
+MODELS = ("patients", "users", actes_models, "theso", "annuaire", "documents")
 
 TZ = pendulum.timezone("Europe/Paris")
 
 JWT_DURATION = 0
+
+STATIC_DIR = ""
 
 env_path = Path(".").parent / ".env"
 load_dotenv(env_path)

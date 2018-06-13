@@ -19,6 +19,9 @@ def check_config(settings):
     if not settings.JWT_DURATION:  # pragma: no cover
         raise MapistarProgrammingError("La durée des JWT doit être précisée")
 
+    if not settings.STATIC_DIR:
+        raise MapistarProgrammingError('STATIC_DIR non configurée')
+
 
 def import_models(module_liste: list):
     """

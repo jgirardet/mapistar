@@ -21,7 +21,11 @@ class Correspondance(Acte):
     """
 
     praticien = orm.Optional(Praticien)
-
+    cor_body = orm.Optional(str)
 
 class Avis(Correspondance):
-    body = orm.String()
+    avis_titre = orm.Optional(str)
+
+
+# class Avis(Correspondance):
+#      = orm.Optional(str)

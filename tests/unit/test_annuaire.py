@@ -65,7 +65,7 @@ class TestModelPraticien:
             "rpps": "10002727377",
             "rue": "ROUTE DE GRASSAC",
             "cp": "16380",
-            "ville": "10002727377",
+            "ville": "Marthon",
             "tel": "",
             "portable": "",
             "email": "",

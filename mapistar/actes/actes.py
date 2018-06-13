@@ -29,6 +29,7 @@ class Acte(DicoMixin, NameMixin, SetMixin, db.Entity):
     owner = orm.Required("User")
     created = orm.Required(datetime, default=datetime.utcnow)
     modified = orm.Optional(datetime)
+    pj = orm.Set('Document')
 
     def before_insert(self):
         """
