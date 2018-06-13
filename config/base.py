@@ -21,5 +21,7 @@ JWT_DURATION = 0
 
 STATIC_DIR = ""
 
+DOCUMENT_DIR = "/tmp"
+
 env_path = Path(".").parent / ".env"
 load_dotenv(env_path)

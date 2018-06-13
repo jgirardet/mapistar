@@ -11,6 +11,7 @@ from mapistar.actes.ordonnances import Ordonnance
 from mapistar.app import app
 from mapistar.users import User
 from tests import factory
+from mapistar.documents import Document
 
 
 @pytest.fixture(scope="function")
@@ -31,6 +32,11 @@ def mitem(ent):
 @pytest.fixture(scope="function")
 def muser(request):
     return MagicMock(spec=User)
+
+
+@pytest.fixture(scope="function")
+def mdocu():
+    return MagicMock(spec=Document)
 
 
 @pytest.fixture(scope="function")

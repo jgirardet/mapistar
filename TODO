@@ -2,8 +2,10 @@ Todo vers 1.0
 ===============
 
 * à terminer 
-    √ corriger les test fail de befiore insert
-    √ tester séparément test utils
+    Document
+        □ lieude save
+        □ check save et commit ok
+        □ response type
     □ Avis
     □ Annuaire
         □ chanps
@@ -60,3 +62,5 @@ Todo vers 1.0
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ √ tester séparément test utils
+ √ corriger les test fail de befiore insert
