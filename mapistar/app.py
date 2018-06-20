@@ -9,7 +9,6 @@ from mapistar.actes.routes import (
     routes_medicaments,
     routes_observations,
     routes_ordonnances,
-    routes_divers,
 )
 from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
@@ -36,6 +35,7 @@ app = App(
     components=components,
     event_hooks=[PonyDBSession(), IsAuthenticated()],
     schema_url="/schemas/",
+    static_dir=settings.STATIC_DIR,
 )
 
 """

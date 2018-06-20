@@ -5,7 +5,7 @@ from simple_settings import settings
 import mimetypes
 import uuid
 from mapistar.utils import get_or_404
-
+from pathlib import Path
 
 AUTHORIZED_CONTENT_TYPE = (
     "application/pdf",
@@ -36,7 +36,15 @@ def get_new_filename(content_type):
     return uuid.uuid4().hex + mimetypes.guess_extension(content_type)
 
 
-def send_document(acte_id: int, data: http.RequestData):
+def get_new_directory(filename):
+    return Path(*filename[:2])
+
+
+def get_new_path(filename):
+    return Path(settings.STATIC_DIR, get_new_directory(filename), filename)
+
+
+def post_document(acte_id: int, data: http.RequestData):
     acte = get_or_404(db.Acte, acte_id)
 
     files = []
@@ -44,7 +52,7 @@ def send_document(acte_id: int, data: http.RequestData):
         if not hasattr(value, "filename"):
             raise exceptions.BadRequest("un fichier doit être envoyé")
 
-        content_type = mimetypes.guess_type(value.filename)
+        content_type = mimetypes.guess_type(value.filename)[0]
         if content_type not in AUTHORIZED_CONTENT_TYPE:
             raise exceptions.BadRequest(
                 f"Extension autorisées : {AUTHORIZED_CONTENT_TYPE}"
@@ -52,12 +60,11 @@ def send_document(acte_id: int, data: http.RequestData):
 
         new_filename = get_new_filename(content_type)
 
-        with open(new_filename, "wb") as f:
-            f.write(value.read())
+        p = Path(get_new_path(new_filename))
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes(value.read())
 
         d = Document(filename=new_filename, content_type=content_type, acte=acte)
-        d.flush()
+        files.append(d)
 
-        files.append({"content_type": content_type, "content": value.read()})
-
-    return {"data": data}
+    return [doc.to_dict() for doc in files]

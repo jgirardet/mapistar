@@ -50,9 +50,9 @@ def user(request):
     return factory.userf()
 
 
-# @pytest.fixture(scope="function")
-# def acte(request):
-#     return factory.actef()
+@pytest.fixture(scope="function")
+def acte(request):
+    return factory.actef()
 
 
 # @pytest.fixture(scope="function")

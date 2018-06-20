@@ -22,6 +22,8 @@ MAX_LENGTH = {
     "tel": 20,
     "email": 100,
 }
+
+
 """ Valeurs maximales pour chaque field"""
 
 SEXE = ["f", "m"]

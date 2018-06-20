@@ -19,9 +19,9 @@ TZ = pendulum.timezone("Europe/Paris")
 
 JWT_DURATION = 0
 
-STATIC_DIR = ""
 
-DOCUMENT_DIR = "/tmp"
+STATIC_DIR = "/tmp/mapistar"
 
+# load env variable
 env_path = Path(".").parent / ".env"
 load_dotenv(env_path)
