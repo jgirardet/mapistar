@@ -61,7 +61,6 @@ def post_document(acte_id: int, data: http.RequestData):
         new_filename = get_new_filename(content_type)
 
         p = Path(get_new_path(new_filename))
-        p.parent.mkdir(parents=True, exist_ok=True)
         p.write_bytes(value.read())
 
         d = Document(filename=new_filename, content_type=content_type, acte=acte)

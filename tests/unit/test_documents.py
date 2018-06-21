@@ -48,14 +48,26 @@ def test_post_document_fail(mdocu, mocker):
 
 
 @pytest.mark.pony
-def test_post_doc_succceeds(acte, tmpdir, mocker):
-    mocker.patch.object(settings, "STATIC_DIR", tmpdir)
+def test_post_doc_succceeds(acte, arbo, mocker):
+    mocker.patch.object(settings, "STATIC_DIR", arbo)
     print(settings.STATIC_DIR)
+
     m = io.BytesIO(b"blabla")
-    m.filename = "oladdd.pdf"
+    n = io.BytesIO(b"blabla")
+    o = io.BytesIO(b"blabla")
+    p = io.BytesIO(b"blabla")
+    m.filename = "a.pdf"
+    n.filename = "b.pdf"
+    o.filename = "e.jpg"
+    p.filename = "f.zip"
     r = post_document(acte.id, data={1: m})
     assert r[0]["id"] == 1
 
-    r = post_document(acte.id, data={1: m, 2: m, 3: m})
+    r = post_document(acte.id, data={1: n, 2: o, 3: p})
     assert {x["id"] for x in r} == {2, 3, 4}
-    assert 4 == len(list(tmpdir.visit(fil="*.pdf")))
+    assert 2 == len(list(arbo.visit(fil="*.pdf")))
+    assert 4 == len(list(arbo.visit(fil="*.*")))
+
+
+def test_jpg_bbecame_jpe():
+    pass

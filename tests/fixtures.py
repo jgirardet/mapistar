@@ -12,6 +12,7 @@ from mapistar.app import app
 from mapistar.users import User
 from tests import factory
 from mapistar.documents import Document
+from mapistar.first_run import create_directory_tree
 
 
 @pytest.fixture(scope="function")
@@ -68,6 +69,12 @@ def ordonnance(request):
 # @pytest.fixture(scope="function")
 # def item(request):
 #     return factory.itemf()
+
+
+@pytest.fixture(scope="function")
+def arbo(tmpdir):
+    create_directory_tree(tmpdir)
+    return tmpdir
 
 
 @pytest.fixture(scope="module")
