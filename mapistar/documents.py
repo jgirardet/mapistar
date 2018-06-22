@@ -33,7 +33,10 @@ class Document(db.Entity):
 
 
 def get_new_filename(content_type):
-    return uuid.uuid4().hex + mimetypes.guess_extension(content_type)
+    ext = mimetypes.guess_extension(content_type)
+    # jpeg sometimes return jpe
+    ext = ".jpg" if ext == ".jpe" else ext
+    return uuid.uuid4().hex + ext
 
 
 def get_new_directory(filename):
@@ -44,10 +47,61 @@ def get_new_path(filename):
     return Path(settings.STATIC_DIR, get_new_directory(filename), filename)
 
 
-def post_document(acte_id: int, data: http.RequestData):
-    acte = get_or_404(db.Acte, acte_id)
+# def save_document(path):
 
-    files = []
+#     some_files  = [...]
+
+#     new_entity =[]
+
+#     for file in some_files:
+#         try:
+#             d  = Document(*args)
+#             d.flush()
+#             savefile
+#         except orm.OrmError:
+#             raise someother error
+#         except IOError:
+#             rollback
+#             raise someerror
+#         else:
+#             new_entity .append(d)
+
+#     return new_entity
+
+
+# def save_file(filename, saved_files, ...):
+#     <do save>
+#     saved_files.append(filename)
+
+# def save_document(path):
+#     files_to_save = [...]
+#     saved_files = []
+#     new_entities = []
+
+#     try:
+#         with db_session:
+#             for file in files_to_save:
+#                 d = Document(*args)
+#                 new_entities.append(d)
+#                 d.flush()
+#                 save_file(file, saved_files, ...)
+#     except:
+#         for filename in saved_files:
+#             remove_file(filename)
+#         raise
+#     return new_entities
+
+
+def validate(data):
+    """
+    Validate multipart content.
+
+    Return
+        validated_files(dict)
+
+    """
+
+    validated_files = []
     for key, value in data.items():
         if not hasattr(value, "filename"):
             raise exceptions.BadRequest("un fichier doit être envoyé")
@@ -58,12 +112,41 @@ def post_document(acte_id: int, data: http.RequestData):
                 f"Extension autorisées : {AUTHORIZED_CONTENT_TYPE}"
             )
 
-        new_filename = get_new_filename(content_type)
+        validated_files.append(
+            {
+                "filename": value.filename,
+                "content_type": content_type,
+                "content": value,
+                "new_filename": get_new_filename(content_type),
+            }
+        )
 
-        p = Path(get_new_path(new_filename))
-        p.write_bytes(value.read())
+    return validated_files
 
-        d = Document(filename=new_filename, content_type=content_type, acte=acte)
-        files.append(d)
 
-    return [doc.to_dict() for doc in files]
+def save_files(files):
+    pass
+
+
+def post_document(acte_id: int, data: http.RequestData):
+    pass
+
+
+#     """
+#     Ajouter un nouveau document à un Acte
+#     """
+#     acte = get_or_404(db.Acte, acte_id)
+
+#     entites = []
+#     files = []
+
+#     vf = validate(data)
+
+#     d = Document(filename=new_filename, content_type=content_type, acte=acte)
+
+#     p = get_new_path(new_filename)
+#     p.write_bytes(value.read())
+
+#     files.append(d)
+
+#     return [doc.to_dict() for doc in files]

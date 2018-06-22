@@ -41,11 +41,10 @@ class ActesViews:
     @classmethod
     def liste(cls) -> Callable:
         def liste(patient_id: int) -> List:
-            # fmt: off
             return [
-                acte.dico for acte in select(a for a in cls.model if a.patient.id == patient_id)
+                acte.dico
+                for acte in select(a for a in cls.model if a.patient.id == patient_id)
             ]
-            # fmt: on
 
         liste.__doc__ = f""" Liste les Actes de type {cls.model.name}"""
         return liste
