@@ -14,6 +14,7 @@ from mapistar.patients import routes_patients
 from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
 from mapistar.theso import routes_theso
 from mapistar.users import UserComponent, routes_users
+from mapistar.documents import routes_documents
 from mapistar.utils import check_config
 
 
@@ -27,6 +28,7 @@ routes = [
     routes_theso,
     routes_users,
     routes_divers,
+    routes_documents,
 ]
 components = [JWT(settings.JWT), ActesPermissionsComponent(), UserComponent()]
 

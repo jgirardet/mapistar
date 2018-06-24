@@ -1,11 +1,15 @@
-from pony import orm
-from .base_db import db
-from apistar import http, exceptions
-from simple_settings import settings
-import mimetypes
 import uuid
+
+import mimetypes
+from apistar import Include, Route, exceptions, http
+from apistar.http import JSONResponse
+from mapistar.exceptions import MapistarProgrammingError, MapistarInternalError
 from mapistar.utils import get_or_404
 from pathlib import Path
+from pony import orm
+from simple_settings import settings
+
+from .base_db import db
 
 AUTHORIZED_CONTENT_TYPE = (
     "application/pdf",
@@ -31,65 +35,48 @@ class Document(db.Entity):
     content_type = orm.Optional(str)
     acte = orm.Required("Acte")
 
+    @property
+    def directory(self):
+        """subdirectory given the filename"""
+        return Path(*self.filename[:2])
 
-def get_new_filename(content_type):
-    ext = mimetypes.guess_extension(content_type)
-    # jpeg sometimes return jpe
-    ext = ".jpg" if ext == ".jpe" else ext
-    return uuid.uuid4().hex + ext
+    @property
+    def path(self):
+        """absolute path of the file"""
+        return Path(settings.STATIC_DIR, self.directory, self.filename)
 
+    def write(self, file):
+        """write file to disk"""
+        self.path.write_bytes(file.read())
 
-def get_new_directory(filename):
-    return Path(*filename[:2])
+    def erase(self):
+        """delete file from disk"""
+        self.path.unlink()
 
+    @staticmethod
+    def get_new_filename(content_type):
+        """giver a content type, return a uuencoded name with right extension"""
+        ext = mimetypes.guess_extension(content_type)
+        # jpeg sometimes return jpe
+        ext = ".jpg" if ext == ".jpe" else ext
+        return uuid.uuid4().hex + ext
 
-def get_new_path(filename):
-    return Path(settings.STATIC_DIR, get_new_directory(filename), filename)
+    @classmethod
+    def new(cls, old_filename, content_type, stream, acte):
+        """ ajoute un nouveau fichier dans la bae de donnée et sur le disk"""
+        d = Document(
+            filename=cls.get_new_filename(content_type),
+            content_type=content_type,
+            acte=acte,
+        )
 
+        try:
+            d.write(stream)
+        except Exception as exc:
+            d.delete()
+            return
 
-# def save_document(path):
-
-#     some_files  = [...]
-
-#     new_entity =[]
-
-#     for file in some_files:
-#         try:
-#             d  = Document(*args)
-#             d.flush()
-#             savefile
-#         except orm.OrmError:
-#             raise someother error
-#         except IOError:
-#             rollback
-#             raise someerror
-#         else:
-#             new_entity .append(d)
-
-#     return new_entity
-
-
-# def save_file(filename, saved_files, ...):
-#     <do save>
-#     saved_files.append(filename)
-
-# def save_document(path):
-#     files_to_save = [...]
-#     saved_files = []
-#     new_entities = []
-
-#     try:
-#         with db_session:
-#             for file in files_to_save:
-#                 d = Document(*args)
-#                 new_entities.append(d)
-#                 d.flush()
-#                 save_file(file, saved_files, ...)
-#     except:
-#         for filename in saved_files:
-#             remove_file(filename)
-#         raise
-#     return new_entities
+        return d
 
 
 def validate(data):
@@ -113,40 +100,73 @@ def validate(data):
             )
 
         validated_files.append(
-            {
-                "filename": value.filename,
-                "content_type": content_type,
-                "content": value,
-                "new_filename": get_new_filename(content_type),
-            }
+            {"content_type": content_type, "content": value, "filename": value.filename}
         )
 
     return validated_files
 
 
-def save_files(files):
-    pass
+def post_document(acte_id: int, data: http.RequestData) -> http.JSONResponse:
+
+    """
+    Ajouter un ou des nouveaux documents à un Acte
+
+    Returns:
+        200 : tout ok
+        500 : rien ok
+        207 : 200: contenu ok, 500: message d'erreurs
+    """
+
+    acte = get_or_404(db.Acte, acte_id)
+
+    entities = []
+    errors = []
+    vf = validate(data)
+
+    for f in vf:
+        d = Document.new(
+            old_filename=f["filename"],
+            content_type=f["content_type"],
+            stream=f["content"],
+            acte=acte,
+        )
+        if d:
+            entities.append(d)
+        else:
+            errors.append(f"Une erreur s'est produite avec {f['filename']}")
+
+    if entities and not errors:
+        return http.JSONResponse([e.to_dict() for e in entities], 201)
+    elif entities and errors:
+        return http.JSONResponse(
+            {200: [e.to_dict() for e in entities], 500: [e for e in errors]}, 207
+        )
+    else:
+        return http.JSONResponse([e for e in errors], 500)
 
 
-def post_document(acte_id: int, data: http.RequestData):
-    pass
+from mapistar.permissions import ActesPermissions
 
 
-#     """
-#     Ajouter un nouveau document à un Acte
-#     """
-#     acte = get_or_404(db.Acte, acte_id)
+def delete_document(document_id: int, obj: ActesPermissions):
+    try:
+        obj.erase()
+    except Exception as exc:
+        print(exc)
+        raise MapistarInternalError(str(exc))
 
-#     entites = []
-#     files = []
+    obj.delete()
+    return {"id": document_id, "deleted": True}
 
-#     vf = validate(data)
 
-#     d = Document(filename=new_filename, content_type=content_type, acte=acte)
-
-#     p = get_new_path(new_filename)
-#     p.write_bytes(value.read())
-
-#     files.append(d)
-
-#     return [doc.to_dict() for doc in files]
+routes_documents = Include(
+    url="/documents",
+    name="documents",
+    routes=[
+        Route(url="/{acte_id}/", method="POST", handler=post_document),
+        # Route(url="/", method="GET", handler=liste),
+        # Route(url="/{patient_id}/", method="PUT", handler=update),
+        Route(url="/{document_id}/", method="DELETE", handler=delete_document),
+        # Route(url="/{patient_id}/", method="GET", handler=one),
+    ],
+)

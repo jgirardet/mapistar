@@ -1,34 +1,45 @@
 import pytest
 
-from mapistar.documents import (
-    get_new_path,
-    get_new_filename,
-    get_new_directory,
-    post_document,
-    validate,
-)
+from mapistar.documents import post_document, validate, Document
 import pathlib
 from simple_settings import settings
 from apistar import exceptions
 import io
 
+from unittest.mock import MagicMock
 
-def test_get_new_filename():
-    a = get_new_filename("application/pdf").split(".")
-    assert len(a[0]) == 32
-    assert a[1] == "pdf"
+D = MagicMock(spec=Document)
 
 
-def test_get_new_directory():
-    a = get_new_directory("a1grergerg")
-    assert str(a) == "a/1"
+class TestDocument:
+    def test_get_new_filename(self):
+        a = Document.get_new_filename("application/pdf").split(".")
+        assert len(a[0]) == 32
+        assert a[1] == "pdf"
 
+    def test_directory(self, mocker):
+        a = Document.directory.fget(mocker.MagicMock(**{"filename": "a1ergergerg"}))
+        assert str(a) == "a/1"
 
-def test_new_path(mocker):
-    mocker.patch.object(settings, "STATIC_DIR", "/bla/ble")
-    print(settings.STATIC_DIR)
-    a = get_new_path("318ed983dcc443738c8788d249822189.pdf")
-    assert str(a) == "/bla/ble/3/1/318ed983dcc443738c8788d249822189.pdf"
+    def test_new_path(self, mocker):
+        mocker.patch.object(settings, "STATIC_DIR", "/bla/ble")
+        a = Document.path.fget(
+            mocker.MagicMock(
+                **{
+                    "directory": "3/1",
+                    "filename": "318ed983dcc443738c8788d249822189.pdf",
+                }
+            )
+        )
+        assert str(a) == "/bla/ble/3/1/318ed983dcc443738c8788d249822189.pdf"
+
+    def test_write_erase(self, tmpdir):
+        print(tmpdir)
+        a = MagicMock(**{"path": pathlib.Path(tmpdir, "heelo.txt")})
+        Document.write(a, io.BytesIO(b"hello"))
+        assert tmpdir.join("heelo.txt") in tmpdir.listdir()
+        Document.erase(a)
+        assert tmpdir.join("heelo.txt") not in tmpdir.listdir()
 
 
 def test_validate(mdocu, mocker):
@@ -45,6 +56,8 @@ def test_validate(mdocu, mocker):
         validate(data={1: m})
     assert str(exc.value)[:20] == "Extension autorisées"
 
+    # tester validate success
+
 
 # @pytest.mark.pony
 # def test_post_doc_succceeds(acte, arbo, mocker):
@@ -59,12 +72,12 @@ def test_validate(mdocu, mocker):
 #     o.filename = "e.jpg"
 #     p.filename = "f.zip"
 #     r = post_document(acte.id, data={1: m})
-#     assert r[0]["id"] == 1
+#     assert r.content["success"][0]["id"] == 1
 
-#     r = post_document(acte.id, data={1: n, 2: o, 3: p})
-#     assert {x["id"] for x in r} == {2, 3, 4}
-#     assert 2 == len(list(arbo.visit(fil="*.pdf")))
-#     assert 4 == len(list(arbo.visit(fil="*.*")))
-#     assert {"pdf", "jpg", "zip"} == {
-#         str(e).split(".")[-1] for e in arbo.visit(fil="*.*")
-#     }
+# r = post_document(acte.id, data={1: n, 2: o, 3: p})
+# assert {x["id"] for x in r} == {2, 3, 4}
+# assert 2 == len(list(arbo.visit(fil="*.pdf")))
+# assert 4 == len(list(arbo.visit(fil="*.*")))
+# assert {"pdf", "jpg", "zip"} == {
+#     str(e).split(".")[-1] for e in arbo.visit(fil="*.*")
+# }

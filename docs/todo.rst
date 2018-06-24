@@ -4,8 +4,7 @@ Todo vers 1.0
 * à terminer 
     Document
         * verifier nom dans dir
-        * discuter class/staticmethod
-        □ response type
+        * discuter validate dans class ?
         * permissions
     □ Avis
     □ Annuaire

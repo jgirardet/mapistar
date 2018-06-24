@@ -9,8 +9,12 @@ from pony import orm
 
 # mapistar
 from mapistar.app import app
+from mapistar.documents import Document
 
 from .runner import generate_db
+from simple_settings import settings
+
+from unittest.mock import patch
 
 
 @pytest.fixture(scope="module")
@@ -348,3 +352,77 @@ def test_users(clij, clil):
     }
     r = clil.post(app.reverse_url("users:create_user"), data=json.dumps(datak))
     assert r.status_code == 201
+
+
+def test_document(clij, arbo, mocker):
+
+    # test document ordonnace 20
+    mocker.patch.object(settings, "STATIC_DIR", arbo)
+
+    # 1 file ok
+    r = clij.post(
+        app.reverse_url("documents:post_document", acte_id=20),
+        files={"a": ("fichierb.gif", b"123")},
+    )
+    assert r.status_code == 201
+    assert r.json()[0]["content_type"] == "image/gif"
+    assert r.json()[0]["id"] == 1
+
+    # 3 files ok
+    r = clij.post(
+        app.reverse_url("documents:post_document", acte_id=20),
+        files={
+            "a": ("fichiera.gif", b"123"),
+            "b": ("fichierb.pdf", b"123"),
+            "c": ("fichierc.jpg", b"123"),
+        },
+    )
+    assert r.status_code == 201
+    assert r.json()[0]["content_type"] == "image/gif"
+    assert r.json()[1]["content_type"] == "application/pdf"
+    assert r.json()[2]["content_type"] == "image/jpeg"
+    assert r.json()[2]["id"] == 4
+
+    #  acte not ound
+    r = clij.post(
+        app.reverse_url("documents:post_document", acte_id=999999),
+        files={"a": ("fichierb.gif", b"123")},
+    )
+    assert r.status_code == 404
+
+    # 1 fail
+    with patch.object(Document, "write") as m:
+        m.side_effect = IOError
+        r = clij.post(
+            app.reverse_url("documents:post_document", acte_id=20),
+            files={"a": ("fichierb.gif", b"123")},
+        )
+        assert r.status_code == 500
+        assert r.json()[0] == "Une erreur s'est produite avec fichierb.gif"
+
+    # 1ok 1 fail 1 ok
+    # ww = lambda self, file: self.path.write_bytes(file.read())
+    with patch.object(Document, "write", side_effect=["ok", IOError, "ok"]):
+        r = clij.post(
+            app.reverse_url("documents:post_document", acte_id=20),
+            files={
+                "a": ("fichiera.gif", b"123"),
+                "b": ("fichierb.pdf", b"123"),
+                "c": ("fichierc.jpg", b"123"),
+            },
+        )
+        assert r.status_code == 207
+        assert r.json()["500"] == ["Une erreur s'est produite avec fichierb.pdf"]
+        assert len(r.json()["200"]) == 2
+
+    # # delete file ok
+
+    xr = clij.post(
+        app.reverse_url("documents:post_document", acte_id=20),
+        files={"a": ("fichierb.gif", b"123")},
+    )
+    r = clij.delete(
+        app.reverse_url("documents:delete_document", document_id=xr.json()[0]["id"])
+    )
+    assert r.status_code == 200
+    assert r.json() == {"id": xr.json()[0]["id"], "deleted": True}

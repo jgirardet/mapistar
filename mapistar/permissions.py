@@ -99,6 +99,7 @@ class ActesPermissionsComponent(Component):
         """
         acte_id = params.get("acte_id", None)
         item_id = params.get("item_id", None)
+        document_id = params.get("document_id", None)
 
         if acte_id:
             if item_id:
@@ -112,6 +113,11 @@ class ActesPermissionsComponent(Component):
         elif item_id:
             obj = get_or_404(db.Item, item_id)
             acte = obj.ordonnance
+
+        elif document_id:
+            obj = get_or_404(db.Document, document_id)
+            acte = obj.acte
+
         else:
             raise MapistarProgrammingError("doit préciser acte_id ou item_id")
 

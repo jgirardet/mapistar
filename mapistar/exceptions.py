@@ -32,3 +32,8 @@ class MapistarForbidden(MapistarException, exceptions.Forbidden):
     """
     Utilisateur non authorisée
     """
+
+
+class MapistarInternalError(MapistarException, exceptions.HTTPException):
+    default_status_code = 500
+    default_detail = "Internal Error"
