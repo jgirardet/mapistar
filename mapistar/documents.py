@@ -60,7 +60,8 @@ class Document(DicoMixin, db.Entity):
         """delete file from disk"""
         self.path.unlink()
 
-    def load(self):
+    @property
+    def content(self):
         return self.path.read_bytes()
 
     @property
@@ -184,7 +185,7 @@ def one(document_id: int, app: App) -> http.Response:
     """
     doc = get_or_404(db.Document, document_id)
     return http.Response(
-        doc.load(),
+        doc.content,
         headers={
             "content-type": doc.content_type,
             "Cache-Control": "no-cache, no-store, must-revalidate",

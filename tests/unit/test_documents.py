@@ -44,7 +44,7 @@ class TestDocument:
         a = pathlib.Path(tmpdir, "load.txt")
         a.write_bytes(b"123")
         m = mocker.MagicMock(**{"path": a})
-        a = Document.load(m)
+        a = Document.content.fget(m)
         assert a == b"123"
 
     def test_dico(self, mocker):

@@ -29,7 +29,16 @@ class Acte(DicoMixin, NameMixin, SetMixin, db.Entity):
     owner = orm.Required("User")
     created = orm.Required(datetime, default=datetime.utcnow)
     modified = orm.Optional(datetime)
-    pj = orm.Set('Document')
+    documents = orm.Set("Document")
+
+    @property
+    def dico(self):
+        if self.documents:
+            _dico = super().dico
+            _dico["documents"] = [d.url for d in self.documents]
+            return _dico
+        else:
+            return super().dico
 
     def before_insert(self):
         """

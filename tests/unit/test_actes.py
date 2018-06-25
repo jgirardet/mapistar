@@ -39,6 +39,15 @@ class TestActeModel:
             Acte.set(f, **{"omk": "mok"})
         assert str(exc.value) == "omk n'est pas updatable"
 
+    def test_dico(self, mocker):
+        d, e, f = [mocker.MagicMock(**{"url": "/bla/bla/"}) for i in range(3)]
+        f = mocker.MagicMock(spec=Acte, **{"documents": [d, e, f]})
+        r = Acte.dico.fget(f)
+        assert r == {"documents": ["/bla/bla/", "/bla/bla/", "/bla/bla/"]}
+        f.documents = []
+        r = Acte.dico.fget(f)
+        assert r == {}
+
 
 acte = Mock(spec=Acte)
 mock_dico = Mock(**{"dico": {"le": "dico"}})
