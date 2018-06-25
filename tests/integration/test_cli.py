@@ -368,6 +368,13 @@ def test_document(clij, clik, arbo, mocker):
     assert r.json()[0]["content_type"] == "image/gif"
     assert r.json()[0]["id"] == 1
 
+    # not good user
+    r = clik.post(
+        app.reverse_url("documents:post", acte_id=20),
+        files={"a": ("fichierb.gif", b"123")},
+    )
+    assert r.status_code == 403
+
     # 3 files ok
     r = clij.post(
         app.reverse_url("documents:post", acte_id=20),

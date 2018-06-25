@@ -85,10 +85,5 @@ class TestActesPermissionComponent:
             AP.resolve(params={"acte_id": 1, "item_id": 1}, user=1)
         assert (
             str(exc.value)
-            == "Une requête ne peut spécifier item_id et acte_id à la fois"
+            == "Une requête ne peut spécifier seulement acte_id ou item_id ou document_id"
         )
-
-    def test_resolve_not_acteid_or_itmeid(self):
-        with pytest.raises(MapistarProgrammingError) as exc:
-            AP.resolve(params={}, user=1)
-        assert str(exc.value) == "doit préciser acte_id ou item_id"

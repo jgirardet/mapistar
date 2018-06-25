@@ -101,14 +101,15 @@ class ActesPermissionsComponent(Component):
         item_id = params.get("item_id", None)
         document_id = params.get("document_id", None)
 
-        if acte_id:
-            if item_id:
-                raise MapistarProgrammingError(
-                    "Une requête ne peut spécifier item_id et acte_id à la fois"
-                )
+        ids = [x for x in [acte_id, item_id, document_id] if x]
 
-            else:
-                acte = obj = get_or_404(db.Acte, acte_id)
+        if len(ids) != 1:
+            raise MapistarProgrammingError(
+                f"Une requête ne peut spécifier seulement acte_id ou item_id ou document_id"
+            )
+
+        if acte_id:
+            acte = obj = get_or_404(db.Acte, acte_id)
 
         elif item_id:
             obj = get_or_404(db.Item, item_id)
@@ -117,9 +118,6 @@ class ActesPermissionsComponent(Component):
         elif document_id:
             obj = get_or_404(db.Document, document_id)
             acte = obj.acte
-
-        else:
-            raise MapistarProgrammingError("doit préciser acte_id ou item_id")
 
         ActesPermissions(acte, user)()
 

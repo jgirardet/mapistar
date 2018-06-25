@@ -1,16 +1,16 @@
 import uuid
 
 import mimetypes
-from apistar import Include, Route, exceptions, http
+from apistar import App, Include, Route, exceptions, http
 from apistar.http import JSONResponse
-from mapistar.exceptions import MapistarProgrammingError, MapistarInternalError
-from mapistar.utils import get_or_404
+from mapistar.exceptions import MapistarInternalError, MapistarProgrammingError
+from mapistar.permissions import ActesPermissions
+from mapistar.utils import DicoMixin, get_or_404
 from pathlib import Path
 from pony import orm
 from simple_settings import settings
 
 from .base_db import db
-from mapistar.utils import DicoMixin
 
 AUTHORIZED_CONTENT_TYPE = (
     "application/pdf",
@@ -123,7 +123,7 @@ def validate(data):
     return validated_files
 
 
-def post(acte_id: int, data: http.RequestData) -> http.JSONResponse:
+def post(acte: ActesPermissions, data: http.RequestData) -> http.JSONResponse:
 
     """
     Ajouter un ou des nouveaux documents à un Acte
@@ -133,8 +133,6 @@ def post(acte_id: int, data: http.RequestData) -> http.JSONResponse:
         500 : rien ok
         207 : 200: contenu ok, 500: message d'erreurs
     """
-
-    acte = get_or_404(db.Acte, acte_id)
 
     entities = []
     errors = []
@@ -160,10 +158,6 @@ def post(acte_id: int, data: http.RequestData) -> http.JSONResponse:
         )
     else:
         return http.JSONResponse([e for e in errors], 500)
-
-
-from mapistar.permissions import ActesPermissions
-from apistar import App
 
 
 def delete(document_id: int, obj: ActesPermissions) -> dict:

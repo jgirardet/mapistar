@@ -3,9 +3,7 @@ Todo vers 1.0
 
 * à terminer 
     Document
-        * verifier nom dans dir
-        * discuter validate dans class ?
-        * permissions
+        * permissions vérifier différents cas (any ?)
     □ Avis
     □ Annuaire
         □ chanps
