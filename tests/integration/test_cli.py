@@ -354,14 +354,14 @@ def test_users(clij, clil):
     assert r.status_code == 201
 
 
-def test_document(clij, arbo, mocker):
+def test_document(clij, clik, arbo, mocker):
 
     # test document ordonnace 20
-    mocker.patch.object(settings, "STATIC_DIR", arbo)
+    mocker.patch.object(settings, "DOCUMENTS_DIR", arbo)
 
     # 1 file ok
     r = clij.post(
-        app.reverse_url("documents:post_document", acte_id=20),
+        app.reverse_url("documents:post", acte_id=20),
         files={"a": ("fichierb.gif", b"123")},
     )
     assert r.status_code == 201
@@ -370,7 +370,7 @@ def test_document(clij, arbo, mocker):
 
     # 3 files ok
     r = clij.post(
-        app.reverse_url("documents:post_document", acte_id=20),
+        app.reverse_url("documents:post", acte_id=20),
         files={
             "a": ("fichiera.gif", b"123"),
             "b": ("fichierb.pdf", b"123"),
@@ -385,7 +385,7 @@ def test_document(clij, arbo, mocker):
 
     #  acte not ound
     r = clij.post(
-        app.reverse_url("documents:post_document", acte_id=999999),
+        app.reverse_url("documents:post", acte_id=999999),
         files={"a": ("fichierb.gif", b"123")},
     )
     assert r.status_code == 404
@@ -394,7 +394,7 @@ def test_document(clij, arbo, mocker):
     with patch.object(Document, "write") as m:
         m.side_effect = IOError
         r = clij.post(
-            app.reverse_url("documents:post_document", acte_id=20),
+            app.reverse_url("documents:post", acte_id=20),
             files={"a": ("fichierb.gif", b"123")},
         )
         assert r.status_code == 500
@@ -404,7 +404,7 @@ def test_document(clij, arbo, mocker):
     # ww = lambda self, file: self.path.write_bytes(file.read())
     with patch.object(Document, "write", side_effect=["ok", IOError, "ok"]):
         r = clij.post(
-            app.reverse_url("documents:post_document", acte_id=20),
+            app.reverse_url("documents:post", acte_id=20),
             files={
                 "a": ("fichiera.gif", b"123"),
                 "b": ("fichierb.pdf", b"123"),
@@ -415,14 +415,18 @@ def test_document(clij, arbo, mocker):
         assert r.json()["500"] == ["Une erreur s'est produite avec fichierb.pdf"]
         assert len(r.json()["200"]) == 2
 
-    # # delete file ok
+    # # get delete file ok
 
     xr = clij.post(
-        app.reverse_url("documents:post_document", acte_id=20),
-        files={"a": ("fichierb.gif", b"123")},
+        app.reverse_url("documents:post", acte_id=20),
+        files={"a": ("fichierb.pdf", b"123")},
     )
-    r = clij.delete(
-        app.reverse_url("documents:delete_document", document_id=xr.json()[0]["id"])
-    )
+    doc_id = xr.json()[0]["id"]
+
+    r = clij.get(app.reverse_url("documents:one", document_id=doc_id))
+    assert r.content == b"123"
+    assert r.headers["content-type"] == "application/pdf"
+
+    r = clij.delete(app.reverse_url("documents:delete", document_id=doc_id))
     assert r.status_code == 200
-    assert r.json() == {"id": xr.json()[0]["id"], "deleted": True}
+    assert r.json() == {"id": doc_id, "deleted": True}

@@ -10,6 +10,7 @@ from pony import orm
 from simple_settings import settings
 
 from .base_db import db
+from mapistar.utils import DicoMixin
 
 AUTHORIZED_CONTENT_TYPE = (
     "application/pdf",
@@ -30,7 +31,7 @@ AUTHORIZED_CONTENT_TYPE = (
 )
 
 
-class Document(db.Entity):
+class Document(DicoMixin, db.Entity):
     filename = orm.Required(str)
     content_type = orm.Optional(str)
     acte = orm.Required("Acte")
@@ -43,7 +44,7 @@ class Document(db.Entity):
     @property
     def path(self):
         """absolute path of the file"""
-        return Path(settings.STATIC_DIR, self.directory, self.filename)
+        return Path(settings.DOCUMENTS_DIR, self.directory, self.filename)
 
     def write(self, file):
         """write file to disk"""
@@ -59,13 +60,16 @@ class Document(db.Entity):
         ext = mimetypes.guess_extension(content_type)
         # jpeg sometimes return jpe
         ext = ".jpg" if ext == ".jpe" else ext
-        return uuid.uuid4().hex + ext
+        return Path(uuid.uuid4().hex + ext)
+
+    def load(self):
+        return self.path.read_bytes()
 
     @classmethod
     def new(cls, old_filename, content_type, stream, acte):
         """ ajoute un nouveau fichier dans la bae de donnée et sur le disk"""
         d = Document(
-            filename=cls.get_new_filename(content_type),
+            filename=str(cls.get_new_filename(content_type)),
             content_type=content_type,
             acte=acte,
         )
@@ -106,7 +110,7 @@ def validate(data):
     return validated_files
 
 
-def post_document(acte_id: int, data: http.RequestData) -> http.JSONResponse:
+def post(acte_id: int, data: http.RequestData) -> http.JSONResponse:
 
     """
     Ajouter un ou des nouveaux documents à un Acte
@@ -146,9 +150,13 @@ def post_document(acte_id: int, data: http.RequestData) -> http.JSONResponse:
 
 
 from mapistar.permissions import ActesPermissions
+from apistar import App
 
 
-def delete_document(document_id: int, obj: ActesPermissions):
+def delete(document_id: int, obj: ActesPermissions) -> dict:
+    """
+    Supprime un documents
+    """
     try:
         obj.erase()
     except Exception as exc:
@@ -159,14 +167,28 @@ def delete_document(document_id: int, obj: ActesPermissions):
     return {"id": document_id, "deleted": True}
 
 
+def one(document_id: int, app: App) -> http.Response:
+    """
+    one document
+    """
+    doc = get_or_404(db.Document, document_id)
+    return http.Response(
+        doc.load(),
+        headers={
+            "content-type": doc.content_type,
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+    )
+
+
 routes_documents = Include(
     url="/documents",
     name="documents",
     routes=[
-        Route(url="/{acte_id}/", method="POST", handler=post_document),
+        Route(url="/{acte_id}/", method="POST", handler=post),
         # Route(url="/", method="GET", handler=liste),
         # Route(url="/{patient_id}/", method="PUT", handler=update),
-        Route(url="/{document_id}/", method="DELETE", handler=delete_document),
-        # Route(url="/{patient_id}/", method="GET", handler=one),
+        Route(url="/{document_id}/", method="DELETE", handler=delete),
+        Route(url="/{document_id}/", method="GET", handler=one),
     ],
 )

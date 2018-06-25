@@ -1,6 +1,6 @@
 import pytest
 
-from mapistar.documents import post_document, validate, Document
+from mapistar.documents import validate, Document
 import pathlib
 from simple_settings import settings
 from apistar import exceptions
@@ -13,7 +13,7 @@ D = MagicMock(spec=Document)
 
 class TestDocument:
     def test_get_new_filename(self):
-        a = Document.get_new_filename("application/pdf").split(".")
+        a = str(Document.get_new_filename("application/pdf")).split(".")
         assert len(a[0]) == 32
         assert a[1] == "pdf"
 
@@ -22,7 +22,7 @@ class TestDocument:
         assert str(a) == "a/1"
 
     def test_new_path(self, mocker):
-        mocker.patch.object(settings, "STATIC_DIR", "/bla/ble")
+        mocker.patch.object(settings, "DOCUMENTS_DIR", "/bla/ble")
         a = Document.path.fget(
             mocker.MagicMock(
                 **{
@@ -34,7 +34,6 @@ class TestDocument:
         assert str(a) == "/bla/ble/3/1/318ed983dcc443738c8788d249822189.pdf"
 
     def test_write_erase(self, tmpdir):
-        print(tmpdir)
         a = MagicMock(**{"path": pathlib.Path(tmpdir, "heelo.txt")})
         Document.write(a, io.BytesIO(b"hello"))
         assert tmpdir.join("heelo.txt") in tmpdir.listdir()

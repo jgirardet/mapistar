@@ -37,7 +37,6 @@ app = App(
     components=components,
     event_hooks=[PonyDBSession(), IsAuthenticated()],
     schema_url="/schemas/",
-    static_dir=settings.STATIC_DIR,
 )
 
 """
