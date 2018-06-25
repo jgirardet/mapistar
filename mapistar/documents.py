@@ -30,6 +30,8 @@ AUTHORIZED_CONTENT_TYPE = (
     "video/mpeg",
 )
 
+DOCUMENTS_URL = "/documents"
+
 
 class Document(DicoMixin, db.Entity):
     filename = orm.Required(str)
@@ -46,6 +48,10 @@ class Document(DicoMixin, db.Entity):
         """absolute path of the file"""
         return Path(settings.DOCUMENTS_DIR, self.directory, self.filename)
 
+    @property
+    def url(self):
+        return DOCUMENTS_URL + "/" + str(self.id) + "/"
+
     def write(self, file):
         """write file to disk"""
         self.path.write_bytes(file.read())
@@ -54,6 +60,15 @@ class Document(DicoMixin, db.Entity):
         """delete file from disk"""
         self.path.unlink()
 
+    def load(self):
+        return self.path.read_bytes()
+
+    @property
+    def dico(self):
+        dc = super().dico
+        dc["url"] = self.url
+        return dc
+
     @staticmethod
     def get_new_filename(content_type):
         """giver a content type, return a uuencoded name with right extension"""
@@ -61,9 +76,6 @@ class Document(DicoMixin, db.Entity):
         # jpeg sometimes return jpe
         ext = ".jpg" if ext == ".jpe" else ext
         return Path(uuid.uuid4().hex + ext)
-
-    def load(self):
-        return self.path.read_bytes()
 
     @classmethod
     def new(cls, old_filename, content_type, stream, acte):
@@ -160,7 +172,6 @@ def delete(document_id: int, obj: ActesPermissions) -> dict:
     try:
         obj.erase()
     except Exception as exc:
-        print(exc)
         raise MapistarInternalError(str(exc))
 
     obj.delete()
@@ -182,12 +193,10 @@ def one(document_id: int, app: App) -> http.Response:
 
 
 routes_documents = Include(
-    url="/documents",
+    url=DOCUMENTS_URL,
     name="documents",
     routes=[
         Route(url="/{acte_id}/", method="POST", handler=post),
-        # Route(url="/", method="GET", handler=liste),
-        # Route(url="/{patient_id}/", method="PUT", handler=update),
         Route(url="/{document_id}/", method="DELETE", handler=delete),
         Route(url="/{document_id}/", method="GET", handler=one),
     ],

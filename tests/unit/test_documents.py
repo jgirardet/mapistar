@@ -1,12 +1,12 @@
 import pytest
 
-from mapistar.documents import validate, Document
+from mapistar.documents import validate, Document, routes_documents
 import pathlib
 from simple_settings import settings
 from apistar import exceptions
 import io
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 D = MagicMock(spec=Document)
 
@@ -39,6 +39,28 @@ class TestDocument:
         assert tmpdir.join("heelo.txt") in tmpdir.listdir()
         Document.erase(a)
         assert tmpdir.join("heelo.txt") not in tmpdir.listdir()
+
+    def test_load(self, tmpdir, mocker):
+        a = pathlib.Path(tmpdir, "load.txt")
+        a.write_bytes(b"123")
+        m = mocker.MagicMock(**{"path": a})
+        a = Document.load(m)
+        assert a == b"123"
+
+    def test_dico(self, mocker):
+        m = mocker.MagicMock(**{"url": "/bla/1/"})
+        with patch("builtins.super") as n:
+            n.return_value.dico = {}
+            d = Document.dico.fget(m)
+        assert d["url"] == "/bla/1/"
+
+    def test_url(self, mocker):
+        link = None
+        for r in routes_documents.routes:
+            if r.name == "one":
+                link = r.link.url
+        m = mocker.MagicMock(**{"id": 3})
+        assert link.format(document_id=3) == Document.url.fget(m)
 
 
 def test_validate(mdocu, mocker):

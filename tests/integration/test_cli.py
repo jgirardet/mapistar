@@ -430,3 +430,16 @@ def test_document(clij, clik, arbo, mocker):
     r = clij.delete(app.reverse_url("documents:delete", document_id=doc_id))
     assert r.status_code == 200
     assert r.json() == {"id": doc_id, "deleted": True}
+
+    # delete fail
+    xr = clij.post(
+        app.reverse_url("documents:post", acte_id=20),
+        files={"a": ("fichierb.pdf", b"123")},
+    )
+    doc_id = xr.json()[0]["id"]
+
+    with patch.object(Document, "erase") as m:
+        m.side_effect = FileNotFoundError("Rien à battre")
+        r = clij.delete(app.reverse_url("documents:delete", document_id=doc_id))
+        assert r.status_code == 500
+        assert r.json() == "Rien à battre"
