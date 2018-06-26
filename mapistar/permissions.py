@@ -108,7 +108,7 @@ class ActesPermissionsComponent(Component):
                 f"Une requête ne peut spécifier seulement acte_id ou item_id ou document_id"
             )
 
-        if acte_id:
+        elif acte_id:
             acte = obj = get_or_404(db.Acte, acte_id)
 
         elif item_id:
@@ -118,6 +118,9 @@ class ActesPermissionsComponent(Component):
         elif document_id:
             obj = get_or_404(db.Document, document_id)
             acte = obj.acte
+
+        else:  # pragma: no cover
+            raise MapistarProgrammingError("Permissions non achevées")
 
         ActesPermissions(acte, user)()
 

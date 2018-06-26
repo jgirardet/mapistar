@@ -3,7 +3,6 @@ Todo vers 1.0
 
 * à terminer 
     Document
-        * permissions vérifier différents cas (any ?)
     □ Avis
     □ Annuaire
         □ chanps

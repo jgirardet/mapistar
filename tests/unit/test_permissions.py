@@ -9,6 +9,10 @@ from apistar import exceptions
 # mapistar
 from mapistar.exceptions import MapistarProgrammingError
 from mapistar.permissions import ActesPermissions, ActesPermissionsComponent
+from mapistar.documents import Document
+from mapistar.actes.actes import Acte
+from mapistar.actes.ordo_items import Item
+from unittest.mock import patch
 
 
 class TestActesPermission:
@@ -56,6 +60,7 @@ class TestActesPermission:
 AP = ActesPermissionsComponent()
 
 
+# @pytest.mark.pony(reset_db=False)
 class TestActesPermissionComponent:
     @pytest.mark.parametrize("genre", ["acte_id", "item_id"])
     def test_ActesPermissions_called(self, mocker, genre):
@@ -79,6 +84,33 @@ class TestActesPermissionComponent:
         obj = AP.resolve(params={"item_id": 1}, user=1)
 
         assert item is obj
+
+    def test_returns_document_with_document_id(self, mocker):
+        mocker.patch("mapistar.permissions.ActesPermissions")
+        document = mocker.Mock()
+        mocker.patch("mapistar.permissions.get_or_404", return_value=document)
+        obj = AP.resolve(params={"document_id": 1}, user=1)
+
+        assert document is obj
+
+    def test_get_404_call(self, mocker):
+        m = mocker.patch("mapistar.permissions.ActesPermissions")
+        q = mocker.patch("mapistar.permissions.get_or_404")
+        a = AP.resolve(params={"acte_id": 1}, user=1)
+        b = AP.resolve(params={"item_id": 1}, user=1)
+        c = AP.resolve(params={"document_id": 1}, user=1)
+        c = mocker.call
+        q.assert_has_calls([c(Acte, 1), c(Item, 1), c(Document, 1)])
+        m.assert_has_calls(
+            [
+                c(q.return_value, 1),
+                c()(),
+                c(q.return_value.ordonnance, 1),
+                c()(),
+                c(q.return_value.acte, 1),
+                c()(),
+            ]
+        )
 
     def test_resolve_exclude_acteid_and_itemid(self):
         with pytest.raises(MapistarProgrammingError) as exc:
