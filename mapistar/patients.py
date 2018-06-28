@@ -3,15 +3,16 @@ from datetime import date
 from typing import List
 
 # Third Party Libraries
-from apistar import Include, Route, exceptions, http, types, validators
-from pony.orm import Optional, Required, Set
+# from apistar import Include, Route, exceptions, http, types, validators
+from pony.orm import Optional, Required, Set, db_session
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.users import User
+
+# from mapistar.users import User
 
 # from mapistar.db import db
-from .utils import DicoMixin, get_or_404, CapWordsMixin
+from mapistar.utils import get_or_404, CapWordsMixin
 
 MAX_LENGTH = {
     "nom": 100,
@@ -28,10 +29,8 @@ MAX_LENGTH = {
 
 SEXE = ["f", "m"]
 
-MAX = {"cp": 10000000}
 
-
-class Patient(CapWordsMixin, DicoMixin, db.Entity):
+class Patient(CapWordsMixin, db.Entity):
     """
     Entity Patient
 
@@ -55,12 +54,12 @@ class Patient(CapWordsMixin, DicoMixin, db.Entity):
     ddn = Required(date)
     sexe = Required(str, MAX_LENGTH["sexe"], py_check=lambda x: x in SEXE)
     rue = Optional(str, MAX_LENGTH["rue"])
-    cp = Optional(int, max=MAX["cp"])
+    cp = Optional(int)
     ville = Optional(str, MAX_LENGTH["ville"])
     tel = Optional(str, MAX_LENGTH["tel"])
     email = Optional(str, MAX_LENGTH["email"])
     alive = Optional(bool, default=True)
-    actes = Set("Acte")
+    # actes = Set("Acte")
 
     def __repr__(self):
         """
@@ -86,110 +85,96 @@ notes divers
 """
 
 
-class PatientCreateSchema(types.Type):
-    nom = validators.String(max_length=MAX_LENGTH["nom"])
-    prenom = validators.String(max_length=MAX_LENGTH["prenom"])
-    ddn = validators.Date()
-    sexe = validators.String(
-        description="sexe", max_length=MAX_LENGTH["sexe"], enum=SEXE
-    )
+from marshmallow import Schema, fields, validate, post_load
 
 
-class PatientUpdateSchema(types.Type):
-    nom = validators.String(max_length=MAX_LENGTH["nom"], default="")
-    prenom = validators.String(max_length=MAX_LENGTH["prenom"], default="")
-    ddn = validators.Date(default="")
-    sexe = validators.String(enum=SEXE, default=None, allow_null=True)
-    rue = validators.String(description="rue", max_length=MAX_LENGTH["rue"], default="")
-    cp = validators.Integer(description="Code Postal", default=None, allow_null=True)
-    ville = validators.String(
-        description="Ville", max_length=MAX_LENGTH["ville"], default=""
-    )
-    tel = validators.String(
-        description="Numéro de Téléphone", max_length=MAX_LENGTH["tel"], default=""
-    )
-    email = validators.String(
-        description="email", max_length=MAX_LENGTH["email"], default=""
-    )
-    alive = validators.Boolean(description="vivant ?", default=None, allow_null=True)
+class PatientSchema(Schema):
+    nom = fields.String(required=True)
+    prenom = fields.String(required=True)
+    ddn = fields.Date(required=True)
+    sexe = fields.String(required=True, validate=[validate.OneOf(SEXE)])
+    rue = fields.String(default="")
+    cp = fields.Integer(default=None, allow_null=True)
+    ville = fields.String()
+    tel = fields.String()
+    email = fields.String()
+    alive = fields.Boolean()
 
 
-def add(patient: PatientCreateSchema) -> http.JSONResponse:
+import hug
+from falcon import HTTP_201
+
+# from mapistar.base_db import api
+
+
+@hug.post("", status=HTTP_201)
+def add(data: hug.types.MarshmallowSchema(PatientSchema())):
     """
     Ajouter un nouveau patient
 
     Args:
         patient: données du nouveau patient
     """
-    a = db.Patient(**patient)
-    return http.JSONResponse(a.dico, status_code=201)
+
+    return Patient(**data).to_dict()
 
 
-def liste() -> List[dict]:
-    """ List patients
+@hug.get("")
+def get(patientid=None):
+    if patientid is None:
+        return [x.to_dict() for x in Patient.select()]
 
-    Returns:
-        Liste de tous les patients
-    """
-    return [x.dico for x in db.Patient.select()]
-
-
-def one(patient_id: int) -> dict:
-    """ Get patient details
-
-    Args:
-        id: id du patient
-
-    Returns:
-        Le patient
-    Raises:
-        NotFound si non trouvé.
-    """
-    return get_or_404(db.Patient, patient_id).dico
-
-
-def delete(patient_id: int, user: User) -> dict:
-    """
-    delete un patient
-
-    Args:
-        id: id du patient
-    Returns:
-        msg "delete success"
-    Raises:
-        NotFound si non trouvé
-    """
-    pat = get_or_404(db.Patient, patient_id)
-    if user.is_admin or user.permissions.del_patient:
-        pat.delete()
-        return {"msg": "delete success"}
     else:
-        raise exceptions.Forbidden(
-            f"Action non autorisée pour l'utilisateur {user.username}"
-        )
+        return Patient[patientid].to_dict()
 
 
-def update(new_data: PatientUpdateSchema, patient_id: int) -> http.JSONResponse:
+# def delete(patient_id: int, user: User) -> dict:
+#     """
+#     delete un patient
+
+#     Args:
+#         id: id du patient
+#     Returns:
+#         msg "delete success"
+#     Raises:
+#         NotFound si non trouvé
+#     """
+#     pat = get_or_404(db.Patient, patient_id)
+#     if user.is_admin or user.permissions.del_patient:
+#         pat.delete()
+#         return {"msg": "delete success"}
+#     else:
+#         raise exceptions.Forbidden(
+#             f"Action non autorisée pour l'utilisateur {user.username}"
+#         )
+
+
+@hug.put("", status=HTTP_201)
+def update(
+    data: hug.types.MarshmallowSchema(PatientSchema(partial=True)),
+    patientid: hug.types.number,
+):
     """modify patients
 
     Args:
         new_data: Rien n'est requis.
         id: patient id.
     """
-    to_update = get_or_404(db.Patient, patient_id)
-    to_update.set(**{k: v for k, v in new_data.items() if v})
-    return http.JSONResponse(to_update.dico, status_code=201)
+    # to_update = get_or_404(db.Patient, patient_id)
+    to_update = Patient[patientid]
+    to_update.set(**{k: v for k, v in data.items() if v})
+    return to_update.to_dict()
 
 
-routes_patients = Include(
-    url="/patients",
-    name="patients",
-    routes=[
-        Route(url="/", method="POST", handler=add),
-        Route(url="/", method="GET", handler=liste),
-        Route(url="/{patient_id}/", method="PUT", handler=update),
-        Route(url="/{patient_id}/", method="DELETE", handler=delete),
-        Route(url="/{patient_id}/", method="GET", handler=one),
-    ],
-)
-#
+# routes_patients = Include(
+#     url="/patients",
+#     name="patients",
+#     routes=[
+#         Route(url="/", method="POST", handler=add),
+#         Route(url="/", method="GET", handler=liste),
+#         Route(url="/{patient_id}/", method="PUT", handler=update),
+#         Route(url="/{patient_id}/", method="DELETE", handler=delete),
+#         Route(url="/{patient_id}/", method="GET", handler=one),
+#     ],
+# )
+# #

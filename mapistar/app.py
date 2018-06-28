@@ -10,12 +10,13 @@ from mapistar.actes.routes import (
     routes_observations,
     routes_ordonnances,
 )
-from mapistar.patients import routes_patients
-from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
-from mapistar.theso import routes_theso
-from mapistar.users import UserComponent, routes_users
-from mapistar.documents import routes_documents
-from mapistar.utils import check_config
+
+# from mapistar.patients import routes_patients
+# from mapistar.permissions import ActesPermissionsComponent, IsAuthenticated
+# from mapistar.theso import routes_theso
+# from mapistar.users import UserComponent, routes_users
+# from mapistar.documents import routes_documents
+# from mapistar.utils import check_config
 
 
 check_config(settings)
