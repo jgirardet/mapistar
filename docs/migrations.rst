@@ -13,6 +13,7 @@ Fait
 
 A completer
 patients:
-get_or_404
 permissions del
+mise en place User
+login
 delete

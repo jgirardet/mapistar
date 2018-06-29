@@ -5,9 +5,9 @@ from string import capwords
 
 
 # Third Party Libraries
-from apistar.exceptions import NotFound
 from descriptors import classproperty
 from pony import orm
+from falcon import HTTPNotFound
 
 # mapistar
 from mapistar.exceptions import MapistarProgrammingError
@@ -55,37 +55,11 @@ def get_or_404(model: orm.core.Entity, id: [str, int]):
     try:
         item = model[id]
     except orm.ObjectNotFound as e:
-        raise NotFound
+        raise HTTPNotFound(
+            title=f"Aucun {model.__class__.__name__} trouvé avec l'id {id}"
+        )
 
     return item
-
-
-class DicoMixin:
-    @property
-    def dico(self) -> dict:
-        """
-        Transforme un dict en dict serializable.
-
-        Marche pour:
-            *object datetime
-            *object date
-
-        Args:
-            dico: le dict à transformer
-        Returns:
-            un nouveau dict.
-        """
-        new_dict = {}
-
-        for k, v in self.to_dict().items():
-            if isinstance(v, datetime):
-                new_dict[k] = v.isoformat()
-
-            elif isinstance(v, date):
-                new_dict[k] = v.isoformat()
-            else:
-                new_dict[k] = v
-        return new_dict
 
 
 class NameMixin:

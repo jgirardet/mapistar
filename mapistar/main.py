@@ -8,17 +8,12 @@ from pony.orm import db_session
 # from mapistar.base_db import api
 
 # from base_db import api
+from .auth import IsAuthenticated, JsonWebToken
 
 
 class PonyMiddleware(object):
-    """A middleware that logs all incoming requests and outgoing responses that make their way through the API"""
-
-    __slots__ = ("logger",)
-
     def __init__(self):
         pass
-
-    #     self.logger = logger if logger is not None else logging.getLogger('hug')
 
     def process_request(self, request, response):
         """Logs the basic endpoint requested"""
@@ -28,8 +23,35 @@ class PonyMiddleware(object):
         db_session.__exit__()
 
 
+def token_verify(token):
+    # secret_key = 'super-secret-key-please-change'
+    # try:
+    #     return jwt.decode(token, secret_key, algorithm='HS256')
+    # except jwt.DecodeError:
+    #     return False
+    return True
+
+
 api = hug.API(__name__)
 api.http.add_middleware(PonyMiddleware())
+
+
+test_settings = {
+    "user_id": "id",
+    "user_name": "username",
+    "algorithms": ["HS256"],
+    "options": {},
+    "secret": "aa",
+    "white_list": [],
+}
+
+Jweb = JsonWebToken(test_settings)
+
+api.http.add_middleware(IsAuthenticated(Jweb))
+
+
+token_key_authentication = hug.authentication.token(token_verify)
+# api.http(requires=token_key_authentication)
 
 
 # @hug.extend_api()

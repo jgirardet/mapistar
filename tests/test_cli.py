@@ -9,7 +9,7 @@ from pony import orm
 # mapistar
 # from mapistar.documents import Document
 
-from runner import generate_db
+from .runner import generate_db
 from simple_settings import settings
 
 from unittest.mock import patch
@@ -34,7 +34,7 @@ pytestmark = pytest.mark.usefixtures("gen_db")
 def test_patients(clij):
     # test add
     a = {"nom": "aaa", "prenom": "paa", "ddn": "1234-12-12", "sexe": "f"}
-    r = clij.post(main, "patients", {"data": a})
+    r = clij.post("patients", {"data": a})
     assert "201" in r.status
     assert r.data == {
         "id": 9,
@@ -51,12 +51,12 @@ def test_patients(clij):
     }
 
     # test_get
-    r = clij.get(main, "patients")
+    r = clij.get("patients")
     assert "200" in r.status
     assert len(r.data) == 9
     assert "rue" in r.data[0].keys()
 
-    r = clij.get(main, "patients", {"patientid": 9})
+    r = clij.get("patients", {"patientid": 9})
     assert "200" in r.status
     assert r.data == {
         "id": 9,
@@ -74,7 +74,7 @@ def test_patients(clij):
 
     # test update
     update = {"prenom": "omkmok", "ddn": "1237-03-03", "rue": "mokmokmok"}
-    r = clij.put(main, "/patients", {"patientid": 9, "data": update})
+    r = clij.put("/patients", {"patientid": 9, "data": update})
     assert r.data == {
         "id": 9,
         "nom": "Aaa",
@@ -88,3 +88,7 @@ def test_patients(clij):
         "email": "",
         "alive": True,
     }
+
+    # test delete
+    r = clij.delete("/patients", {"patientid": 9})
+    assert r.data == {"msg": "delete success", "patientid": 9}

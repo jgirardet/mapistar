@@ -82,9 +82,30 @@ import pytest
 
 import hug
 
+import pendulum
+from functools import partial
+from falcon import HTTP_METHODS
+from hug.test import call
+from mapistar import main
+
+
+class Cli:
+    def __init__(self, headers):
+        self.headers = headers
+        for method in HTTP_METHODS:
+            tester = partial(call, method, main, headers=headers)
+            tester.__doc__ = """Simulates a round-trip HTTP {0} against the given API / URL""".format(
+                method.upper()
+            )
+            setattr(self, method.lower(), tester)
+
 
 @pytest.fixture(scope="module")
 def clij():
+    """
+    Permisssions:
+        del_patient
+    """
     # cli = TestClient(app)
     # r = cli.post(
     #     app.reverse_url("users:login"),
@@ -94,7 +115,21 @@ def clij():
     # cli.headers.update({"Authorization": f"Bearer {token}"})
 
     # return cli
-    return hug.test
+    from mapistar.main import Jweb
+
+    headers = {
+        "Authorization": "Bearer "
+        + Jweb.encode(
+            payload={
+                "id": 1,
+                "username": "hello",
+                "iat": pendulum.now(),
+                "exp": pendulum.now() + pendulum.Duration(seconds=1000),
+            }
+        )
+    }
+
+    return Cli(headers=headers)
 
 
 # @pytest.fixture(scope="module")

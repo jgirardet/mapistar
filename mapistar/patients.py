@@ -102,7 +102,7 @@ class PatientSchema(Schema):
 
 
 import hug
-from falcon import HTTP_201
+from falcon import HTTP_201, HTTPForbidden
 
 # from mapistar.base_db import api
 
@@ -125,32 +125,35 @@ def get(patientid=None):
         return [x.to_dict() for x in Patient.select()]
 
     else:
-        return Patient[patientid].to_dict()
+        return get_or_404(Patient, patientid).to_dict()
 
 
-# def delete(patient_id: int, user: User) -> dict:
-#     """
-#     delete un patient
+@hug.delete("")
+def delete(hug_user, patientid: hug.types.number):
+    """
+    delete un patient
 
-#     Args:
-#         id: id du patient
-#     Returns:
-#         msg "delete success"
-#     Raises:
-#         NotFound si non trouvé
-#     """
-#     pat = get_or_404(db.Patient, patient_id)
-#     if user.is_admin or user.permissions.del_patient:
-#         pat.delete()
-#         return {"msg": "delete success"}
-#     else:
-#         raise exceptions.Forbidden(
-#             f"Action non autorisée pour l'utilisateur {user.username}"
-#         )
+    Args:
+        id: id du patient
+    Returns:
+        msg "delete success"
+    Raises:
+        NotFound si non trouvé
+    """
+    pat = get_or_404(Patient, patientid)
+    # if hug_user.is_admin or hug_user.permissions.del_patient:
+    if True:
+        pat.delete()
+        return {"msg": "delete success", "patientid": patientid}
+    else:
+        raise HTTPForbidden(
+            title=f"Action non autorisée pour l'utilisateur {hug_user.username}"
+        )
 
 
 @hug.put("", status=HTTP_201)
 def update(
+    hug_user,
     data: hug.types.MarshmallowSchema(PatientSchema(partial=True)),
     patientid: hug.types.number,
 ):
@@ -160,8 +163,7 @@ def update(
         new_data: Rien n'est requis.
         id: patient id.
     """
-    # to_update = get_or_404(db.Patient, patient_id)
-    to_update = Patient[patientid]
+    to_update = get_or_404(db.Patient, patientid)
     to_update.set(**{k: v for k, v in data.items() if v})
     return to_update.to_dict()
 
