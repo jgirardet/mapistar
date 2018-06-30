@@ -32,16 +32,22 @@ def import_models(module_liste: list):
     Args:
         module_liste: Liste des moduels où se trouvent les Entities Pony.
     """
+    modules = {}
     for item in module_liste:
         if isinstance(item, str):
-            importlib.import_module(".".join(("mapistar", item)))
+            modules[item] = importlib.import_module(".".join(("mapistar", item)))
+
         elif isinstance(item, tuple):
             for module in item[1]:
-                importlib.import_module(".".join(("mapistar", item[0], module)))
+                modules[module] = importlib.import_module(
+                    ".".join(("mapistar", item[0], module))
+                )
         else:
             raise MapistarProgrammingError(
                 "Déclaration de module sous la forme str ou tuple('base', ('module1','modele2'))"
             )
+
+    return modules
 
 
 def get_or_404(model: orm.core.Entity, id: [str, int]):
@@ -55,6 +61,10 @@ def get_or_404(model: orm.core.Entity, id: [str, int]):
     try:
         item = model[id]
     except orm.ObjectNotFound as e:
+        raise HTTPNotFound(
+            title=f"Aucun {model.__class__.__name__} trouvé avec l'id {id}"
+        )
+    except orm.OperationWithDeletedObjectError as e:
         raise HTTPNotFound(
             title=f"Aucun {model.__class__.__name__} trouvé avec l'id {id}"
         )

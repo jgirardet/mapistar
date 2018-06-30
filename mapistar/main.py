@@ -2,13 +2,16 @@ import hug
 
 # import patients
 from mapistar import db
-from mapistar.db import patients
+
+# from mapistar.db import patients
 from pony.orm import db_session
 
 # from mapistar.base_db import api
 
 # from base_db import api
-from .auth import IsAuthenticated, JsonWebToken
+from mapistar.auth import IsAuthenticated, JsonWebToken
+
+from mapistar import directives
 
 
 class PonyMiddleware(object):
@@ -23,40 +26,33 @@ class PonyMiddleware(object):
         db_session.__exit__()
 
 
-def token_verify(token):
-    # secret_key = 'super-secret-key-please-change'
-    # try:
-    #     return jwt.decode(token, secret_key, algorithm='HS256')
-    # except jwt.DecodeError:
-    #     return False
-    return True
-
-
-api = hug.API(__name__)
-api.http.add_middleware(PonyMiddleware())
-
-
 test_settings = {
     "user_id": "id",
     "user_name": "username",
     "algorithms": ["HS256"],
     "options": {},
     "secret": "aa",
-    "white_list": [],
+    "white_list": ["/", "users/login"],
 }
 
-Jweb = JsonWebToken(test_settings)
 
-api.http.add_middleware(IsAuthenticated(Jweb))
-
-
-token_key_authentication = hug.authentication.token(token_verify)
-# api.http(requires=token_key_authentication)
+api = hug.API(__name__)
 
 
-# @hug.extend_api()
-# def with_other_apis():
-#     return [part_1, part_2]
+# hug.defaults.directives["jwtoken"] = jwtoken
+# jwtoken.directive = True
+# from hug.directives import _built_in_directive
 
 
-hug.API(__name__).extend(patients, "/patients")
+# hug.directives["hug_jwtoken"] = jwtoken
+
+# print(api.directives())
+
+
+api.http.add_middleware(PonyMiddleware())
+api.http.add_middleware(IsAuthenticated(directives.JBB))
+
+
+# hug.API(__name__).extend(rien, "/rien")
+hug.API(__name__).extend(db.modules["patients"], "/patients")
+hug.API(__name__).extend(db.modules["users"], "/users")

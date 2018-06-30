@@ -1,37 +1,18 @@
 from falcon import HTTPUnauthorized
 import jwt
-
-
-class JWTUser:
-    slots = ("id", "username", "token")
-
-    def __init__(self, id, username, token) -> None:
-        self.id = id
-        self.username = username
-        self.token = token
-
-    def __repr__(self):
-        return f"User:[{self.username} {self.id}]"
+from mapistar import User
+from simple_settings import settings
 
 
 class JsonWebToken:
-    slots = ("ID", "USERNAME", "algorithms", "options", "secret")
-
-    test_settings = {
-        "user_id": "id",
-        "user_name": "username",
-        "algorithms": ["HS256"],
-        "options": {},
-        "secret": "aa",
-        "white_list": [],
-    }
+    __slots__ = ("ID", "algorithms", "options", "secret", "white_list")
 
     def __init__(self, settings) -> None:
-        self.ID = settings.get("user_id")
-        self.USERNAME = settings.get("user_name")
-        self.algorithms = settings.get("algorithms")
-        self.options = settings.get("options")
+        self.ID = settings.get("user_id", "id")
+        self.algorithms = settings.get("algorithms", ["HS256"])
+        self.options = settings.get("options", {})
         self.secret = settings.get("secret")
+        self.white_list = settings.get("white_list", [])
 
     def encode(self, payload, algorithm=None, **kwargs) -> str:
         algorithm = algorithm if algorithm else self.algorithms[0]
@@ -40,6 +21,7 @@ class JsonWebToken:
                 encoding="UTF-8"
             )
         except Exception as exc:
+            print("erreur de creation du token", exc)
             # log.warn(exc.__class__.__name__)
             return None
         return token
@@ -61,12 +43,10 @@ class JsonWebToken:
             # log.exception("JWT Exception: %s", exc.__class__.__name__)
             return None
         _id = payload.get(self.ID)
-        username = payload.get(self.USERNAME)
-        return JWTUser(id=_id, username=username, token=payload)
+        return (User[_id], payload)
 
     @staticmethod
-    def get_token_from_header(headers):
-        authorization = headers.get("AUTHORIZATION", None)
+    def get_token_from_header(authorization):
         if authorization is None:
             raise HTTPUnauthorized(title="Authorization header is missing.")
         try:
@@ -81,6 +61,19 @@ class JsonWebToken:
             )
 
         return token
+
+
+class IsAuthenticated(object):
+    """check all request is"""
+
+    def __init__(self, jwt):
+        self.jwt = jwt
+
+    def process_request(self, request, response):
+        if request.path in self.jwt.white_list:
+            return None
+        token = self.jwt.get_token_from_header(request.auth)
+        request.context["user"], request.context["payload"] = self.jwt.decode(token)
 
 
 # class JWT:
@@ -128,18 +121,4 @@ class JsonWebToken:
 
 
 # return jwt_user
-
-
-class IsAuthenticated(object):
-    """check all request is"""
-
-    def __init__(self, jwt):
-        self.jwt = jwt
-
-    def process_request(self, request, response):
-        """Logs the basic endpoint requested"""
-
-        token = self.jwt.get_token_from_header(request.headers)
-        user = self.jwt.decode(token)
-        request.context["user"] = user
-        return user
+# return request.context["user"]

@@ -12,7 +12,7 @@ from mapistar.base_db import db
 # from mapistar.users import User
 
 # from mapistar.db import db
-from mapistar.utils import get_or_404, CapWordsMixin
+from mapistar import get_or_404, CapWordsMixin
 
 MAX_LENGTH = {
     "nom": 100,
@@ -59,7 +59,7 @@ class Patient(CapWordsMixin, db.Entity):
     tel = Optional(str, MAX_LENGTH["tel"])
     email = Optional(str, MAX_LENGTH["email"])
     alive = Optional(bool, default=True)
-    # actes = Set("Acte")
+    actes = Set("Acte")
 
     def __repr__(self):
         """
@@ -141,8 +141,7 @@ def delete(hug_user, patientid: hug.types.number):
         NotFound si non trouvé
     """
     pat = get_or_404(Patient, patientid)
-    # if hug_user.is_admin or hug_user.permissions.del_patient:
-    if True:
+    if hug_user.is_admin or hug_user.permissions.del_patient:
         pat.delete()
         return {"msg": "delete success", "patientid": patientid}
     else:

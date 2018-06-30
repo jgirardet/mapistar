@@ -6,10 +6,10 @@ from pony import orm
 from mapistar.base_db import db
 from mapistar.exceptions import MapistarBadRequest
 from mapistar.permissions import ActesPermissions
-from mapistar.utils import DicoMixin, NameMixin, SetMixin
+from mapistar.utils import NameMixin, SetMixin
 
 
-class Item(DicoMixin, NameMixin, SetMixin, db.Entity):
+class Item(NameMixin, SetMixin, db.Entity):
     ordonnance = orm.Required("Ordonnance")
     # place = orm.Optional(int)
 

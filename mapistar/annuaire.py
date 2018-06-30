@@ -1,5 +1,5 @@
 from pony.orm import Optional, Required, Set
-from mapistar.utils import DicoMixin, CapWordsMixin
+from mapistar.utils import CapWordsMixin
 from mapistar.base_db import db
 
 # from mapistar.actes.avis import Avis
@@ -18,7 +18,7 @@ MAX_LENGTH = {
 MAX = {"cp": 10000000}
 
 
-class Praticien(CapWordsMixin, DicoMixin, db.Entity):
+class Praticien(CapWordsMixin, db.Entity):
     """
     Entity Praticien
 

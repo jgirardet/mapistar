@@ -39,4 +39,15 @@ def many(nombre, factory, **kwargs):
 @db_session
 def generate_db():
     many(8, patientf)
+    j = userf(username="j")  # id = 1
+    userf(username="k")  # id = 2
+    inactif = userf(username="inactif", actif=False)  # id=3
     flush()
+    j.permissions.del_patient = True
+    inactif.actif
+    flush()
+
+
+#     ll = userf(username="l")
+#     ll.is_admin = True
+#     flush()

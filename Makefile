@@ -94,7 +94,7 @@ migrations:
 	pipenv run apistar makemigrations
 
 run:
-	poetry run python manage.py --settings=config.local
+	poetry run hug -f mapistar/main.py --settings=config.local
 
 shell:
 	poetry run ipython --settings=config.local

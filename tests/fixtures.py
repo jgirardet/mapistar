@@ -1,6 +1,6 @@
 # Standard Libraries
 # import json
-# from unittest.mock import MagicMock
+from unittest.mock import MagicMock
 
 # # Third Party Libraries
 import pytest
@@ -11,7 +11,8 @@ import pytest
 # from mapistar.actes.ordonnances import Ordonnance
 
 # # from mapistar.app import app
-# from mapistar.users import User
+from mapistar import User
+
 # from tests import factory
 # from mapistar.documents import Document
 # from mapistar.first_run import create_directory_tree
@@ -33,9 +34,9 @@ import pytest
 #     return MagicMock(spec=Item, return_value=ent)
 
 
-# @pytest.fixture(scope="function")
-# def muser(request):
-#     return MagicMock(spec=User)
+@pytest.fixture(scope="function")
+def muser(request):
+    return MagicMock(spec=User)
 
 
 # @pytest.fixture(scope="function")
@@ -87,10 +88,11 @@ from functools import partial
 from falcon import HTTP_METHODS
 from hug.test import call
 from mapistar import main
+from mapistar.directives import JBB
 
 
 class Cli:
-    def __init__(self, headers):
+    def __init__(self, headers={}):
         self.headers = headers
         for method in HTTP_METHODS:
             tester = partial(call, method, main, headers=headers)
@@ -101,28 +103,22 @@ class Cli:
 
 
 @pytest.fixture(scope="module")
+def cli_anonymous():
+    return Cli()
+
+
+@pytest.fixture(scope="module")
 def clij():
     """
     Permisssions:
         del_patient
     """
-    # cli = TestClient(app)
-    # r = cli.post(
-    #     app.reverse_url("users:login"),
-    #     data=json.dumps({"username": "j", "password": "j"}),
-    # )
-    # token = r.content.decode()
-    # cli.headers.update({"Authorization": f"Bearer {token}"})
-
-    # return cli
-    from mapistar.main import Jweb
-
     headers = {
         "Authorization": "Bearer "
-        + Jweb.encode(
+        + JBB.encode(
             payload={
                 "id": 1,
-                "username": "hello",
+                "username": "j",
                 "iat": pendulum.now(),
                 "exp": pendulum.now() + pendulum.Duration(seconds=1000),
             }
@@ -132,8 +128,24 @@ def clij():
     return Cli(headers=headers)
 
 
-# @pytest.fixture(scope="module")
-# def clik():
+@pytest.fixture(scope="module")
+def clik():
+
+    headers = {
+        "Authorization": "Bearer "
+        + JBB.encode(
+            payload={
+                "id": 2,
+                "username": "k",
+                "iat": pendulum.now(),
+                "exp": pendulum.now() + pendulum.Duration(seconds=1000),
+            }
+        )
+    }
+
+    return Cli(headers=headers)
+
+
 #     cli = TestClient(app)
 #     r = cli.post(
 #         app.reverse_url("users:login"),

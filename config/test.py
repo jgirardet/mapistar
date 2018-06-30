@@ -6,11 +6,10 @@ from .base import *  # noqa: F401,F403
 
 print("Testing Config")
 
-JWT = {"JWT_SECRET": "a"}
+JWT = {"secret": "a", "white_list": ["/", "/users/login"]}
+JWT_DURATION = 60
 
-JWT_DURATION = 10
-
-STATIC_DIR  = "/tmp/mapistar/"
+STATIC_DIR = "/tmp/mapistar/"
 
 # sqlite memory
 DATABASE = {"provider": "sqlite", "filename": ":memory:", "create_tables": True}

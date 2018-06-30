@@ -5,7 +5,7 @@ from apistar import App, Include, Route, exceptions, http
 from apistar.http import JSONResponse
 from mapistar.exceptions import MapistarInternalError, MapistarProgrammingError
 from mapistar.permissions import ActesPermissions
-from mapistar.utils import DicoMixin, get_or_404
+from mapistar.utils import get_or_404
 from pathlib import Path
 from pony import orm
 from simple_settings import settings
@@ -33,7 +33,7 @@ AUTHORIZED_CONTENT_TYPE = (
 DOCUMENTS_URL = "/documents"
 
 
-class Document(DicoMixin, db.Entity):
+class Document(db.Entity):
     filename = orm.Required(str)
     content_type = orm.Optional(str)
     acte = orm.Required("Acte")

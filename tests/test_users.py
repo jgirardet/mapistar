@@ -1,5 +1,5 @@
 # Standard Libraries
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 # Third Party Libraries
 import pytest
@@ -10,6 +10,8 @@ from werkzeug.security import check_password_hash
 from mapistar.users import User, login
 
 from werkzeug.security import check_password_hash
+
+import falcon
 
 
 class TestModel:
@@ -55,13 +57,13 @@ class TestModel:
         userm = MagicMock(spec=User)
 
         userm.check_password.return_value = False
-        with pytest.raises(exceptions.Forbidden) as exc:
+        with pytest.raises(falcon.HTTPForbidden) as exc:
             User.change_password(userm, "old", "new1", "new2")
 
         userm.check_password.return_value = True
-        with pytest.raises(exceptions.Forbidden) as exc:
+        with pytest.raises(falcon.HTTPForbidden) as exc:
             User.change_password(userm, "old", "new1", "new2")
-        assert str(exc.value) == "Les mots de passes ne correspondent pas"
+        assert exc.value.title == "Les mots de passes ne correspondent pas"
 
         User.change_password(userm, "old", "new1", "new1")
         assert check_password_hash(userm.pwd, "new1")
@@ -74,12 +76,18 @@ class TestModel:
         assert set(a) <= alph
         assert m.password == a
 
-    def test_dico(self, muser):
-        muser.to_dict.return_value = {"username": "hehe", "password": "haha"}
-        assert User.dico.fget(muser) == {"username": "hehe", "password": "xxxxxxxxxx"}
+    def test_to_dict(self, muser):
+        with patch("builtins.super") as m:
+            m.return_value.to_dict.return_value = {
+                "username": "hehe",
+                "password": "haha",
+            }
+            aa = User.to_dict(muser)
+        print("mkmokmo")
+        assert aa == {"username": "hehe", "password": "xxxxxxxxxx"}
 
 
-cred = MagicMock()
+cred = {}
 cred["username"] = "a"
 cred["password"] = "b"
 
@@ -89,24 +97,24 @@ userm = MagicMock(spec=User)
 class TestLogin:
     def test_bad_username(self, mocker):
         mocker.patch.object(User, "get", return_value=None)
-        with pytest.raises(exceptions.Forbidden) as exc:
-            login(cred, "jwt")
-        assert str(exc.value) == "Incorrect username or password."
+        with pytest.raises(falcon.HTTPForbidden) as exc:
+            login("jwt", **cred)
+        assert exc.value.title == "Incorrect username or password."
 
     def test_bad_pwd(self, mocker):
         mocker.patch.object(User, "get", return_value=userm)
         userm.password = "bad pwd"
         userm.check_password.return_value = False
-        with pytest.raises(exceptions.Forbidden) as exc:
-            login(cred, "jwt")
-        assert str(exc.value) == "Incorrect username or password."
+        with pytest.raises(falcon.HTTPForbidden) as exc:
+            login("jwt", **cred)
+        assert exc.value.title == "Incorrect username or password."
 
     def test_login_pass(self, mocker):
         mocker.patch.object(User, "get", return_value=userm)
         userm.check_password.return_value = True
         jwt = mocker.MagicMock()
         jwt.encode = lambda x: x
-        assert {"id", "username", "iat", "exp"} == set(login(cred, jwt).keys())
+        assert {"id", "username", "iat", "exp"} == set(login(jwt, **cred))
 
     def test_fail_token_none(self, mocker):
         mocker.patch.object(User, "get", return_value=userm)
@@ -114,9 +122,9 @@ class TestLogin:
         jwt = mocker.MagicMock()
         jwt.encode.return_value = None
 
-        with pytest.raises(exceptions.ConfigurationError) as exc:
-            login(cred, jwt)
-        assert str(exc.value) == "échec de l'encodage jwt"
+        with pytest.raises(falcon.HTTPServiceUnavailable) as exc:
+            login(jwt, **cred)
+        assert exc.value.title == "échec de l'encodage jwt"
 
     def test_fail_user_inactive(self, mocker):
         mocker.patch.object(User, "get", return_value=userm)
@@ -124,6 +132,6 @@ class TestLogin:
         userm.actif = False
         jwt = mocker.MagicMock()
         jwt.encode.return_value = True
-        with pytest.raises(exceptions.Forbidden) as exc:
-            login(cred, jwt)
-        assert str(exc.value) == "Utilisateur inactif"
+        with pytest.raises(falcon.HTTPForbidden) as exc:
+            login(jwt, **cred)
+        assert exc.value.title == "Utilisateur inactif"

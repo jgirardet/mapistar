@@ -7,7 +7,7 @@ from .base import *  # noqa: F401,F403
 
 print("Local Config")
 
-JWT = {"JWT_SECRET": "a", "JWT_WHITE_LIST": ["serve_schema", "serve_documentation"]}
+JWT = {"secret": "a", "white_list": ["/", "/users/login"]}
 
 JWT_DURATION = 3600
 

@@ -24,6 +24,7 @@ pendulum = "^2.0"
 python-dotenv = "^0.8.2"
 hug = "^2.4"
 marshmallow = "^2.15"
+werkzeug = "^0.14.1"
 
 
 [tool.poetry.dev-dependencies]

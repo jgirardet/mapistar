@@ -13,7 +13,8 @@ from .runner import generate_db
 from simple_settings import settings
 
 from unittest.mock import patch
-from mapistar import main
+
+# from mapistar import main
 
 
 @pytest.fixture(scope="module")
@@ -30,8 +31,7 @@ def gen_db(ponydb):
 pytestmark = pytest.mark.usefixtures("gen_db")
 
 
-# @pytest.mark.pony(reset_db=False)
-def test_patients(clij):
+def test_patients(clij, clik):
     # test add
     a = {"nom": "aaa", "prenom": "paa", "ddn": "1234-12-12", "sexe": "f"}
     r = clij.post("patients", {"data": a})
@@ -51,7 +51,7 @@ def test_patients(clij):
     }
 
     # test_get
-    r = clij.get("patients")
+    r = clij.get("/patients")
     assert "200" in r.status
     assert len(r.data) == 9
     assert "rue" in r.data[0].keys()
@@ -89,6 +89,31 @@ def test_patients(clij):
         "alive": True,
     }
 
+    # delete unauthorized
+    r = clik.delete("/patients", {"patientid": 9})
+    assert r.data == {"errors": {"Action non autorisée pour l'utilisateur k": None}}
     # test delete
     r = clij.delete("/patients", {"patientid": 9})
     assert r.data == {"msg": "delete success", "patientid": 9}
+
+
+def test_users(cli_anonymous):
+    cli = cli_anonymous
+
+    # test need auth
+    r = cli.get("/patients")
+    assert "401" in r.status
+
+    # test bad login
+    r = cli.post("/users/login", {"username": "jjj", "password": "j"})
+    assert "403" in r.status
+    assert r.data == {"errors": {"Incorrect username or password.": None}}
+
+    # test bad password
+    r = cli.post("/users/login", username="j", password="jjj")
+    assert "403" in r.status
+    assert r.data == {"errors": {"Incorrect username or password.": None}}
+
+    # test good login
+    r = cli.post("/users/login", username="j", password="j")
+    assert "200" in r.status

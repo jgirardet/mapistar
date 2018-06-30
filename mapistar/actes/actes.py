@@ -7,10 +7,10 @@ from pony import orm
 
 # mapistar
 from mapistar.base_db import db
-from mapistar.utils import DicoMixin, NameMixin, SetMixin
+from mapistar.utils import NameMixin, SetMixin
 
 
-class Acte(DicoMixin, NameMixin, SetMixin, db.Entity):
+class Acte(NameMixin, SetMixin, db.Entity):
     """
     Base Entity pour les différents actes.
 
